@@ -17,16 +17,16 @@ Las versiones incluyen:
 ## 🏗️ Estructura del Proyecto
 ```bash
 IntelliDocU/
-data/ # PDFs y dataset de preguntas-respuestas
-indices/ # Índices vectoriales generados por FAISS
-results/ # Métricas, logs y resultados de evaluación
-src/
-common/ # Funciones reutilizables (lectura PDF, chunking, etc.)
-v1_baseline/ # Implementación de la primera versión
-v2_rag_basic/ # Implementación del RAG simple
-v3_rag_advanced/ # Implementación con verificación y abstención
-requirements.txt
-README.md
+    data/ # PDFs y dataset de preguntas-respuestas
+    indices/ # Índices vectoriales generados por FAISS
+    results/ # Métricas, logs y resultados de evaluación
+    src/
+        common/ # Funciones reutilizables (lectura PDF, chunking, etc.)
+        v1_baseline/ # Implementación de la primera versión
+        v2_rag_basic/ # Implementación del RAG simple
+        v3_rag_advanced/ # Implementación con verificación y abstención
+    requirements.txt
+    README.md
 ```
 ---
 
