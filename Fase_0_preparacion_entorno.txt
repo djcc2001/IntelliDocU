@@ -1,0 +1,200 @@
+NOTAS TÉCNICAS — FASE 0
+-------------------------------------
+
+Este documento describe paso a paso la preparación técnica necesaria para iniciar
+el proyecto IntelliDocU. No contiene metodología ni teoría: únicamente los
+procedimientos prácticos para configurar el entorno de desarrollo, instalar
+dependencias y preparar el repositorio.
+
+El objetivo es que cualquier persona sin experiencia pueda reproducir todo el
+entorno inicial.
+
+
+==================================================
+1. CLONAR EL PROYECTO DESDE GITHUB
+==================================================
+
+Si ya existe el repositorio remoto:
+
+1. Abrir una terminal (CMD, PowerShell o Git Bash).
+2. Navegar a la carpeta donde se desea clonar el proyecto.
+3. Ejecutar:
+
+   git clone <URL_DEL_REPOSITORIO>
+
+4. Entrar al proyecto:
+
+   cd IntelliDocU
+
+Si el repositorio no existe aún:
+- Crear un repo en GitHub con el nombre: IntelliDocU
+- No incluir README ni .gitignore (se crearán localmente).
+
+
+==================================================
+2. CREAR ESTRUCTURA BASE DEL PROYECTO
+==================================================
+
+Crear manualmente las carpetas iniciales:
+
+IntelliDocU/
+  data/              -> para PDFs y dataset
+  indices/           -> índices vectoriales (FAISS)
+  results/           -> métricas, logs
+  src/               -> código fuente
+    common/          -> funciones compartidas
+    v1_baseline/     -> versión 1 del sistema
+    v2_rag_basic/    -> versión 2 (RAG)
+    v3_rag_advanced/ -> versión 3 (RAG + verificación)
+  env/               -> entorno virtual (se genera en el siguiente paso)
+  README.md
+  requirements.txt
+  .gitignore
+
+
+==================================================
+3. CREAR EL ENTORNO VIRTUAL (venv)
+==================================================
+
+Es importante para separar dependencias del sistema.
+
+Windows:
+  python -m venv env
+  env\Scripts\activate
+
+Linux/Mac:
+  python3 -m venv env
+  source env/bin/activate
+
+Para desactivar:
+  deactivate
+
+
+==================================================
+4. INSTALAR DEPENDENCIAS INICIALES
+==================================================
+
+El archivo requirements.txt contiene las librerías necesarias para la Fase 1.
+
+Contenido recomendado:
+
+  pymupdf          # extracción de texto PDF
+  pytesseract      # OCR
+  Pillow           # soporte para imágenes
+  numpy            # operaciones numéricas
+  pandas           # manejo de datasets
+  python-dotenv    # cargar variables de entorno
+  tqdm             # barras de progreso
+
+Para instalarlas:
+
+  pip install -r requirements.txt
+
+
+==================================================
+5. INSTALACIÓN DE TESSERACT-OCR (REQUERIDO POR pytesseract)
+==================================================
+
+pytesseract NO implementa OCR. Es solo un "puente" para llamar al programa real:
+Tesseract-OCR. Por eso se debe instalar por separado.
+
+DESCARGA:
+Recomendado descargar desde:
+https://github.com/UB-Mannheim/tesseract/wiki
+
+Instalar la versión "tesseract-ocr-w64-setup-XXXX.exe".
+
+El instalador crea la carpeta:
+  C:\Program Files\Tesseract-OCR\
+
+AGREGAR AL PATH DEL SISTEMA:
+1. Abrir "Editar variables de entorno".
+2. Seleccionar PATH.
+3. Agregar:
+   C:\Program Files\Tesseract-OCR\
+
+VERIFICAR INSTALACIÓN:
+En una terminal ejecutar:
+
+  tesseract --version
+
+Si aparece la versión, la instalación es correcta.
+
+
+==================================================
+6. CREAR ARCHIVO .gitignore
+==================================================
+
+Para evitar subir archivos pesados o innecesarios al repositorio.
+
+Contenido recomendado:
+
+# Entornos virtuales
+env/
+venv/
+
+# Archivos de sistema
+__pycache__/
+*.pyc
+
+# Índices y resultados generados
+indices/
+results/
+
+# Datos
+data/
+
+# Configuraciones locales
+.env
+
+
+Agregar el archivo:
+
+  touch .gitignore
+
+
+==================================================
+7. INICIALIZAR GIT (SI NO SE CLONÓ EL PROYECTO)
+==================================================
+
+Si se creó el proyecto localmente antes de subirlo:
+
+  git init
+  git add .
+  git commit -m "Inicialización del proyecto"
+
+Agregar el remoto:
+
+  git remote add origin <URL_DEL_REPO>
+  git push -u origin main
+
+
+==================================================
+8. ARCHIVO README.md
+==================================================
+
+Archivo descriptivo del proyecto. No afecta la ejecución, pero es importante
+para documentación del trabajo universitario.
+
+Debe incluir:
+- descripción general
+- objetivo del sistema
+- estructura del proyecto
+- instrucciones para ejecutar versiones
+- dependencias
+
+
+==================================================
+9. VERIFICACIÓN FINAL DE LA FASE 0
+==================================================
+
+✓ Proyecto clonado o creado
+✓ Estructura de carpetas preparada
+✓ Entorno virtual configurado
+✓ requirements.txt instalado correctamente
+✓ Tesseract instalado y funcionando
+✓ .gitignore creado
+✓ Primer commit realizado
+✓ README presente
+
+FIN DE LA FASE 0.
