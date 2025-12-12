@@ -1,0 +1,7 @@
+pymupdf
+pytesseract
+Pillow
+numpy
+pandas
+python-dotenv
+tqdm

@@ -1,0 +1,15 @@
+# Entorno virtual
+env/
+venv/
+
+# Archivos grandes
+data/
+indices/
+
+# Archivos temporales
+__pycache__/
+*.log
+*.tmp
+
+# Archivos sensibles
+*.env
