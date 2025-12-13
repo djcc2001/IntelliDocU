@@ -1,0 +1,112 @@
+Fase 7: RAG Basic Recuperacion y Grounding
+--------------------------------------------
+
+Esta fase tuvo como objetivo implementar y validar la version v2_rag_basic del sistema IntelliDocU, basada en el enfoque de Recuperacion Aumentada con Generacion (RAG). En esta etapa se integro el indice vectorial FAISS, el mecanismo de recuperacion semantica y la construccion de prompts con contexto, con el fin de reducir alucinaciones y garantizar que las respuestas se basen exclusivamente en evidencia proveniente de los documentos PDF.
+
+
+==================================================
+1. Objetivo de la fase
+==================================================
+El objetivo principal de la Fase 7 fue:
+
+    - Integrar el indice FAISS construido en fases anteriores.
+    - Implementar un componente de recuperacion (Retriever).
+    - Construir un pipeline RAG basico (v2_rag_basic).
+    - Verificar que el contexto relevante sea correctamente entregado al modelo de lenguaje.
+    - Demostrar que el sistema deja de responder sin evidencia directa del documento.
+
+Esta fase NO busca aun generar respuestas finales de alta calidad, sino validar el proceso de grounding mediante recuperacion.
+
+==================================================
+2. Estructura de archivos utilizada
+==================================================
+Se utilizo la siguiente estructura dentro del proyecto:
+    IntelliDocU/
+      src/
+        common/
+          retriever/
+            retriever.py
+            load_index.py
+            validate_retriever.py
+          llm/
+            simple_llm.py
+        v2_rag_basic/
+          run_rag.py
+
+Los componentes compartidos se mantuvieron en src/common/, siguiendo el principio de reutilizacion y separacion de responsabilidades.
+
+==================================================
+3. Implementacion del Retriever
+==================================================
+Se implemento la clase Retriever, encargada de:
+    - Cargar el indice FAISS previamente construido.
+    - Cargar el archivo de mapeo de fragmentos (metadata).
+    - Transformar la pregunta del usuario en un embedding.
+    - Recuperar los K fragmentos mas similares semanticamente.
+    - Retornar los fragmentos junto con sus metadatos (documento, pagina, fragmento, score).
+
+Se valido el funcionamiento del retriever usando el script:
+    src/common/retriever/validate_retriever.py
+
+Las pruebas confirmaron que las preguntas recuperan fragmentos correctos del documento correspondiente.
+
+==================================================
+4. Construccion del pipeline RAG basico (v2)
+==================================================
+En el archivo:
+    src/v2_rag_basic/run_rag.py
+
+se implemento el flujo completo:
+    1. Recepcion de la pregunta del usuario.
+    2. Recuperacion de fragmentos relevantes usando FAISS.
+    3. Construccion de un prompt estructurado que incluye:
+        - Instrucciones claras al modelo.
+        - Contexto delimitado por fragmentos numerados.
+        - Metadatos de cada fragmento (doc, pagina, frag).
+        - La pregunta original.
+    4. Envio del prompt al modelo de lenguaje (LLM).
+
+==================================================
+5. Modelo de lenguaje simulado
+==================================================
+
+Para esta fase se utilizo un LLM simulado (SimpleLLM), cuya funcion fue:
+    - No generar texto nuevo.
+    - Devolver el prompt completo recibido.
+    - Permitir inspeccionar visualmente el contexto recuperado.
+
+Este enfoque permite validar que el sistema RAG funciona correctamente antes de introducir generacion real y evita alucinaciones tempranas.
+
+==================================================
+6. Validacion experimental
+==================================================
+
+Se realizo la ejecucion:
+    python -m src.v2_rag_basic.run_rag
+
+Usando la pregunta:
+    "What is SparseSwaps?"
+
+El sistema recupero multiples fragmentos relevantes del documento:
+    arxiv_251210922_sparseswaps
+
+Los fragmentos correspondieron a secciones donde se describe el algoritmo SparseSwaps, su motivacion, eficiencia y resultados experimentales, confirmando una recuperacion correcta y coherente.
+
+==================================================
+7. Resultado de la fase
+==================================================
+
+Al finalizar esta fase se confirmo que:
+    - El indice FAISS funciona correctamente.
+    - El retriever recupera fragmentos relevantes.
+    - El contexto entregado al LLM es correcto y suficiente.
+    - El sistema RAG reduce la posibilidad de alucinaciones al depender de evidencia.
+    - La version v2_rag_basic esta completamente operativa.
+
+Esta fase sienta las bases para la siguiente etapa del proyecto, donde se implementaran mecanismos avanzados de control como citacion obligatoria, abstencion y verificacion cruzada (v3_rag_advanced).
+
+==================================================
+8. Conclusion
+==================================================
+
+La Fase 7 demuestra que la integracion de recuperacion semantica con modelos de lenguaje es efectiva para controlar la generacion de respuestas basadas en documentos. El sistema IntelliDocU avanza asi desde un modelo generativo sin control (v1) hacia un sistema fundamentado en evidencia (v2), preparando el camino para tecnicas avanzadas de mitigacion de alucinaciones en la siguiente fase.
