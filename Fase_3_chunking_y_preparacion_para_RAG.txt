@@ -1,0 +1,89 @@
+Chunking y Preparacion para Recuperacion Aumentada (RAG) – FASE 3
+
+Esta fase tuvo como objetivo transformar el texto limpio obtenido en la Fase 2 en fragmentos semanticos (chunks) de tamano controlado, preparados para la generacion de embeddings y la posterior recuperacion de informacion dentro del sistema IntelliDocU. El resultado final es un conjunto de fragmentos tokenizados, solapados y validados, con metadatos suficientes para garantizar trazabilidad, citacion y verificacion de evidencia.
+
+==================================================
+Objetivo de la Fase 3
+==================================================
+
+El objetivo principal de esta fase fue:
+    - dividir el texto limpio en fragmentos manejables para modelos de lenguaje,
+    - preservar el contexto semantico mediante solapamiento entre fragmentos,
+    - mantener la referencia a documento y pagina original,
+    - preparar los datos para la generacion de embeddings y RAG,
+    - validar automaticamente la calidad del chunking.
+
+==================================================
+2. Insumos utilizados
+
+Los insumos principales de esta fase fueron:
+    - archivos .jsonl generados en la Fase 2,
+    - texto limpio normalizado por pagina,
+    - metadatos asociados a cada documento.
+
+Los archivos de entrada se ubicaron en:
+    IntelliDocU/data/preprocessed/
+
+==================================================
+3. Estrategia de chunking
+
+Se adopto una estrategia de chunking basada en tokens, utilizando un tokenizer compatible con modelos de embeddings semanticos.
+
+Parametros definidos:
+    - modelo de tokenizacion: sentence-transformers/all-MiniLM-L6-v2
+    - tamano maximo de fragmento: 500 tokens
+    - solapamiento entre fragmentos: 150 tokens
+    - unidad base: pagina del documento
+
+Esta configuracion permite capturar suficiente contexto sin introducir ruido excesivo ni superar los limites habituales de entrada de modelos de lenguaje.
+
+==================================================
+4. Generacion de fragmentos
+
+Ejecución: python src/common/chunking/chunker.py
+
+El proceso de generacion de fragmentos consistio en:
+    - lectura secuencial de cada pagina de texto limpio,
+    - tokenizacion del contenido textual,
+    - division del texto en fragmentos con solapamiento,
+    - asignacion de identificadores unicos a cada fragmento,
+    - almacenamiento de los fragmentos en formato JSONL.
+
+Cada fragmento contiene la siguiente informacion:
+    - doc_id: identificador del documento original,
+    - page: numero de pagina de origen,
+    - frag_id: identificador del fragmento dentro del documento,
+    - text: contenido textual del fragmento,
+    - token_count: numero de tokens del fragmento.
+
+Los fragmentos generados se almacenaron en:
+    IntelliDocU/data/fragments/
+
+==================================================
+5. Validacion automatica del chunking
+
+Ejecución: python src/common/chunking/validate_chunks.py
+
+Para garantizar la calidad del proceso, se implemento un script de validacion automatica que verifico:
+    - existencia de fragmentos para todos los documentos,
+    - ausencia de fragmentos vacios,
+    - cumplimiento de los limites de tokens definidos,
+    - distribucion adecuada del tamano de los fragmentos.
+
+Los resultados mostraron:
+    - cero fragmentos vacios en todos los documentos,
+    - tamanos maximos consistentes de 500 tokens,
+    - promedios entre 400 y 450 tokens por fragmento,
+    - presencia ocasional de fragmentos pequenos, aceptables por tratarse de finales de pagina.
+
+==================================================
+6. Resultado final de la Fase 3
+
+Al finalizar la Fase 3, el proyecto cuenta con:
+    - fragmentos semanticos listos para embeddings,
+    - solapamiento adecuado para preservar contexto,
+    - metadatos completos para trazabilidad y citacion,
+    - validacion automatica del proceso de chunking,
+    - una base solida para la construccion del sistema RAG.
+
+Esta fase establece el puente directo entre el preprocesamiento textual y la recuperacion semantica, permitiendo avanzar hacia la Fase 4: Generacion de Embeddings y Construccion del Indice Vectorial.

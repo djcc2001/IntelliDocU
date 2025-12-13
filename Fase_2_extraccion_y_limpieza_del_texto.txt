@@ -34,6 +34,8 @@ Su propósito es el siguiente:
 ==================================================
 3. Extracción de texto desde PDFs
 
+Ejecutar: python src/common/extract/extractor.py
+
 La extracción de texto se realizó utilizando la librería PyMuPDF (fitz), elegida por su velocidad y precisión en documentos académicos digitales.
 Para cada PDF:
     - se abrió el documento página por página,
@@ -54,6 +56,8 @@ Cada registro contiene:
 ==================================================
 4. Limpieza y normalización del texto
 
+Ejecutar: python src/common/extract/cleaner.py
+
 El texto extraído desde los PDFs contiene ruido típico de documentos científicos. Para corregirlo, se aplicaron las siguientes operaciones de limpieza:
     - unión de palabras cortadas por guiones al final de línea,
     - eliminación de saltos de línea innecesarios,
@@ -70,6 +74,8 @@ Cada registro limpio conserva:
 ==================================================
 5. Actualización del archivo de metadatos
 
+Ejecutar: python src/common/extract/update_metadata.py
+
 Una vez finalizada la extracción y limpieza, se actualizó automáticamente el archivo:
     IntelliDocU/data/pdf_metadata.csv
 
@@ -85,6 +91,8 @@ Esta información permite:
 
 ==================================================
 6. Validación de la Fase 2
+
+Ejecutar: python src/common/extract/test_fase2.py
 
 La correcta ejecución de esta fase se validó mediante:
     - ejecución exitosa de los scripts de extracción y limpieza,
