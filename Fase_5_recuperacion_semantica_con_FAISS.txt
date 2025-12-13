@@ -1,0 +1,128 @@
+Recuperacion Semantica con FAISS (Retriever) - FASE 5
+-----------------------------------------------------
+
+Esta fase tuvo como objetivo implementar y validar el modulo de recuperacion de informacion
+(retriever) del sistema IntelliDocU. Este componente es fundamental para el enfoque RAG,
+ya que permite localizar fragmentos relevantes de documentos PDF en base a consultas
+en lenguaje natural, utilizando embeddings semanticos y busqueda vectorial.
+
+==================================================
+1. Objetivo de la Fase
+==================================================
+
+El objetivo principal de esta fase fue:
+    - Construir un sistema de recuperacion semantica basado en FAISS
+    - Validar que, dada una pregunta en lenguaje natural, el sistema
+      sea capaz de recuperar fragmentos relevantes desde multiples documentos
+    - Preparar la base tecnica necesaria para las versiones v2 (RAG basico)
+      y v3 (RAG avanzado con verificacion)
+
+En esta fase no se generan respuestas finales al usuario, solo se valida
+la correcta recuperacion de evidencia textual.
+
+==================================================
+2. Carga del indice FAISS y mapping
+==================================================
+
+Se utilizaron los siguientes archivos generados en la Fase 4:
+    - indices/faiss.index
+    - indices/mapping.json
+
+El archivo FAISS contiene los embeddings de todos los fragmentos del dataset,
+mientras que el mapping permite relacionar cada vector con su informacion original:
+
+    - identificador del documento
+    - numero de pagina
+    - numero de fragmento
+    - texto del fragmento
+
+Se implementaron funciones dedicadas para:
+    - cargar el indice FAISS desde disco
+    - cargar el mapping de fragmentos
+    - garantizar consistencia entre indices y metadatos
+
+==================================================
+3. Implementacion del Retriever
+==================================================
+
+Se implemento la clase Retriever en:
+    src/common/retriever/retriever.py
+
+Esta clase se encarga de:
+    - recibir una pregunta del usuario
+    - generar el embedding de la pregunta usando el mismo modelo
+      utilizado para los fragmentos (all-MiniLM-L6-v2)
+    - ejecutar la busqueda vectorial en FAISS
+    - devolver los k fragmentos mas similares junto con su score
+
+Cada resultado recuperado incluye:
+    - score de similitud
+    - documento de origen
+    - pagina
+    - identificador del fragmento
+    - texto del fragmento
+
+
+==================================================
+4. Validacion del Retriever
+==================================================
+
+Ejecución: python -m src.common.retriever.validate_retriever
+
+Se creo un script de validacion:
+    src/common/retriever/validate_retriever.py
+
+Este script permite:
+    - ejecutar consultas manuales
+    - inspeccionar los fragmentos recuperados
+    - verificar que los documentos correctos aparezcan
+    - analizar los valores de similitud (scores)
+
+Se comprobo que:
+    - preguntas especificas producen scores altos (> 0.45)
+    - los fragmentos recuperados pertenecen al documento correcto
+    - la recuperacion funciona de forma global sobre todos los PDFs
+
+==================================================
+5. Observaciones sobre los resultados
+==================================================
+
+Se observo que:
+    - preguntas genericas (por ejemplo "What is the main contribution?")
+      producen resultados mas dispersos, lo cual es esperado
+    - preguntas especificas (por ejemplo "What is SparseSwaps?")
+      producen resultados altamente relevantes y coherentes
+
+Esto confirma que el sistema de embeddings y FAISS funciona correctamente.
+
+Los scores obtenidos son consistentes con el modelo MiniLM utilizado,
+donde valores superiores a 0.4 indican alta similitud semantica.
+
+==================================================
+6. Alcances y limites de la Fase
+==================================================
+
+En esta fase:
+    - NO se filtra por documento especifico
+    - NO se generan respuestas finales
+    - NO se aplica citacion ni verificacion
+
+Estos aspectos seran abordados en fases posteriores dentro de
+las versiones v2 y v3 del sistema.
+
+El proposito de esta fase es puramente tecnico:
+asegurar una recuperacion semantica robusta y confiable.
+
+==================================================
+7. Resultado Final de la Fase
+==================================================
+
+Al finalizar esta fase se obtuvo:
+    - un indice FAISS funcional
+    - un sistema de recuperacion estable
+    - evidencia de que el sistema localiza correctamente fragmentos relevantes
+    - una base solida para implementar RAG y estrategias anti-alucinacion
+
+Con esto, la FASE 5 se considera COMPLETADA satisfactoriamente
+y el proyecto esta listo para iniciar la construccion de
+las versiones del sistema ChatPDF (v1, v2 y v3).

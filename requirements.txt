@@ -10,3 +10,6 @@ transformers
 sentence-transformers
 # Fase 4
 faiss-cpu
+# Fase 5
+json
+pathlib
