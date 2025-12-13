@@ -1,0 +1,23 @@
+[
+  {
+    "question_id": "q1",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What is SparseSwaps?",
+    "type": "fact",
+    "answer": "SparseSwaps is a pruning refinement method for large language models that improves sparsity masks by iteratively swapping weights to reduce performance degradation."
+  },
+  {
+    "question_id": "q2",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What problem does SparseSwaps solve?",
+    "type": "fact",
+    "answer": "SparseSwaps is a pruning refinement method for large language models that improves sparsity masks by iteratively swapping weights to reduce performance degradation."
+  },
+  {
+    "question_id": "q3",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "Does the paper mention quantum computing?",
+    "type": "impossible",
+    "answer": "SparseSwaps is a pruning refinement method for large language models that improves sparsity masks by iteratively swapping weights to reduce performance degradation."
+  }
+]

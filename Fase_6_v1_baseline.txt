@@ -1,0 +1,71 @@
+FASE 6 – v1_baseline (Modelo sin Recuperacion)
+---------------------------------------------
+
+El objetivo de esta fase fue implementar y evaluar un sistema base de
+preguntas y respuestas sobre documentos academicos, sin utilizar ningun
+mecanismo de recuperacion de informacion. Esta version, denominada
+v1_baseline, sirve como linea base para comparar el impacto de los
+sistemas RAG que se implementaran en fases posteriores.
+
+En v1_baseline, el modelo de lenguaje recibe unicamente la pregunta del
+usuario, sin acceso al contenido de los documentos PDF ni a fragmentos
+extraidos previamente. Las respuestas se generan exclusivamente a partir
+del conocimiento interno del modelo, sin ningun tipo de evidencia
+documental.
+
+==================================================
+1. Implementacion del sistema baseline
+==================================================
+
+Se creo el modulo:
+    src/v1_baseline/
+
+Dentro de este modulo se implemento un script que:
+    - recibe una pregunta en lenguaje natural,
+    - construye un prompt minimo sin contexto externo,
+    - genera una respuesta directamente desde el modelo de lenguaje.
+
+No se utiliza el indice FAISS, ni embeddings, ni fragmentos de texto.
+El sistema no tiene conocimiento explicito de los documentos del dataset.
+
+==================================================
+2. Evaluacion sobre el dataset de preguntas
+==================================================
+
+Ejecución: python src/v1_baseline/run_baseline_batch.py
+
+El sistema v1_baseline fue evaluado utilizando preguntas asociadas a los
+documentos del dataset, incluyendo:
+    - preguntas factuales (respondibles desde el documento),
+    - preguntas imposibles (no respondibles desde el documento).
+
+Las respuestas generadas fueron almacenadas en formato JSON para su
+posterior analisis y comparacion con otras versiones del sistema.
+
+==================================================
+3. Resultados observados
+==================================================
+
+Los resultados muestran que el modelo:
+    - responde todas las preguntas, incluso aquellas que no pueden ser
+      respondidas desde el documento,
+    - genera respuestas plausibles pero no verificadas,
+    - no distingue entre preguntas factuales e imposibles,
+    - puede incurrir en alucinaciones al afirmar informacion inexistente.
+
+En particular, ante preguntas imposibles, el modelo produce respuestas
+incorrectas en lugar de abstenerse.
+
+==================================================
+4. Conclusiones de la fase
+==================================================
+
+Esta fase evidencia claramente las limitaciones de un modelo de lenguaje
+sin acceso a informacion documental. Los resultados justifican la
+necesidad de incorporar mecanismos de recuperacion de contexto (RAG),
+citado de evidencia y abstencion, los cuales se abordaran en las
+siguientes fases del proyecto.
+
+El sistema v1_baseline se utilizara como referencia cuantitativa y
+cualitativa para comparar el desempeno de las versiones v2_rag_basic y
+v3_rag_advanced.
