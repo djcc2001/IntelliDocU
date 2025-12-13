@@ -1,0 +1,108 @@
+Extracción y Limpieza del Texto - FASE 2
+
+Esta fase tuvo como objetivo convertir los documentos académicos en formato PDF, previamente organizados en la Fase 1, en texto estructurado y limpio, listo para ser utilizado en las siguientes etapas del proyecto IntelliDocU, especialmente chunking, recuperación aumentada (RAG) y verificación de evidencia. El resultado final es un conjunto de archivos de texto por página, normalizados y correctamente documentados.
+
+==================================================
+Objetivo de la Fase 2
+==================================================
+
+El objetivo principal de esta fase fue:
+
+- extraer el texto completo de cada PDF del dataset,
+- conservar la estructura por páginas,
+- limpiar el texto eliminando ruido típico de PDFs,
+- generar archivos intermedios reutilizables,
+- actualizar los metadatos del dataset con información del proceso de extracción.
+
+
+Esta fase es fundamental para garantizar que el sistema trabaje con información textual confiable y bien estructurada.
+
+==================================================
+2. Organización de carpetas
+
+Se crearon los siguientes directorios dentro del proyecto:
+    IntelliDocU/data/extracted/
+    IntelliDocU/data/preprocessed/
+    IntelliDocU/src/common/extract/
+
+Su propósito es el siguiente:
+
+- extracted/: almacena el texto crudo extraído directamente de los PDFs.
+- preprocessed/: almacena el texto limpio y normalizado.
+- extract/: contiene el código reutilizable para extracción y limpieza.
+
+==================================================
+3. Extracción de texto desde PDFs
+
+La extracción de texto se realizó utilizando la librería PyMuPDF (fitz), elegida por su velocidad y precisión en documentos académicos digitales.
+Para cada PDF:
+    - se abrió el documento página por página,
+    - se extrajo el texto de cada página,
+    - se almacenó cada página como una entrada independiente,
+    - se generó un archivo .jsonl por cada PDF.
+
+El formato JSONL permite:
+    - procesar grandes volúmenes de texto de manera eficiente,
+    - mantener una línea por página,
+    - facilitar etapas posteriores como chunking y citación.
+
+Cada registro contiene:
+    - identificador del PDF,
+    - número de página,
+    - texto original extraído.
+
+==================================================
+4. Limpieza y normalización del texto
+
+El texto extraído desde los PDFs contiene ruido típico de documentos científicos. Para corregirlo, se aplicaron las siguientes operaciones de limpieza:
+    - unión de palabras cortadas por guiones al final de línea,
+    - eliminación de saltos de línea innecesarios,
+    - normalización de espacios múltiples,
+    - eliminación de caracteres irrelevantes.
+
+El resultado es un texto continuo, legible y preparado para ser dividido en fragmentos (chunks).
+
+Cada registro limpio conserva:
+    - texto original,
+    - texto limpio (clean_text),
+    - número de página y referencia al PDF.
+
+==================================================
+5. Actualización del archivo de metadatos
+
+Una vez finalizada la extracción y limpieza, se actualizó automáticamente el archivo:
+    IntelliDocU/data/pdf_metadata.csv
+
+Se añadieron las siguientes columnas:
+    - cleaned_length: número total de caracteres del texto limpio por PDF,
+    - extraction_method: método utilizado para la extracción (pymupdf),
+    - ocr_applied: indicador de uso de OCR (False para todos los documentos actuales).
+
+Esta información permite:
+    - cuantificar el contenido textual disponible,
+    - documentar el método de procesamiento,
+    - facilitar la reproducibilidad del experimento.
+
+==================================================
+6. Validación de la Fase 2
+
+La correcta ejecución de esta fase se validó mediante:
+    - ejecución exitosa de los scripts de extracción y limpieza,
+    - verificación de archivos generados en extracted/ y preprocessed/,
+    - inspección visual del texto limpio,
+    - comprobación de columnas añadidas en el archivo CSV,
+    - ejecución de un script de prueba automatizado.
+
+La validación confirmó que todos los PDFs fueron procesados correctamente y que el texto resultante es consistente y utilizable.
+
+==================================================
+7. Resultado final de la Fase 2
+
+Al finalizar la Fase 2, el proyecto cuenta con:
+    - texto estructurado por página para cada PDF,
+    - texto limpio y normalizado,
+    - metadatos actualizados y cuantificados,
+    - base sólida para aplicar chunking y RAG,
+    - código modular reutilizable para futuras versiones (v1, v2, v3).
+
+La Fase 2 deja el proyecto completamente preparado para avanzar hacia la Fase 3: Chunking y Preparación para Recuperación Aumentada (RAG).
