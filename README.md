@@ -105,11 +105,10 @@ data/
 La estructura recomendada para preguntas:
 ```bash
 {
-  "pdf_id": "documento1",
+  "id": "q#",
+  "doc_id": "documento1",
   "question": "¿Cuál es el objetivo principal del texto?",
-  "answer": "Objetivo X",
-  "type": "factual",
-  "page": 3
+  "type": "fact"
 }
 ```
 
