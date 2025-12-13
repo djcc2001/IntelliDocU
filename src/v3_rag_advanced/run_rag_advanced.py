@@ -44,7 +44,7 @@ def construir_prompt_avanzado(pregunta, fragmentos):
 # -------------------------------
 
 def main():
-    pregunta = "Does the paper mention quantum computing?"
+    pregunta = "¿Hola como estás?"
 
     retriever = Retriever()
     llm = SimpleLLM()
