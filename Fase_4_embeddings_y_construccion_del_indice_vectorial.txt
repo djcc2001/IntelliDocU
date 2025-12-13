@@ -1,0 +1,106 @@
+Embeddings y Construccion del Indice Vectorial – FASE 4
+
+Esta fase tuvo como objetivo transformar los fragmentos textuales generados en la Fase 3 en representaciones vectoriales densas (embeddings) y organizarlas en un indice vectorial eficiente que permita la recuperacion semantica de informacion dentro del sistema IntelliDocU.
+
+==================================================
+Objetivo de la Fase 4
+==================================================
+
+El objetivo principal de esta fase fue:
+    - generar embeddings semanticos para cada fragmento textual,
+    - construir un indice vectorial eficiente para busqueda por similitud,
+    - preservar la correspondencia entre vectores y fragmentos originales,
+    - permitir recuperacion rapida y escalable para el sistema RAG.
+
+==================================================
+2. Insumos utilizados
+
+Los insumos principales de esta fase fueron:
+    - archivos JSONL de fragmentos generados en la Fase 3,
+    - texto tokenizado y validado por fragmento,
+    - metadatos de documento, pagina y fragmento.
+
+Los archivos de entrada se ubicaron en:
+    IntelliDocU/data/fragments/
+
+==================================================
+3. Modelo de embeddings
+
+Se selecciono un modelo liviano y eficiente de Sentence Transformers:
+    - modelo: sentence-transformers/all-MiniLM-L6-v2
+    - dimension del embedding: 384
+    - tipo: embeddings densos normalizados
+
+Este modelo fue elegido por su buen balance entre:
+    - calidad semantica,
+    - velocidad de inferencia,
+    - bajo consumo de memoria,
+    - amplia adopcion en sistemas RAG.
+
+==================================================
+4. Generacion de embeddings
+
+Para cada fragmento textual se realizo el siguiente proceso:
+    - lectura secuencial del texto del fragmento,
+    - generacion del embedding vectorial,
+    - normalizacion L2 del vector,
+    - almacenamiento temporal en memoria.
+
+Los embeddings fueron generados de forma batch para mejorar eficiencia.
+
+==================================================
+5. Construccion del indice FAISS
+
+Ejecución: python src/common/embeddings/build_faiss.py
+
+Se utilizo la biblioteca FAISS en modo CPU para construir un indice vectorial global.
+
+Configuracion del indice:
+    - tipo de indice: IndexFlatIP
+    - metrica: producto interno (cosine similarity tras normalizacion)
+    - almacenamiento: indice global unico
+
+Pasos realizados:
+    - inicializacion del indice FAISS,
+    - adicion de todos los embeddings generados,
+    - guardado persistente del indice en disco,
+    - generacion de un archivo de mapeo vector → fragmento.
+
+Los archivos generados se almacenaron en:
+    IntelliDocU/indices/faiss_global/
+
+==================================================
+6. Archivo de mapeo de fragmentos
+
+Se genero un archivo de mapeo que asocia cada vector del indice con su fragmento original, incluyendo:
+    - doc_id,
+    - page,
+    - frag_id,
+    - texto del fragmento.
+
+Este archivo permite recuperar evidencia textual exacta a partir de los resultados del indice vectorial.
+
+==================================================
+7. Validacion del indice
+
+Ejecución: python src/common/embeddings/validate_index.py
+
+Se implemento un script de validacion para verificar:
+    - correcta carga del indice FAISS,
+    - consistencia entre numero de vectores y fragmentos,
+    - ausencia de vectores vacios o corruptos,
+    - correcta asociacion con el archivo de mapeo.
+
+La validacion confirmo que el indice es consistente y funcional.
+
+==================================================
+8. Resultado final de la Fase 4
+
+Al finalizar la Fase 4, el proyecto cuenta con:
+    - embeddings semanticos para todos los fragmentos,
+    - un indice FAISS global persistente,
+    - mapeo completo entre vectores y fragmentos,
+    - infraestructura lista para recuperacion semantica.
+
+
+Esta fase habilita directamente la Fase 5: Implementacion del Recuperador (Retriever) y marca la transicion formal hacia el sistema RAG.

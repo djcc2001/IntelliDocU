@@ -8,3 +8,5 @@ tqdm               # Barras de progreso para procesos largos (chunking, OCR, etc
 # Fase 3
 transformers
 sentence-transformers
+# Fase 4
+faiss-cpu
