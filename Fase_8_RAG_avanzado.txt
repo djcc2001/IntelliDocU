@@ -96,6 +96,15 @@ Al finalizar esta fase se confirmo que:
     - La version v3_rag_advanced es mas conservadora pero mas confiable.
 
 ==================================================
-8. Conclusion
+8. Evaluacion sobre el dataset de preguntas
+==================================================
+
+Ejecución: python -m src.v3_rag_advanced.run_rag_eval
+
+Las respuestas generadas fueron almacenadas en formato JSON para su
+posterior analisis y comparacion con otras versiones del sistema.
+
+==================================================
+9. Conclusion
 ==================================================
 La Fase 8 representa un avance clave en el proyecto IntelliDocU, al introducir mecanismos estrictos de control sobre la generacion de respuestas. El sistema deja de priorizar la fluidez del lenguaje y adopta un enfoque centrado en evidencia verificable, citacion explicita y abstencion responsable. Esta fase demuestra un diseno robusto y alineado con principios modernos de IA confiable y explicable, consolidando el sistema como una herramienta orientada a precision y trazabilidad documental.

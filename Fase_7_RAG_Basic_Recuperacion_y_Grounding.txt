@@ -106,7 +106,16 @@ Al finalizar esta fase se confirmo que:
 Esta fase sienta las bases para la siguiente etapa del proyecto, donde se implementaran mecanismos avanzados de control como citacion obligatoria, abstencion y verificacion cruzada (v3_rag_advanced).
 
 ==================================================
-8. Conclusion
+8. Evaluacion sobre el dataset de preguntas
+==================================================
+
+Ejecución: python -m src.v2_rag_basic.run_rag_eval
+
+Las respuestas generadas fueron almacenadas en formato JSON para su
+posterior analisis y comparacion con otras versiones del sistema.
+
+==================================================
+9. Conclusion
 ==================================================
 
 La Fase 7 demuestra que la integracion de recuperacion semantica con modelos de lenguaje es efectiva para controlar la generacion de respuestas basadas en documentos. El sistema IntelliDocU avanza asi desde un modelo generativo sin control (v1) hacia un sistema fundamentado en evidencia (v2), preparando el camino para tecnicas avanzadas de mitigacion de alucinaciones en la siguiente fase.
