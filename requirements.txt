@@ -13,5 +13,8 @@ faiss-cpu
 # Fase 5
 json
 pathlib
-
+# LLM
 hf_xet
+# UI
+streamlit
+torch
