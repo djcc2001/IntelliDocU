@@ -1,63 +1,166 @@
 ==================================================
-IntelliDocU – Evaluación y Métricas
+Fase 9 – Evaluación y Métricas
 ==================================================
 
-Archivo: src/common/evaluation/metrics.py
-Propósito:
-    Contiene funciones para evaluar el desempeño de las versiones del sistema IntelliDocU
-    (v1_baseline, v2_rag_basic, v3_rag_advanced) sobre un dataset de preguntas/respuestas.
+Módulo:
+    src/common/evaluation/
 
-Funciones incluidas:
+Archivos incluidos:
+    - metrics.py
+    - evaluate.py
+    - evaluate_all.py
+
+==================================================
+1. Archivo: metrics.py
+==================================================
+
+Propósito:
+    Define las métricas utilizadas para evaluar el desempeño de las distintas
+    versiones experimentales del sistema IntelliDocU sobre un conjunto de
+    preguntas y respuestas de referencia.
+
 --------------------------------------------------
+Funciones implementadas
+--------------------------------------------------
+
 1. exact_match(prediction, reference)
-    - Retorna 1 si la predicción coincide exactamente con la referencia.
-    - Ignora mayúsculas y espacios extra.
-    - Ejemplo:
-        exact_match("SparseSwaps", "sparseSwaps") -> 1
 
-2. f1_score(prediction, reference)
-    - Calcula la F1 entre tokens de predicción y referencia.
-    - Permite medir similitud parcial cuando no hay coincidencia exacta.
-    - Ejemplo:
-        f1_score("SparseSwaps algorithm", "SparseSwaps") -> 0.6667
+    - Retorna 1 si la respuesta generada coincide exactamente con la
+      respuesta de referencia.
+    - La comparación ignora diferencias de mayúsculas y espacios extra.
+    - Es una métrica estricta que solo contabiliza coincidencias exactas.
 
-3. abstention_accuracy(predictions, references, abstention_token="NO_ANSWER")
-    - Mide cuántas veces el sistema se abstuvo correctamente.
-    - Útil para la versión v3_rag_advanced donde se implementa abstención.
-    - Ejemplo:
-        abstention_accuracy(["NO_ANSWER", "SparseSwaps"], ["NO_ANSWER", "SparseSwaps"]) -> 1.0
+    Ejemplo:
+        exact_match("SparseSwaps", "sparseSwaps") → 1
+
 
 --------------------------------------------------
-Script de evaluación: evaluate.py
+2. f1_score(prediction, reference)
+
+    - Calcula la métrica F1 a nivel de tokens entre la predicción y la referencia.
+    - Permite medir similitud parcial cuando la respuesta no coincide
+      exactamente.
+    - Es útil para evaluar respuestas parcialmente correctas.
+
+    Ejemplo:
+        f1_score("SparseSwaps algorithm", "SparseSwaps") → 0.6667
+
+
+--------------------------------------------------
+3. abstention_accuracy(predictions, references,
+   abstention_token="It is not mentioned in the document.")
+
+    - Mide la precisión de abstención del sistema.
+    - Una abstención se considera correcta cuando:
+        • La respuesta de referencia es exactamente el token de abstención.
+        • La respuesta generada también es exactamente el token de abstención.
+    - Esta métrica es especialmente relevante para versiones RAG que
+      incorporan mecanismos explícitos de abstención ante preguntas imposibles.
+
+==================================================
+2. Archivo: evaluate.py
+==================================================
+
 Propósito:
-    Permite evaluar un conjunto de predicciones frente a las respuestas correctas
-    usando las métricas exact_match, F1 y abstention_accuracy.
+    Evalúa un único archivo de predicciones frente a un archivo de respuestas
+    correctas, calculando las métricas:
+        - Exact Match
+        - F1 Score
+        - Abstention Accuracy
 
 Uso:
-    v1_baseline:
-    python src/common/evaluation/evaluate.py --pred_file results/v1_baseline/baseline_answers.json --reference_file data/questions/answers.json
+    python src/common/evaluation/evaluate.py \
+        --pred_file results/model_answers.json \
+        --reference_file data/questions/answers.json
 
-    v2_baseline:
-    python src/common/evaluation/evaluate.py --pred_file results/v2_rag_basic/rag_basic_answers.json --reference_file data/questions/answers.json
-    
-    v1_baseline:
-    python src/common/evaluation/evaluate.py --pred_file results/v3_rag_advanced/rag_advanced_answers.json --reference_file data/questions/answers.json
-    
-Formato de los archivos JSON:
-    - Lista de strings, cada string es una respuesta o predicción.
-    - La posición en la lista corresponde a la pregunta en el dataset.
-    Ejemplo:
-        ["SparseSwaps is a graph algorithm.", "NO_ANSWER", ...]
+Salida:
+    - Exact Match promedio
+    - F1 Score promedio
+    - Abstention Accuracy
 
-Resultados entregados:
-    - Exact Match (EM): proporción de respuestas que coinciden exactamente con la referencia.
-    - F1 Score: promedio F1 token a token entre predicción y referencia.
-    - Abstention Accuracy: proporción de abstenciones correctas en v3.
 
-Notas importantes:
---------------------------------------------------
-- El LLM NO se entrena con este dataset. Las métricas solo evalúan la capacidad
-  de recuperación y generación de respuestas sobre el contenido de los PDFs.
-- El script es compatible con todas las versiones del sistema (v1, v2, v3).
-- Permite comparativas directas entre versiones para mostrar mejoras en grounding,
-  citación y abstención.
+==================================================
+3. Archivo: evaluate_all.py
+==================================================
+
+Propósito:
+    Permite evaluar múltiples modelos o configuraciones en una sola ejecución,
+    mostrando una tabla comparativa de métricas.
+
+Uso:
+    python src/common/evaluation/evaluate_all.py \
+        --refs data/questions/answers.json \
+        --preds \
+            results/v1_baseline/baseline_answers.json \
+            results/v2_rag_basic/rag_basic_answers.json \
+            results/v3_rag_advanced/rag_advanced_answers.json
+
+Salida:
+    Tabla comparativa con:
+        - Nombre del modelo (derivado del nombre del archivo)
+        - Exact Match
+        - F1 Score
+        - Abstention Accuracy
+
+==================================================
+4. Formato de los archivos JSON
+==================================================
+
+Cada archivo de predicciones o referencias contiene una lista ordenada de
+diccionarios. La posición de cada elemento corresponde a la misma pregunta
+en el dataset.
+
+Estructura de cada elemento:
+    {
+        "question_id": str,
+        "doc_id": str,
+        "question": str,
+        "type": str,
+        "answer": str
+    }
+
+Ejemplo:
+[
+  {
+    "question_id": "q1",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What is SparseSwaps?",
+    "type": "fact",
+    "answer": "SparseSwaps is a graph algorithm."
+  },
+  {
+    "question_id": "q2",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "Does the paper mention quantum computing?",
+    "type": "impossible",
+    "answer": "It is not mentioned in the document."
+  }
+]
+
+==================================================
+5. Métricas reportadas
+==================================================
+
+- Exact Match (EM):
+    Proporción de respuestas generadas que coinciden exactamente con la
+    referencia.
+
+- F1 Score:
+    Promedio de la métrica F1 calculada a nivel de tokens entre predicción
+    y referencia.
+
+- Abstention Accuracy:
+    Proporción de preguntas imposibles en las que el sistema se abstuvo
+    correctamente utilizando el token de abstención definido.
+
+==================================================
+6. Consideraciones importantes
+==================================================
+
+- El modelo de lenguaje no es entrenado con este dataset.
+- Las métricas evalúan exclusivamente la calidad de recuperación de contexto,
+  grounding y generación de respuestas.
+- Los scripts de evaluación son independientes del modelo utilizado y
+  permiten comparaciones directas entre distintas versiones del sistema.
+- La incorporación de abstención mejora la robustez del sistema ante
+  preguntas sin respuesta en los documentos.

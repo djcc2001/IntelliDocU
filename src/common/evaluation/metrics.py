@@ -22,14 +22,16 @@ def f1_score(prediction: str, reference: str) -> float:
         return 0.0
     return 2 * precision * recall / (precision + recall)
 
-def abstention_accuracy(predictions: list, references: list, abstention_token="NO_ANSWER") -> float:
+def abstention_accuracy(predictions: list, references: list, abstention_token="It is not mentioned in the document.") -> float:
     """
-    Calcula la precisión de abstención:
-    Cuántas veces el sistema se abstuvo correctamente (cuando no hay respuesta).
+    Precisión de abstención: cuántas veces el sistema se abstuvo correctamente.
     """
     correct = 0
     total = len(predictions)
     for pred, ref in zip(predictions, references):
-        if ref == abstention_token and pred == abstention_token:
+        pred_answer = pred.get("answer", "").strip().lower()
+        ref_answer = ref.get("answer", "").strip().lower()
+        if ref_answer == abstention_token.lower() and pred_answer == abstention_token.lower():
             correct += 1
     return correct / total
+
