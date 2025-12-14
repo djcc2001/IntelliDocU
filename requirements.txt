@@ -13,3 +13,5 @@ faiss-cpu
 # Fase 5
 json
 pathlib
+
+hf_xet

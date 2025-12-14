@@ -1,71 +1,100 @@
-FASE 6 – v1_baseline (Modelo sin Recuperacion)
+FASE 6 – v1_baseline (Modelo sin Recuperación)
 ---------------------------------------------
 
 El objetivo de esta fase fue implementar y evaluar un sistema base de
-preguntas y respuestas sobre documentos academicos, sin utilizar ningun
-mecanismo de recuperacion de informacion. Esta version, denominada
-v1_baseline, sirve como linea base para comparar el impacto de los
-sistemas RAG que se implementaran en fases posteriores.
+preguntas y respuestas sobre documentos académicos, sin utilizar ningún
+mecanismo de recuperación de información. Esta versión, denominada
+v1_baseline, sirve como línea base para comparar el impacto de los
+sistemas RAG que se implementarán en fases posteriores.
 
-En v1_baseline, el modelo de lenguaje recibe unicamente la pregunta del
+En v1_baseline, el modelo de lenguaje recibe únicamente la pregunta del
 usuario, sin acceso al contenido de los documentos PDF ni a fragmentos
-extraidos previamente. Las respuestas se generan exclusivamente a partir
-del conocimiento interno del modelo, sin ningun tipo de evidencia
+extraídos previamente. Las respuestas se generan exclusivamente a partir
+del conocimiento interno del modelo, sin ningún tipo de evidencia
 documental.
 
 ==================================================
-1. Implementacion del sistema baseline
+1. Implementación del sistema baseline
 ==================================================
 
-Se creo el modulo:
+Se creó el módulo:
     src/v1_baseline/
 
-Dentro de este modulo se implemento un script que:
+Dentro de este módulo se implementó un sistema que:
     - recibe una pregunta en lenguaje natural,
-    - construye un prompt minimo sin contexto externo,
+    - construye un prompt mínimo sin contexto externo,
     - genera una respuesta directamente desde el modelo de lenguaje.
 
-No se utiliza el indice FAISS, ni embeddings, ni fragmentos de texto.
-El sistema no tiene conocimiento explicito de los documentos del dataset.
+El sistema utiliza el modelo de lenguaje Flan-T5
+(google/flan-t5-base) como modelo base para la generación de respuestas.
+
+El prompt está compuesto por:
+    - una instrucción general al modelo, que define el rol de asistente
+      académico,
+    - la pregunta del usuario seguida de un marcador de respuesta.
+
+No se incluyen reglas explícitas de verificación, citación de fuentes ni
+mecanismos de abstención ante preguntas no respondibles.
+
+No se utiliza el índice FAISS, ni embeddings, ni fragmentos de texto.
+El sistema no tiene conocimiento explícito de los documentos del dataset.
+
+Para reducir la variabilidad en la generación, se fija una semilla
+aleatoria, permitiendo una reproducibilidad parcial de los resultados.
 
 ==================================================
-2. Evaluacion sobre el dataset de preguntas
+2. Evaluación sobre el dataset de preguntas
 ==================================================
 
-Ejecución: python src/v1_baseline/run_baseline_batch.py
+Ejecución:
+    python -m src.v1_baseline.run_baseline_eval
 
-El sistema v1_baseline fue evaluado utilizando preguntas asociadas a los
-documentos del dataset, incluyendo:
+El sistema v1_baseline fue evaluado utilizando el conjunto de preguntas
+asociadas a los documentos del dataset, incluyendo:
     - preguntas factuales (respondibles desde el documento),
     - preguntas imposibles (no respondibles desde el documento).
 
-Las respuestas generadas fueron almacenadas en formato JSON para su
-posterior analisis y comparacion con otras versiones del sistema.
+Para cada pregunta, el sistema genera una respuesta sin acceso al
+documento correspondiente. Las respuestas producidas se almacenan en un
+archivo JSON que incluye, para cada entrada:
+    - identificador de la pregunta,
+    - identificador del documento asociado,
+    - texto de la pregunta,
+    - tipo de pregunta,
+    - respuesta generada por el modelo.
+
+Estos resultados se utilizan posteriormente para el análisis comparativo
+con versiones más avanzadas del sistema.
 
 ==================================================
 3. Resultados observados
 ==================================================
 
 Los resultados muestran que el modelo:
-    - responde todas las preguntas, incluso aquellas que no pueden ser
-      respondidas desde el documento,
-    - genera respuestas plausibles pero no verificadas,
-    - no distingue entre preguntas factuales e imposibles,
-    - puede incurrir en alucinaciones al afirmar informacion inexistente.
+    - genera una respuesta para todas las preguntas evaluadas,
+    - responde tanto a preguntas factuales como a preguntas imposibles,
+    - produce respuestas plausibles pero no verificadas,
+    - no distingue entre preguntas respondibles y no respondibles,
+    - puede incurrir en alucinaciones al afirmar información inexistente.
 
-En particular, ante preguntas imposibles, el modelo produce respuestas
-incorrectas en lugar de abstenerse.
+En particular, ante preguntas imposibles, el modelo no se abstiene, sino
+que genera respuestas incorrectas o especulativas, presentadas con un
+alto grado de confianza.
 
 ==================================================
 4. Conclusiones de la fase
 ==================================================
 
 Esta fase evidencia claramente las limitaciones de un modelo de lenguaje
-sin acceso a informacion documental. Los resultados justifican la
-necesidad de incorporar mecanismos de recuperacion de contexto (RAG),
-citado de evidencia y abstencion, los cuales se abordaran en las
-siguientes fases del proyecto.
+sin acceso a información documental ni mecanismos de control. Si bien el
+sistema es capaz de producir respuestas lingüísticamente coherentes, no
+puede garantizar su corrección ni su fundamentación en los documentos
+fuente.
 
-El sistema v1_baseline se utilizara como referencia cuantitativa y
-cualitativa para comparar el desempeno de las versiones v2_rag_basic y
+Los resultados justifican la necesidad de incorporar mecanismos de
+recuperación de contexto (RAG), citación de evidencia y estrategias de
+abstención, los cuales se abordarán en las siguientes fases del proyecto.
+
+El sistema v1_baseline se utiliza como referencia cuantitativa y
+cualitativa para comparar el desempeño de las versiones v2_rag_basic y
 v3_rag_advanced.

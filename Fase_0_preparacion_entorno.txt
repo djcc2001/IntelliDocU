@@ -74,17 +74,7 @@ Para desactivar:
 4. INSTALAR DEPENDENCIAS INICIALES
 ==================================================
 
-El archivo requirements.txt contiene las librerías necesarias para la Fase 1.
-
-Contenido recomendado:
-
-  pymupdf          # extracción de texto PDF
-  pytesseract      # OCR
-  Pillow           # soporte para imágenes
-  numpy            # operaciones numéricas
-  pandas           # manejo de datasets
-  python-dotenv    # cargar variables de entorno
-  tqdm             # barras de progreso
+El archivo requirements.txt contiene las librerías necesarias.
 
 Para instalarlas:
 

@@ -1,0 +1,63 @@
+==================================================
+IntelliDocU – Evaluación y Métricas
+==================================================
+
+Archivo: src/common/evaluation/metrics.py
+Propósito:
+    Contiene funciones para evaluar el desempeño de las versiones del sistema IntelliDocU
+    (v1_baseline, v2_rag_basic, v3_rag_advanced) sobre un dataset de preguntas/respuestas.
+
+Funciones incluidas:
+--------------------------------------------------
+1. exact_match(prediction, reference)
+    - Retorna 1 si la predicción coincide exactamente con la referencia.
+    - Ignora mayúsculas y espacios extra.
+    - Ejemplo:
+        exact_match("SparseSwaps", "sparseSwaps") -> 1
+
+2. f1_score(prediction, reference)
+    - Calcula la F1 entre tokens de predicción y referencia.
+    - Permite medir similitud parcial cuando no hay coincidencia exacta.
+    - Ejemplo:
+        f1_score("SparseSwaps algorithm", "SparseSwaps") -> 0.6667
+
+3. abstention_accuracy(predictions, references, abstention_token="NO_ANSWER")
+    - Mide cuántas veces el sistema se abstuvo correctamente.
+    - Útil para la versión v3_rag_advanced donde se implementa abstención.
+    - Ejemplo:
+        abstention_accuracy(["NO_ANSWER", "SparseSwaps"], ["NO_ANSWER", "SparseSwaps"]) -> 1.0
+
+--------------------------------------------------
+Script de evaluación: evaluate.py
+Propósito:
+    Permite evaluar un conjunto de predicciones frente a las respuestas correctas
+    usando las métricas exact_match, F1 y abstention_accuracy.
+
+Uso:
+    v1_baseline:
+    python src/common/evaluation/evaluate.py --pred_file results/v1_baseline/baseline_answers.json --reference_file data/questions/answers.json
+
+    v2_baseline:
+    python src/common/evaluation/evaluate.py --pred_file results/v2_rag_basic/rag_basic_answers.json --reference_file data/questions/answers.json
+    
+    v1_baseline:
+    python src/common/evaluation/evaluate.py --pred_file results/v3_rag_advanced/rag_advanced_answers.json --reference_file data/questions/answers.json
+    
+Formato de los archivos JSON:
+    - Lista de strings, cada string es una respuesta o predicción.
+    - La posición en la lista corresponde a la pregunta en el dataset.
+    Ejemplo:
+        ["SparseSwaps is a graph algorithm.", "NO_ANSWER", ...]
+
+Resultados entregados:
+    - Exact Match (EM): proporción de respuestas que coinciden exactamente con la referencia.
+    - F1 Score: promedio F1 token a token entre predicción y referencia.
+    - Abstention Accuracy: proporción de abstenciones correctas en v3.
+
+Notas importantes:
+--------------------------------------------------
+- El LLM NO se entrena con este dataset. Las métricas solo evalúan la capacidad
+  de recuperación y generación de respuestas sobre el contenido de los PDFs.
+- El script es compatible con todas las versiones del sistema (v1, v2, v3).
+- Permite comparativas directas entre versiones para mostrar mejoras en grounding,
+  citación y abstención.

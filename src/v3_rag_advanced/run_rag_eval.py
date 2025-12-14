@@ -1,88 +1,104 @@
+# src/v3_rag_advanced/run_rag_eval.py
 import json
 from pathlib import Path
-
 from src.common.retriever.retriever import Retriever
-from src.common.llm.simple_llm import SimpleLLM
+from src.common.llm.flan_t5_llm import FlanT5LLM
+from src.v3_rag_advanced.abstention import debe_abstener
+from src.v3_rag_advanced.context_builder import build_limited_context
 
 
 # =============================
-# Configuracion
+# Configuración
 # =============================
 QUESTIONS_PATH = Path("data/questions/questions.json")
 OUTPUT_PATH = Path("results/v3_rag_advanced/rag_advanced_answers.json")
-
-K = 5
-MIN_FRAGMENTS = 1
+MAX_CONTEXT_CHARS = 2000         # máximo de caracteres del contexto
+TOP_K = 10                       # cantidad de fragmentos a recuperar
+MAX_FRAGMENTS = 10               # cantidad máxima de fragmentos a incluir en el contexto
+SCORE_MINIMO_ABSTENCION = 0.15  # score mínimo para abstenerse
 
 
 # =============================
-# Inicializacion
+# Funciones de prompt
 # =============================
-retriever = Retriever()
-llm = SimpleLLM()
+def build_prompt_literal(fragmentos):
+    """Extrae literal los fragmentos importantes para mostrar al LLM."""
+    textos = []
+    for f in fragmentos:
+        # Incluimos doc_id, página y frag_id para la generación de citas
+        textos.append(f"[doc={f['doc_id']}, p={f.get('page','?')}, frag={f['frag_id']}] {f['text']}")
+    return "\n\n".join(textos)
 
+def build_prompt_summary(literal_context, question):
+    """Prompt para generar explicación resumida basada solo en los fragmentos literales."""
+    return (
+        "You are an expert academic assistant.\n"
+        "Instructions:\n"
+        "1. Using ONLY the provided context, generate a clear and concise explanation answering the question.\n"
+        "2. Do NOT invent or add information not in the context.\n"
+        "3. Include citations in the format [cita: doc=DOC_ID, p=PAGE, frag=FRAG_ID] for any quoted info.\n"
+        "4. Keep the answer readable, in 2-4 sentences if possible.\n\n"
+        f"Context:\n{literal_context}\n\n"
+        f"Question:\n{question}\n\n"
+        "Answer:\n"
+    )
+
+def agregar_citas(respuesta, fragmentos_usados):
+    """Agrega todas las citas de los fragmentos usados al final de la respuesta."""
+    if respuesta == "It is not mentioned in the document.":
+        return respuesta  # No agregamos citas si es abstención
+    citas = []
+    for f in fragmentos_usados:
+        citas.append(f"[cita: doc={f['doc_id']}, p={f.get('page','?')}, frag={f['frag_id']}]")
+    if citas:
+        return f"{respuesta} {' '.join(citas)}"
+    return respuesta
 
 def main():
+    retriever = Retriever()
+    llm = FlanT5LLM()
+
     with open(QUESTIONS_PATH, "r", encoding="utf-8") as f:
         questions = json.load(f)
 
     results = []
 
     for q in questions:
-        question_text = q["question"]
+        pregunta = q["question"]
 
-        fragments = retriever.retrieve(question_text, k=K)
+        # 1. Recuperar fragmentos
+        fragmentos = retriever.retrieve(pregunta, k=TOP_K)
+        # Construir contexto limitado
+        contexto, usados = build_limited_context(fragmentos, max_fragments=MAX_FRAGMENTS)
 
-        # =============================
-        # Regla de abstencion
-        # =============================
-        if len(fragments) < MIN_FRAGMENTS:
-            answer = "No se encontro informacion suficiente en el PDF para responder esta pregunta."
+        # 2. Abstención si no hay suficiente info
+        if debe_abstener(pregunta, usados, score_minimo=SCORE_MINIMO_ABSTENCION):
+            respuesta = "It is not mentioned in the document."
         else:
-            context = ""
-            for i, frag in enumerate(fragments, start=1):
-                context += (
-                    f"[FRAGMENT {i}] "
-                    f"(doc:{frag['doc_id']}, page:{frag['page']}, frag:{frag['frag_id']}):\n"
-                    f"{frag['text']}\n\n"
-                )
+            # 1) Extraer literalmente los fragmentos
+            literal_context = build_prompt_literal(usados)
 
-            prompt = f"""
-You are an assistant that answers questions using ONLY the provided context.
-Each factual statement MUST include a citation in the format:
-[cita: doc=DOC_ID, p=PAGE, frag=FRAG_ID]
-
-If the answer is not fully supported by the context, respond with:
-No se encontro informacion suficiente en el PDF para responder esta pregunta.
-
-Context:
-{context}
-
-Question:
-{question_text}
-
-Answer:
-"""
-            answer = llm.generate(prompt).strip()
-
-            # Seguridad extra: si el modelo ignora las reglas
-            if "cita:" not in answer:
-                answer = "No se encontro informacion suficiente en el PDF para responder esta pregunta."
-
+            # 2) Generar explicación resumida basada solo en esos fragmentos
+            prompt = build_prompt_summary(literal_context, pregunta)
+            respuesta = llm.generate(prompt).strip()
+            # 3) Agregar citas de todos los fragmentos usados
+            respuesta = agregar_citas(respuesta, usados)
+        
+        # 4. Guardar resultado
         results.append({
             "question_id": q["id"],
             "doc_id": q["doc_id"],
-            "question": q["question"],
+            "question": pregunta,
             "type": q["type"],
-            "answer": answer
+            "answer": respuesta
         })
 
+    # 5. Guardar todo en archivo JSON
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
     print("Resultados de RAG advanced guardados correctamente.")
-
 
 if __name__ == "__main__":
     main()

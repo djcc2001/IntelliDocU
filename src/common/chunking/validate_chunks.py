@@ -1,17 +1,16 @@
 import json
 from pathlib import Path
-from collections import defaultdict
 from statistics import mean
 
 FRAGMENTS_DIR = Path("data/fragments")
 
-MIN_TOKENS = 100
-MAX_TOKENS = 700
-
+# Deben coincidir con el chunker
+MIN_TOKENS = 50
+MAX_TOKENS = 512
 
 def validate_file(path):
     """
-    Valida un archivo de fragments y devuelve estadisticas
+    Valida un archivo de fragments y devuelve estadísticas
     """
     token_counts = []
     empty_chunks = 0
@@ -35,42 +34,37 @@ def validate_file(path):
         "avg_tokens": round(mean(token_counts), 2) if token_counts else 0
     }
 
-
 def main():
     files = list(FRAGMENTS_DIR.glob("*_fragments.jsonl"))
-
     if not files:
         print("No se encontraron archivos de fragments")
         return
 
-    global_stats = []
-
-    print("\n=== VALIDACION DE CHUNKS ===\n")
+    print("\n=== VALIDACIÓN DE CHUNKS ===\n")
 
     for file_path in files:
         doc_id = file_path.stem.replace("_fragments", "")
         stats = validate_file(file_path)
 
-        global_stats.append(stats)
-
         print(f"Documento: {doc_id}")
         print(f"  Total chunks : {stats['total_chunks']}")
-        print(f"  Chunks vacios: {stats['empty_chunks']}")
+        print(f"  Chunks vacíos: {stats['empty_chunks']}")
         print(f"  Tokens min  : {stats['min_tokens']}")
         print(f"  Tokens max  : {stats['max_tokens']}")
-        print(f"  Tokens prom : {stats['avg_tokens']}\n")
+        print(f"  Tokens prom : {stats['avg_tokens']}")
 
         if stats["empty_chunks"] > 0:
-            print("  ADVERTENCIA: existen chunks vacios\n")
+            print("  ADVERTENCIA: existen chunks vacíos")
 
         if stats["min_tokens"] < MIN_TOKENS:
-            print("  Nota: algunos chunks son pequenos\n")
+            print("  Nota: existen chunks pequeños")
 
         if stats["max_tokens"] > MAX_TOKENS:
-            print("  Nota: algunos chunks son grandes\n")
+            print("  Nota: existen chunks más grandes de lo esperado")
 
-    print("=== FIN VALIDACION ===")
+        print()
 
+    print("=== FIN VALIDACIÓN ===")
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@ Extracción y Limpieza del Texto - FASE 2
 Esta fase tuvo como objetivo convertir los documentos académicos en formato PDF, previamente organizados en la Fase 1, en texto estructurado y limpio, listo para ser utilizado en las siguientes etapas del proyecto IntelliDocU, especialmente chunking, recuperación aumentada (RAG) y verificación de evidencia. El resultado final es un conjunto de archivos de texto por página, normalizados y correctamente documentados.
 
 ==================================================
-Objetivo de la Fase 2
+1. Objetivo de la Fase 2
 ==================================================
 
 El objetivo principal de esta fase fue:
@@ -11,106 +11,133 @@ El objetivo principal de esta fase fue:
 - extraer el texto completo de cada PDF del dataset,
 - conservar la estructura por páginas,
 - limpiar el texto eliminando ruido típico de PDFs,
+- asignar una sección semántica a cada fragmento de texto,
 - generar archivos intermedios reutilizables,
 - actualizar los metadatos del dataset con información del proceso de extracción.
 
-
-Esta fase es fundamental para garantizar que el sistema trabaje con información textual confiable y bien estructurada.
+Esta fase es fundamental para garantizar que el sistema trabaje con información textual confiable, consistente y bien estructurada.
 
 ==================================================
 2. Organización de carpetas
+==================================================
 
 Se crearon los siguientes directorios dentro del proyecto:
+
     IntelliDocU/data/extracted/
     IntelliDocU/data/preprocessed/
     IntelliDocU/src/common/extract/
 
 Su propósito es el siguiente:
 
-- extracted/: almacena el texto crudo extraído directamente de los PDFs.
-- preprocessed/: almacena el texto limpio y normalizado.
-- extract/: contiene el código reutilizable para extracción y limpieza.
+- extracted/: almacena el texto crudo extraído directamente de los PDFs, organizado por páginas.
+- preprocessed/: almacena el texto limpio, normalizado y enriquecido con información de sección.
+- extract/: contiene el código modular y reutilizable para la extracción, limpieza y validación del texto.
 
 ==================================================
 3. Extracción de texto desde PDFs
+==================================================
 
-Ejecutar: python src/common/extract/extractor.py
+Ejecutar:
+    python src/common/extract/extractor.py
 
 La extracción de texto se realizó utilizando la librería PyMuPDF (fitz), elegida por su velocidad y precisión en documentos académicos digitales.
+
 Para cada PDF:
     - se abrió el documento página por página,
-    - se extrajo el texto de cada página,
-    - se almacenó cada página como una entrada independiente,
-    - se generó un archivo .jsonl por cada PDF.
+    - se extrajo el texto de cada página de forma independiente,
+    - se conservó el número de página y el identificador del documento,
+    - se generó un archivo .jsonl por cada PDF procesado.
 
 El formato JSONL permite:
     - procesar grandes volúmenes de texto de manera eficiente,
     - mantener una línea por página,
-    - facilitar etapas posteriores como chunking y citación.
+    - facilitar etapas posteriores como chunking, citación y recuperación aumentada (RAG).
 
-Cada registro contiene:
-    - identificador del PDF,
-    - número de página,
-    - texto original extraído.
+Cada registro generado contiene:
+    - identificador del PDF (pdf_id),
+    - número de página (page),
+    - texto original extraído (text).
 
 ==================================================
 4. Limpieza y normalización del texto
+==================================================
 
-Ejecutar: python src/common/extract/cleaner.py
+Ejecutar:
+    python src/common/extract/cleaner.py
 
-El texto extraído desde los PDFs contiene ruido típico de documentos científicos. Para corregirlo, se aplicaron las siguientes operaciones de limpieza:
+El texto extraído desde los PDFs contiene ruido típico de documentos científicos debido al formato de columnas, saltos de línea y partición artificial de palabras. Para corregir estos problemas, se aplicaron las siguientes operaciones de limpieza:
+
     - unión de palabras cortadas por guiones al final de línea,
     - eliminación de saltos de línea innecesarios,
     - normalización de espacios múltiples,
-    - eliminación de caracteres irrelevantes.
+    - preservación del contenido textual sin alteraciones semánticas.
 
-El resultado es un texto continuo, legible y preparado para ser dividido en fragmentos (chunks).
+Adicionalmente, se realizó la asignación de una sección semántica a cada página del documento. Esta asignación se basa en la detección de palabras clave mediante expresiones regulares (por ejemplo: "abstract", "introduction", "method", "results", "conclusion", "appendix").
+
+El algoritmo analiza los primeros caracteres del texto de cada página. Cuando se detecta una nueva sección, esta se establece como sección activa y se mantiene para las páginas siguientes hasta que se identifica otra sección. En caso de no detectarse ninguna, el texto se clasifica como "unknown".
 
 Cada registro limpio conserva:
-    - texto original,
-    - texto limpio (clean_text),
-    - número de página y referencia al PDF.
+    - texto original extraído,
+    - texto limpio normalizado (clean_text),
+    - número de página y referencia al PDF,
+    - sección asignada (section).
+
+Limitaciones:
+    - no se eliminan encabezados ni pies de página,
+    - no se detectan figuras, tablas ni referencias bibliográficas,
+    - no se aplica OCR,
+    - no se corrigen errores semánticos del texto extraído.
 
 ==================================================
 5. Actualización del archivo de metadatos
+==================================================
 
-Ejecutar: python src/common/extract/update_metadata.py
+Ejecutar:
+    python src/common/extract/update_metadata.py
 
 Una vez finalizada la extracción y limpieza, se actualizó automáticamente el archivo:
+
     IntelliDocU/data/pdf_metadata.csv
 
 Se añadieron las siguientes columnas:
+
     - cleaned_length: número total de caracteres del texto limpio por PDF,
-    - extraction_method: método utilizado para la extracción (pymupdf),
+    - extraction_method: método utilizado para la extracción del texto (pymupdf),
     - ocr_applied: indicador de uso de OCR (False para todos los documentos actuales).
 
 Esta información permite:
     - cuantificar el contenido textual disponible,
     - documentar el método de procesamiento,
-    - facilitar la reproducibilidad del experimento.
+    - mejorar la trazabilidad y reproducibilidad del proyecto.
 
 ==================================================
 6. Validación de la Fase 2
+==================================================
 
-Ejecutar: python src/common/extract/test_fase2.py
+Ejecutar:
+    python src/common/extract/test_fase2.py
 
 La correcta ejecución de esta fase se validó mediante:
+
     - ejecución exitosa de los scripts de extracción y limpieza,
-    - verificación de archivos generados en extracted/ y preprocessed/,
+    - verificación de la generación de archivos en extracted/ y preprocessed/,
     - inspección visual del texto limpio,
-    - comprobación de columnas añadidas en el archivo CSV,
+    - comprobación de las columnas añadidas en el archivo de metadatos CSV,
     - ejecución de un script de prueba automatizado.
 
-La validación confirmó que todos los PDFs fueron procesados correctamente y que el texto resultante es consistente y utilizable.
+El script de prueba valida la integridad mínima de los datos generados, asegurando la presencia de los campos esperados y un volumen de texto razonable por página.
 
 ==================================================
 7. Resultado final de la Fase 2
+==================================================
 
 Al finalizar la Fase 2, el proyecto cuenta con:
+
     - texto estructurado por página para cada PDF,
-    - texto limpio y normalizado,
+    - texto limpio y normalizado listo para chunking,
+    - asignación de secciones semánticas a cada fragmento,
     - metadatos actualizados y cuantificados,
-    - base sólida para aplicar chunking y RAG,
-    - código modular reutilizable para futuras versiones (v1, v2, v3).
+    - una base sólida para aplicar recuperación aumentada (RAG),
+    - código modular y reutilizable para futuras versiones del sistema.
 
 La Fase 2 deja el proyecto completamente preparado para avanzar hacia la Fase 3: Chunking y Preparación para Recuperación Aumentada (RAG).

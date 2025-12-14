@@ -1,4 +1,4 @@
-# Carga del indice FAISS y del mapeo de fragmentos
+# Carga del índice FAISS y del mapeo de fragmentos
 
 import faiss
 import json
@@ -11,11 +11,13 @@ MAPPING_PATH = BASE_DIR / "indices" / "faiss_global" / "mapping.json"
 
 
 def load_faiss_index():
+    """Carga y devuelve el índice FAISS"""
     index = faiss.read_index(str(INDEX_PATH))
     return index
 
 
 def load_mapping():
+    """Carga y devuelve el mapeo de fragmentos"""
     with open(MAPPING_PATH, "r", encoding="utf-8") as f:
         mapping = json.load(f)
     return mapping

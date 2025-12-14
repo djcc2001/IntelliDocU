@@ -1,24 +1,28 @@
-Fase 8: RAG Avanzado con Abstencion y Citacion Obligatoria
-------------------------------------------------------------
+Fase 8: RAG Avanzado con Abstención y Citación Basada en Fragmentos
+-----------------------------------------------------------------
 
-Esta fase tuvo como objetivo implementar y validar la version v3_rag_advanced del sistema IntelliDocU, incorporando mecanismos estrictos de control sobre la generacion de respuestas. En esta etapa se introdujo la citacion obligatoria por fragmento y la capacidad de abstencion del sistema cuando no existe evidencia textual suficiente en los documentos PDF, priorizando la precision y la confiabilidad sobre la cobertura de respuestas.
+Esta fase tuvo como objetivo implementar y validar la versión v3_rag_advanced del sistema IntelliDocU, incorporando mecanismos de control sobre la generación de respuestas mediante abstención explícita y citación basada en los fragmentos recuperados. El enfoque de esta versión prioriza la confiabilidad de las respuestas, evitando la generación de contenido no respaldado por evidencia textual.
 
 ==================================================
 1. Objetivo de la fase
 ==================================================
-El objetivo principal de la Fase 8 fue:
-    - Extender el pipeline RAG basico hacia una version avanzada (v3_rag_advanced).
-    - Forzar que cada afirmacion factual este respaldada por evidencia explicita.
-    - Implementar citacion obligatoria a nivel de documento, pagina y fragmento.
-    - Evitar respuestas cuando la informacion no este claramente contenida en el PDF.
-    - Reducir al minimo las alucinaciones del modelo mediante abstencion controlada.
 
-Esta fase prioriza la confiabilidad del sistema sobre la cantidad de respuestas generadas.
+El objetivo principal de la Fase 8 fue:
+
+    - Extender el pipeline RAG básico hacia una versión avanzada (v3_rag_advanced).
+    - Restringir al modelo a responder únicamente con información presente en los fragmentos recuperados.
+    - Incorporar citación explícita a nivel de documento, página y fragmento.
+    - Implementar una política de abstención cuando no existe evidencia suficiente.
+    - Reducir la generación de respuestas no fundamentadas.
+
+Esta fase prioriza la precisión y la trazabilidad documental sobre la cobertura de respuestas.
 
 ==================================================
 2. Estructura de archivos utilizada
 ==================================================
-Se utilizo la siguiente estructura dentro del proyecto:
+
+La estructura utilizada en esta fase es la siguiente:
+
     IntelliDocU/
       src/
         common/
@@ -26,85 +30,117 @@ Se utilizo la siguiente estructura dentro del proyecto:
             retriever.py
             load_index.py
           llm/
-            simple_llm.py
+            flan_t5_llm.py
         v3_rag_advanced/
-          run_rag_advanced.py
+          abstention.py
+          context_builder.py
+          run_rag.py
+          run_rag_eval.py
 
-La estructura mantiene la reutilizacion de componentes comunes y separa claramente las versiones del pipeline RAG.
-
-==================================================
-3. Construccion del pipeline RAG avanzado (v3)
-==================================================
-En el archivo:
-    src/v3_rag_advanced/run_rag_advanced.py
-
-se implemento el flujo completo del RAG avanzado:
-    1. Recepcion de la pregunta del usuario.
-    2. Recuperacion de fragmentos relevantes mediante FAISS.
-    3. Construccion de un prompt estricto que incluye:
-        - Instrucciones para responder SOLO con la informacion del contexto.
-        - Requerimiento explicito de citacion obligatoria por afirmacion.
-        - Formato de citacion estandar:
-            [cita: doc=DOC_ID, p=PAGE, frag=FRAG_ID]
-        - Regla de abstencion si la informacion no es suficiente.
-    4. Envio del prompt al modelo de lenguaje.
+Los componentes comunes (recuperación y modelo de lenguaje) son reutilizados, mientras que la lógica avanzada del pipeline RAG se encapsula en el módulo v3_rag_advanced.
 
 ==================================================
-4. Politica de abstencion implementada
+3. Construcción del pipeline RAG avanzado (v3)
 ==================================================
-El sistema fue configurado para responder con el mensaje:
-    "No se encontro informacion suficiente en el PDF para responder esta pregunta."
 
-cuando:
-    - El contexto recuperado no contiene una definicion clara.
-    - La informacion esta fragmentada o incompleta.
-    - No es posible construir una respuesta totalmente respaldada por citas.
+El pipeline principal se implementa en el archivo:
 
-Esta politica evita inferencias no verificables y alucinaciones.
+    src/v3_rag_advanced/run_rag.py
+
+El flujo completo del sistema es el siguiente:
+
+    1. Recepción de la pregunta del usuario.
+    2. Recuperación de fragmentos relevantes mediante FAISS.
+    3. Selección de fragmentos con mayor relevancia semántica.
+    4. Evaluación de la política de abstención.
+    5. Construcción de un prompt restrictivo que:
+        - Limita la respuesta exclusivamente al contenido de los fragmentos.
+        - Prohíbe la invención de información no presente en el contexto.
+        - Solicita una respuesta breve y comprensible.
+    6. Generación de la respuesta mediante el modelo Flan-T5.
+    7. Agregado de citas globales correspondientes a los fragmentos utilizados.
 
 ==================================================
-5. Ejecucion del sistema
+4. Política de abstención implementada
 ==================================================
-La ejecucion del sistema se realizo mediante el comando:
-    python -m src.v3_rag_advanced.run_rag_advanced
 
-La pregunta utilizada para validacion fue:
+La política de abstención se define en el archivo:
+
+    src/v3_rag_advanced/abstention.py
+
+El sistema se abstiene de responder y devuelve el mensaje:
+
+    "It is not mentioned in the document."
+
+cuando se cumple alguna de las siguientes condiciones:
+
+    - No se recuperan fragmentos relevantes.
+    - Todos los fragmentos tienen un score inferior al umbral mínimo.
+    - La pregunta está fuera del dominio de los documentos indexados.
+    - La pregunta es demasiado corta o ambigua.
+    - Existe un número insuficiente de fragmentos relevantes.
+
+Este mecanismo evita inferencias no verificables y reduce significativamente el riesgo de alucinaciones.
+
+==================================================
+5. Citación basada en fragmentos
+==================================================
+
+Las respuestas generadas incluyen citación explícita basada en los fragmentos utilizados para construir el contexto.
+
+El formato de citación utilizado es:
+
+    [cita: doc=DOC_ID, p=PAGE, frag=FRAG_ID]
+
+Las citas se agregan de forma global al final de la respuesta y corresponden a todos los fragmentos empleados durante la generación. El sistema no implementa validación automática de citas ni citación por afirmación individual.
+
+==================================================
+6. Ejecución del sistema
+==================================================
+
+Para ejecutar una prueba individual del sistema:
+
+    python -m src.v3_rag_advanced.run_rag
+
+Durante la validación se utilizó la pregunta:
+
     "What is SparseSwaps?"
 
-==================================================
-6. Validacion experimental
-==================================================
-Durante la ejecucion, el sistema:
-    - Recupero fragmentos relevantes del documento
-      arxiv_251210922_sparseswaps.
-    - No genero una respuesta directa.
-    - Activo correctamente la politica de abstencion.
-
-Salida observada:
-    No se encontro informacion suficiente en el PDF para responder esta pregunta.
-
-Este comportamiento confirma que el sistema solo responde cuando existe evidencia explicita y citada.
+En este caso, el sistema activó correctamente la política de abstención al no encontrar evidencia textual suficiente en los fragmentos recuperados.
 
 ==================================================
-7. Resultado de la fase
+7. Evaluación sobre el conjunto de preguntas
 ==================================================
-Al finalizar esta fase se confirmo que:
+
+La evaluación automática se realiza mediante el script:
+
+    python -m src.v3_rag_advanced.run_rag_eval
+
+Este script:
+
+    - Carga un conjunto de preguntas desde un archivo JSON.
+    - Ejecuta el pipeline RAG avanzado para cada pregunta.
+    - Aplica la política de abstención cuando corresponde.
+    - Almacena todas las respuestas generadas en formato JSON.
+
+Los resultados se almacenan en:
+
+    results/v3_rag_advanced/rag_advanced_answers.json
+
+==================================================
+8. Resultados de la fase
+==================================================
+
+Al finalizar esta fase se confirmó que:
+
     - El pipeline RAG avanzado funciona correctamente.
-    - La citacion obligatoria esta correctamente integrada.
-    - El sistema es capaz de abstenerse de responder.
-    - Se elimina el riesgo de respuestas no fundamentadas.
-    - La version v3_rag_advanced es mas conservadora pero mas confiable.
+    - El sistema responde únicamente cuando existe evidencia suficiente.
+    - La abstención se activa de manera consistente.
+    - Las respuestas son más conservadoras pero más confiables.
+    - Se reduce el riesgo de generación de contenido no fundamentado.
 
 ==================================================
-8. Evaluacion sobre el dataset de preguntas
+9. Conclusión
 ==================================================
 
-Ejecución: python -m src.v3_rag_advanced.run_rag_eval
-
-Las respuestas generadas fueron almacenadas en formato JSON para su
-posterior analisis y comparacion con otras versiones del sistema.
-
-==================================================
-9. Conclusion
-==================================================
-La Fase 8 representa un avance clave en el proyecto IntelliDocU, al introducir mecanismos estrictos de control sobre la generacion de respuestas. El sistema deja de priorizar la fluidez del lenguaje y adopta un enfoque centrado en evidencia verificable, citacion explicita y abstencion responsable. Esta fase demuestra un diseno robusto y alineado con principios modernos de IA confiable y explicable, consolidando el sistema como una herramienta orientada a precision y trazabilidad documental.
+La Fase 8 consolida un enfoque de RAG orientado a confiabilidad y trazabilidad documental dentro del sistema IntelliDocU. Mediante la combinación de abstención explícita y citación basada en fragmentos, el sistema prioriza la precisión sobre la cobertura, estableciendo una base sólida para futuras extensiones orientadas a validación automática de citas y control más fino de la generación de respuestas.

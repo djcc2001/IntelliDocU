@@ -8,6 +8,7 @@ with open(archivo, "r", encoding="utf-8") as f:
     linea = json.loads(next(f))
 
 assert "clean_text" in linea
+assert "section" in linea
 assert len(linea["clean_text"]) > 50
 
 print("Fase 2 validada correctamente")
