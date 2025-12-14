@@ -24,20 +24,25 @@ def build_prompt_literal(fragmentos):
 
 def build_prompt_summary(literal_context, question):
     """
-    Prompt para generar explicación entendible pero parcialmente correcta.
-    Se permite que la respuesta no sea completamente exacta.
+    Prompt con control de idioma, comparación explícita y abstención estricta.
     """
     return (
-        "You are an assistant helping to explain AI research papers.\n"
+        "You are an assistant helping to explain research papers.\n"
         "Instructions:\n"
-        "1. Using ONLY the provided context, give a readable explanation answering the question.\n"
-        "2. The explanation can be approximate, may contain minor errors or incomplete info.\n"
-        "3. Do NOT invent entirely new concepts.\n"
-        "4. Keep the answer short and understandable, 2-3 sentences.\n\n"
+        "1. Answer the question using ONLY the provided context.\n"
+        "2. The answer MUST directly address the question and explain the main idea, not copy titles or captions.\n"
+        "3. If the question asks for a comparison, explicitly compare the methods mentioned.\n"
+        "4. The language of the answer MUST be the same as the language of the question.\n"
+        "5. If the context does NOT contain enough information to answer the question, "
+        "reply EXACTLY with: \"It is not mentioned in the document.\"\n"
+        "6. Do NOT guess, infer, or provide approximate explanations when information is missing.\n"
+        "7. If answered, keep the explanation concise (2–3 sentences).\n\n"
         f"Context:\n{literal_context}\n\n"
         f"Question:\n{question}\n\n"
-        "Partial Answer:\n"
+        "Answer:\n"
     )
+
+
 
 def agregar_citas(respuesta, fragmentos_usados):
     """Agrega todas las citas de los fragmentos usados al final de la respuesta."""
@@ -54,7 +59,7 @@ def agregar_citas(respuesta, fragmentos_usados):
 # Ejecución principal
 # =============================
 def main():
-    pregunta = "How does SPARSESWAPS improve pruning for LLMs compared to traditional magnitude pruning methods?"
+    pregunta = "Does the paper propose using a quantum neural network for training?"
     retriever = Retriever()
     llm = FlanT5LLM()
 

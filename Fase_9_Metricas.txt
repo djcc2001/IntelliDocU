@@ -88,12 +88,7 @@ Propósito:
     mostrando una tabla comparativa de métricas.
 
 Uso:
-    python src/common/evaluation/evaluate_all.py \
-        --refs data/questions/answers.json \
-        --preds \
-            results/v1_baseline/baseline_answers.json \
-            results/v2_rag_basic/rag_basic_answers.json \
-            results/v3_rag_advanced/rag_advanced_answers.json
+    python src/common/evaluation/evaluate_all.py --refs data/questions/answers.json --preds results/v1_baseline/baseline_answers.json results/v2_rag_basic/rag_basic_answers.json results/v3_rag_advanced/rag_advanced_answers.json
 
 Salida:
     Tabla comparativa con:

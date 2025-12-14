@@ -22,7 +22,7 @@ def build_prompt_partial_summary(literal_context, question):
     La respuesta puede contener errores o ser incompleta.
     """
     return (
-        "You are an assistant helping to explain AI research papers.\n"
+        "You are an assistant helping to explain research papers.\n"
         "Instructions:\n"
         "1. Using ONLY the provided context, give a readable explanation answering the question.\n"
         "2. The explanation can be approximate, may contain minor errors or incomplete info.\n"

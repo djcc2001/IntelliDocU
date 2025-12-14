@@ -30,14 +30,25 @@ def build_prompt_literal(fragmentos):
     return "\n\n".join(textos)
 
 def build_prompt_summary(literal_context, question):
-    """Prompt para generar explicación resumida basada solo en los fragmentos literales."""
+    """
+    Prompt ajustado para RAG avanzado con:
+    - Grounding estricto
+    - Abstención controlada (no binaria)
+    - Mejora ligera de F1 sin alucinación
+    """
     return (
-        "You are an expert academic assistant.\n"
+        "You are an assistant helping to explain academic research papers.\n"
         "Instructions:\n"
-        "1. Using ONLY the provided context, generate a clear and concise explanation answering the question.\n"
-        "2. Do NOT invent or add information not in the context.\n"
-        "3. Include citations in the format [cita: doc=DOC_ID, p=PAGE, frag=FRAG_ID] for any quoted info.\n"
-        "4. Keep the answer readable, in 2-4 sentences if possible.\n\n"
+        "1. Use ONLY the information explicitly stated in the provided context.\n"
+        "2. If the context contains relevant evidence that partially answers the question, "
+        "give a cautious and factual explanation limited to that evidence.\n"
+        "3. If the context clearly supports a full answer, explain it clearly.\n"
+        "4. If the context contains NO relevant information to answer the question, "
+        "reply EXACTLY with: \"It is not mentioned in the document.\" and nothing else.\n"
+        "5. Do NOT guess, infer beyond the text, or add external knowledge.\n"
+        "6. If the question asks for a comparison, explicitly compare ONLY what is stated.\n"
+        "7. The language of the answer MUST be the same as the language of the question.\n"
+        "8. Keep the answer concise (1–3 sentences).\n\n"
         f"Context:\n{literal_context}\n\n"
         f"Question:\n{question}\n\n"
         "Answer:\n"

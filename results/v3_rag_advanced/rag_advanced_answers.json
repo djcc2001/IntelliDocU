@@ -1,23 +1,1262 @@
 [
   {
     "question_id": "q1",
-    "doc_id": "arxiv_251210922_sparseswaps",
-    "question": "What is SparseSwaps?",
+    "doc_id": "arxiv_251210894_duetsvg",
+    "question": "What is the name of the proposed unified multimodal model for SVG generation?",
     "type": "fact",
-    "answer": "SparseSwaps is a sparsity optimization algorithm for sparsity sparsity. [cita: doc=arxiv_251210922_sparseswaps, p=15, frag=45] [cita: doc=arxiv_251210922_sparseswaps, p=5, frag=14]"
+    "answer": "DuetSVG. [cita: doc=arxiv_251210894_duetsvg, p=12, frag=36] [cita: doc=arxiv_251210894_duetsvg, p=12, frag=37]"
   },
   {
     "question_id": "q2",
-    "doc_id": "arxiv_251210922_sparseswaps",
-    "question": "What problem does SparseSwaps solve?",
+    "doc_id": "arxiv_251210894_duetsvg",
+    "question": "What are the two main stages of training for DuetSVG?",
     "type": "fact",
-    "answer": "SparseSwaps is a method for minimizing the sparsity of a sparse array. It is a warm-start agnostic, nearly hyperparameter-free, and scalable. It consistently reduces per-layer pruning error and improves perplexity and zero-shot accuracy across modern GPT architectures. [cita: doc=arxiv_251210922_sparseswaps, p=5, frag=14] [cita: doc=arxiv_251210922_sparseswaps, p=9, frag=24]"
+    "answer": "Feature Alignment. This stage corresponds to Phase 1 training in LLaVA [30]. Both the vision and language backbones are frozen, and only the MLP connector and language backbone are optimized using an autoregressive loss. The objective is to align visual features with the language embedding space, effectively bridging the two modalities. To maintain training stability, we use only the image–utterance subset of the pretraining data in this stage, postponing exposure to multiimage inputs until later phases. Stage 2: Joint Pretraining. In this stage, the vision backbone remains frozen, while the MLP connector and language backbone are trained jointly on the full mixed-format pretraining dataset, as described in Section 3.1. This allows the model to learn multimodal grounding over diverse input structures. Stage 3: Instruction Fine-tuning. Finally, we fine-tune the model using the mixed instruction dataset, which is a combination of all the instruction samples mentioned in Table 3. This step enables the model to perform various downstream tasks through natural-language prompts. The vision backbone, MLP connector and language backbone are all updated to learn instruction-following [cita: doc=arxiv_251210932_babyvlm_v2, p=13, frag=38] [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=5, frag=14]"
   },
   {
     "question_id": "q3",
+    "doc_id": "arxiv_251210894_duetsvg",
+    "question": "Which base model is DuetSVG initialized from?",
+    "type": "fact",
+    "answer": "OmniSVG-3B. [cita: doc=arxiv_251210894_duetsvg, p=6, frag=17] [cita: doc=arxiv_251210894_duetsvg, p=12, frag=38]"
+  },
+  {
+    "question_id": "q4",
+    "doc_id": "arxiv_251210894_duetsvg",
+    "question": "In which section does the paper describe the \"Image-Guided SVG Resampling\" strategy?",
+    "type": "loc",
+    "answer": "[doc=arxiv_251210894_duetsvg, p=4, frag=10] stage-1 visual. Visual Candidate Selection. We first generate N visual candidates using classifier-free guidance (CFG): zCFG t = zuncond t + zcond t zuncond t (2) where zcond t and zuncond t are the model predictions for image tokens with and without conditioning, respectively, and is the guidance scale. Because image-token sequences are much shorter than SVG-token sequences, sampling N candidate images is relatively efficient. We then score each candidate image using CLIP as the verifier and keep the best one, denoted by Iwith corresponding image tokens z img, which can serve as visual guidance during SVG decoding. Image-Guided SVG Resampling. We continue the SVG token generation from the best image tokens z img. We generate SVG tokens in small chunks with image-guided resampling. More specifically, at each iteration, we generate K S [cita: doc=arxiv_251210894_duetsvg, p=4, frag=10] [cita: doc=arxiv_251210894_duetsvg, p=12, frag=37]"
+  },
+  {
+    "question_id": "q5",
+    "doc_id": "arxiv_251210894_duetsvg",
+    "question": "Which figure illustrates the model architecture of DuetSVG?",
+    "type": "loc",
+    "answer": "The model architecture of DuetSVG is a multimodal model that jointly generates image tokens and corresponding SVG tokens in an end-to-end manner. [cita: doc=arxiv_251210894_duetsvg, p=1, frag=0] [cita: doc=arxiv_251210894_duetsvg, p=7, frag=19]"
+  },
+  {
+    "question_id": "q6",
+    "doc_id": "arxiv_251210894_duetsvg",
+    "question": "Does DuetSVG implement a reinforcement learning module for path optimization?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210365_GPG, p=10, frag=19] [cita: doc=arxiv_251209897_SCOPE, p=16, frag=49]"
+  },
+  {
+    "question_id": "q7",
     "doc_id": "arxiv_251210922_sparseswaps",
-    "question": "Does the paper mention quantum computing?",
+    "question": "What is the full name of the proposed pruning refinement algorithm?",
+    "type": "fact",
+    "answer": "SPARSESWAPS: TRACTABLE LLM PRUNING MASK REFINEMENT AT SCALE Max Zimmer, Christophe Roux, Moritz Wagner, Deborah Hendrych, Sebastian Pokutta Department for AI in Society, Science, and Technology, Zuse Institute Berlin, Germany Institute of Mathematics, Technische Universit at Berlin, Germany zimmer,roux,wagner,hendrych,pokutta@zib.de [cita: doc=arxiv_251210922_sparseswaps, p=3, frag=6] [cita: doc=arxiv_251210922_sparseswaps, p=1, frag=0]"
+  },
+  {
+    "question_id": "q8",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What mathematical matrix (G) is central to the efficient 1-swap evaluation?",
+    "type": "fact",
+    "answer": "Gram matrix G = XXRdindin. [cita: doc=arxiv_251210922_sparseswaps, p=6, frag=15] [cita: doc=arxiv_251210922_sparseswaps, p=6, frag=16]"
+  },
+  {
+    "question_id": "q9",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What is the primary constraint enforced by SparseSwaps to make the problem row-separable?",
+    "type": "fact",
+    "answer": "Matrix cardinality. [cita: doc=arxiv_251210922_sparseswaps, p=3, frag=8] [cita: doc=arxiv_251210922_sparseswaps, p=5, frag=14]"
+  },
+  {
+    "question_id": "q10",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "In which section (number and title) does the paper describe the \"Efficient 1-swap evaluation through cost lookups\"?",
+    "type": "loc",
+    "answer": "2.2 THE SPARSESWAPS ALGORITHM [cita: doc=arxiv_251210922_sparseswaps, p=6, frag=16] [cita: doc=arxiv_251210922_sparseswaps, p=5, frag=14]"
+  },
+  {
+    "question_id": "q11",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "According to Table 2, which model shows the largest perplexity improvement when refining Wanda with SparseSwaps at 60% sparsity?",
+    "type": "loc",
+    "answer": "SparseSwaps. [cita: doc=arxiv_251210922_sparseswaps, p=7, frag=20] [cita: doc=arxiv_251210922_sparseswaps, p=15, frag=45]"
+  },
+  {
+    "question_id": "q12",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "Does the SparseSwaps algorithm require training a new neural network from scratch?",
+    "type": "impossible",
+    "answer": "SparseSwaps is essentially hyperparameter-free, and is nearly hyperparameter-free. It consistently reduces per-layer pruning error and improves perplexity and zero-shot accuracy across modern GPT architectures. Our work is not without limitations. While per-row sparsity is not necessarily detrimental for LLMs, our approach is restricted to that setting and only partially adapts to truly unstructured sparsity; in its current form, the algorithm can handle unstructured sparsity but cannot reallocate sparsity levels across rows. Furthermore, runtime and memory remain non-trivial for large architectures. [cita: doc=arxiv_251210922_sparseswaps, p=9, frag=24] [cita: doc=arxiv_251210922_sparseswaps, p=1, frag=1]"
+  },
+  {
+    "question_id": "q13",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "What is the name of the proposed training-free method for asynchronous LLM reasoning?",
+    "type": "fact",
+    "answer": "AsyncReasoning. [cita: doc=arxiv_251210931_asynchronous_reasoning, p=1, frag=2] [cita: doc=arxiv_251210931_asynchronous_reasoning, p=3, frag=9]"
+  },
+  {
+    "question_id": "q14",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "What is the key mathematical property of Rotary Positional Embeddings (RoPE) exploited by AsyncReasoning?",
+    "type": "fact",
+    "answer": "The key mathematical property of RoPE is that it is a vector based representation of a vector. [cita: doc=arxiv_251210931_asynchronous_reasoning, p=4, frag=13] [cita: doc=arxiv_251209897_SCOPE, p=29, frag=78]"
+  },
+  {
+    "question_id": "q15",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "Which model (name and size) is primarily used for evaluation in the experiments?",
+    "type": "fact",
+    "answer": "LLaMa model. [cita: doc=arxiv_230712057_external_reasoning_v2, p=18, frag=46] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=9, frag=17]"
+  },
+  {
+    "question_id": "q16",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "In which section (number and title) does the paper describe the \"Mode Switching\" mechanism?",
+    "type": "loc",
+    "answer": "The \"Mode Switching\" mechanism. [cita: doc=arxiv_251210365_GPG, p=4, frag=6] [cita: doc=arxiv_251210954_group_diffusion, p=7, frag=18]"
+  },
+  {
+    "question_id": "q17",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "According to Table 1, what is the Time to First Token (TTFT) for the AsyncReasoning (Q-Continue) setup on the MATH-500 benchmark?",
+    "type": "loc",
+    "answer": "The time to first token is the wall time delay until the system generates the first non-thinking token. [cita: doc=arxiv_251210931_asynchronous_reasoning, p=7, frag=20] [cita: doc=arxiv_251210931_asynchronous_reasoning, p=6, frag=19]"
+  },
+  {
+    "question_id": "q18",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "Does the AsyncReasoning method require fine-tuning the base language model on a new dataset of conversational speech?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_230712057_external_reasoning_v2, p=22, frag=53] [cita: doc=arxiv_251210931_asynchronous_reasoning, p=11, frag=38]"
+  },
+  {
+    "question_id": "q19",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "What is BabyVLM-V2?",
+    "type": "fact",
+    "answer": "A comprehensive, extensive, and developmentally plausible framework for studying the objective posed at the beginning of the paper. [cita: doc=arxiv_251210932_babyvlm_v2, p=3, frag=8] [cita: doc=arxiv_251210932_babyvlm_v2, p=2, frag=3]"
+  },
+  {
+    "question_id": "q20",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "What dataset is the pretraining set of BabyVLM-V2 based on?",
+    "type": "fact",
+    "answer": "SAYCam. [cita: doc=arxiv_251210932_babyvlm_v2, p=2, frag=3] [cita: doc=arxiv_251210932_babyvlm_v2, p=9, frag=21]"
+  },
+  {
+    "question_id": "q21",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "What is DevCV Toolbox and how many tasks does it contain?",
+    "type": "fact",
+    "answer": "DevCV Toolbox tasks and their corresponding NIH Baby Toolbox® measures (EF/M stands for Executive Function/Memory). [cita: doc=arxiv_251210932_babyvlm_v2, p=6, frag=13] [cita: doc=arxiv_251210932_babyvlm_v2, p=23, frag=66]"
+  },
+  {
+    "question_id": "q22",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "In which section does the paper compare BabyVLM-V1 and BabyVLM-V2 in a table?",
+    "type": "loc",
+    "answer": "Table 3. DevCV Toolbox tasks and their corresponding NIH Baby Toolbox® measures (EF/M stands for Executive Function/Memory). [cita: doc=arxiv_251210932_babyvlm_v2, p=6, frag=13] [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=17, frag=44]"
+  },
+  {
+    "question_id": "q23",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "Where in the paper is the performance comparison of BabyLLaVA-V2 with GPT-4o on counting tasks shown?",
+    "type": "loc",
+    "answer": "Table 5. [cita: doc=arxiv_251210932_babyvlm_v2, p=8, frag=19] [cita: doc=arxiv_251210932_babyvlm_v2, p=8, frag=20]"
+  },
+  {
+    "question_id": "q24",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "Does BabyVLM-V2 use reinforcement learning to train its vision encoder?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210932_babyvlm_v2, p=2, frag=3] [cita: doc=arxiv_251210932_babyvlm_v2, p=13, frag=37]"
+  },
+  {
+    "question_id": "q25",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "What is the main contribution of Any4D?",
+    "type": "fact",
+    "answer": "Any4D is a transformer that takes flexible multi-modal inputs and outputs a dense metric-scale 4D reconstruction in a single feed-forward pass. [cita: doc=arxiv_251210935_any4d, p=3, frag=7] [cita: doc=arxiv_251210935_any4d, p=4, frag=9]"
+  },
+  {
+    "question_id": "q26",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "What type of neural network architecture does Any4D use?",
+    "type": "fact",
+    "answer": "Any4D is a scalable architecture inspired by [32] and performs a single feedforward pass for all image frames at once. [cita: doc=arxiv_251210935_any4d, p=3, frag=7] [cita: doc=arxiv_251210935_any4d, p=4, frag=9]"
+  },
+  {
+    "question_id": "q27",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "Which sensors or modalities can Any4D process besides RGB images?",
+    "type": "fact",
+    "answer": "RGB-D frames, IMU-based egomotion, and Radar Doppler measurements. [cita: doc=arxiv_251210935_any4d, p=3, frag=7] [cita: doc=arxiv_251210935_any4d, p=1, frag=0]"
+  },
+  {
+    "question_id": "q28",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "According to the paper, what are the three core contributions of Any4D?",
+    "type": "loc",
+    "answer": "Any4D is a N-view transformer, consisting of modality-specific encoders, b) a multi-view transformer backbone that attends to the tokens from all views, and c) output representation heads which decode the tokens into the factorized output variables for each view. [cita: doc=arxiv_251210935_any4d, p=4, frag=9] [cita: doc=arxiv_251210935_any4d, p=3, frag=7]"
+  },
+  {
+    "question_id": "q29",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "In which section of the paper are the limitations of Any4D discussed?",
+    "type": "loc",
+    "answer": "Any4D is a N-view transformer, consisting of modality specific input encoders, b) a multi-view transformer backbone that attends to the tokens from all views, and c) output representation heads which decode the tokens into the factorized output variables for each view. [cita: doc=arxiv_251210935_any4d, p=3, frag=7] [cita: doc=arxiv_251210935_any4d, p=4, frag=9]"
+  },
+  {
+    "question_id": "q30",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "Does Any4D use reinforcement learning to optimize scene flow estimation?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210935_any4d, p=8, frag=24] [cita: doc=arxiv_251210935_any4d, p=8, frag=25]"
+  },
+  {
+    "question_id": "q31",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "What is the proposed function that replaces normalization layers?",
+    "type": "fact",
+    "answer": "Dynamic erf. [cita: doc=arxiv_251210938_stronger_normalization_free, p=1, frag=0] [cita: doc=arxiv_251210938_stronger_normalization_free, p=3, frag=6]"
+  },
+  {
+    "question_id": "q32",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "What are the four key properties analyzed for point-wise functions?",
+    "type": "fact",
+    "answer": "Zero-centeredness, boundedness, center sensitivity, and monotonicity. [cita: doc=arxiv_251210938_stronger_normalization_free, p=17, frag=42] [cita: doc=arxiv_251210938_stronger_normalization_free, p=3, frag=5]"
+  },
+  {
+    "question_id": "q33",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "Which tasks were used to evaluate Derf?",
+    "type": "fact",
+    "answer": "Norm, Derf, and DyT. [cita: doc=arxiv_251210938_stronger_normalization_free, p=10, frag=24] [cita: doc=arxiv_251210938_stronger_normalization_free, p=8, frag=20]"
+  },
+  {
+    "question_id": "q34",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "In which section does the paper explain the effect of the shift parameter s?",
+    "type": "loc",
+    "answer": "The training loss curve for horizontal and vertical shifts. [cita: doc=arxiv_251210877_guided_transfer_learning, p=14, frag=46] [cita: doc=arxiv_251210938_stronger_normalization_free, p=16, frag=40] [cita: doc=arxiv_251210365_GPG, p=5, frag=9]"
+  },
+  {
+    "question_id": "q35",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "Where does the paper compare Derf's training loss with normalization layers?",
+    "type": "loc",
+    "answer": "Evaluation mode training loss of normalization layers. [cita: doc=arxiv_251210938_stronger_normalization_free, p=10, frag=24] [cita: doc=arxiv_251210938_stronger_normalization_free, p=21, frag=49]"
+  },
+  {
+    "question_id": "q36",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "Does the paper propose using quantum entanglement for function optimization?",
     "type": "impossible",
     "answer": "It is not mentioned in the document."
+  },
+  {
+    "question_id": "q37",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "What is the name of the method introduced in the paper?",
+    "type": "fact",
+    "answer": "Algorithm 1. [cita: doc=arxiv_230712057_external_reasoning_v2, p=4, frag=8] [cita: doc=arxiv_251210931_asynchronous_reasoning, p=4, frag=13]"
+  },
+  {
+    "question_id": "q38",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "What technique does GaussianHeadTalk use for real-time rendering?",
+    "type": "fact",
+    "answer": "Gaussian optimization. [cita: doc=arxiv_251210939_gaussianHeadTalk, p=1, frag=0] [cita: doc=arxiv_251210939_gaussianHeadTalk, p=3, frag=5]"
+  },
+  {
+    "question_id": "q39",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "What type of model is used to capture long-range temporal information from audio?",
+    "type": "fact",
+    "answer": "Video-to-Time, Audio-to-Time, Time-to-Audio, Video-to-Audio, Video-to-Audio, and Audio-to-Video. [cita: doc=arxiv_251209841_ChronusOmni, p=1, frag=1] [cita: doc=arxiv_251209841_ChronusOmni, p=1, frag=2]"
+  },
+  {
+    "question_id": "q40",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "In which section does the paper describe the stability metric used to quantify wobbling?",
+    "type": "loc",
+    "answer": "log(1 + x) converts quantities to log-space for numerical stability. A pointmap loss is also applied to the composed geometric predictions as follows: Lpm N X i flog Xi zi flog Xi zi ! (9) Similarly, scene flow is also supervised in a scaleinvariant manner. We find that scene flow loss is dominated by static points since most of the scene is static. Therefore, we find it is crucial to calculate a static-dynamic motion mask M from the ground truth scene flow, and upweight the scene flow loss in the dynamic regions by 10x more compared to static regions: Lsf N X i M flog Fi zi flog Fi zi ! (10) Finally, the predicted metric scale factor s is also supervised in the log space as follows: Lscale flog(z) flog( s sg( z), where sg denotes the stop-gradient operation and prevents the scale supervision from affecting other predicted quantities. The final loss is expressed as: L = Ltrans + Lrot + Lrays + Ldepth + Lsf + Lmask [cita: doc=arxiv_251210938_stronger_normalization_free, p=6, frag=15] [cita: doc=arxiv_251210935_any4d, p=6, frag=15]"
+  },
+  {
+    "question_id": "q41",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "According to the paper, which datasets were used for experiments?",
+    "type": "loc",
+    "answer": "The LIMA model is fine-tuned on 52,000 examples from the Alpaca training set. The LLaMa 65B baseline model is fine-tuned on 52,000 examples from the Alpaca training set. Crowd workers, initially, and later replaced by GPT-4, are presented with a single prompt and two possible responses generated by different models. For each prompt, a single response is generated from each baseline model using nucleus sampling with a threshold of 0.9 and a temperature of 0.7. A repetition penalty of 1.2 is applied to avoid repetitive tokens, and the maximum token length is limited to 2048 [Page 13]. Crowd workers, initially, and later replaced by GPT-4, are presented with a single prompt and two possible responses generated by different models. They compare the responses and label which one they prefer [Page 13]. The effects of training data diversity, quality, and quantity are investigated through ablation experiments. A 7B parameter LLaMa model is fine-tuned on various datasets, controlling for the same hyperparameters. [cita: doc=arxiv_251024031_llmloganalyzer, p=26, frag=32] [cita: doc=arxiv_230712057_external_reasoning_v2, p=17, frag=41]"
+  },
+  {
+    "question_id": "q42",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "Does the paper mention the use of reinforcement learning for avatar control?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251209897_SCOPE, p=16, frag=49] [cita: doc=arxiv_251210931_asynchronous_reasoning, p=9, frag=28]"
+  },
+  {
+    "question_id": "q43",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "What is VL-JEPA and what does it stand for?",
+    "type": "fact",
+    "answer": "VL-JEPASFT is a self-supervised vision model that excels at both image and video tasks. [cita: doc=arxiv_251210942_vl_jepa, p=5, frag=18] [cita: doc=arxiv_251210942_vl_jepa, p=4, frag=11]"
+  },
+  {
+    "question_id": "q44",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "How does VL-JEPA achieve 50% fewer trainable parameters compared to standard VLMs?",
+    "type": "fact",
+    "answer": "VL-JEPA achieves 50% fewer trainable parameters compared to standard VLMs. [cita: doc=arxiv_251210942_vl_jepa, p=6, frag=22] [cita: doc=arxiv_251210942_vl_jepa, p=5, frag=18]"
+  },
+  {
+    "question_id": "q45",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "What two stages are used to train VL-JEPA?",
+    "type": "fact",
+    "answer": "Pretraining and Y-Encoder. [cita: doc=arxiv_251210942_vl_jepa, p=8, frag=28] [cita: doc=arxiv_251210942_vl_jepa, p=3, frag=8]"
+  },
+  {
+    "question_id": "q46",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "How does VL-JEPA's selective decoding mechanism work for real-time video applications?",
+    "type": "loc",
+    "answer": "VL-JEPA maintains always-on semantic monitoring while avoiding unnecessary decoding, achieving both responsiveness and efficiency. [cita: doc=arxiv_251210942_vl_jepa, p=4, frag=11] [cita: doc=arxiv_251210942_vl_jepa, p=4, frag=10]"
+  },
+  {
+    "question_id": "q47",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "What are the main differences between VL-JEPA's embedding-space prediction approach and traditional token-space prediction in VLMs?",
+    "type": "loc",
+    "answer": "VL-JEPA predicts target embeddings using a 0.5B predictor, whereas the VLM baseline performs next-token prediction with cross-entropy using a 1B LLM. [cita: doc=arxiv_251210942_vl_jepa, p=2, frag=3] [cita: doc=arxiv_251210942_vl_jepa, p=6, frag=22]"
+  },
+  {
+    "question_id": "q48",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "Does VL-JEPA use reinforcement learning for optimizing its vision encoder parameters?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210942_vl_jepa, p=3, frag=8] [cita: doc=arxiv_251210942_vl_jepa, p=4, frag=11]"
+  },
+  {
+    "question_id": "q49",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "What is the main contribution of Bidirectional Normalizing Flow (BiFlow)?",
+    "type": "fact",
+    "answer": "BiFlow learns a reverse model that approximates the underlying noise-todata inverse mapping, enabling more flexible loss functions and architectures. [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=1, frag=1] [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=1, frag=0]"
+  },
+  {
+    "question_id": "q50",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "Which architecture does BiFlow use for the reverse model?",
+    "type": "fact",
+    "answer": "BiFlow uses a hidden alignment objective to train the reverse model. [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=1, frag=1] [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=10, frag=30]"
+  },
+  {
+    "question_id": "q51",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "What dataset and resolution were used in the experiments?",
+    "type": "fact",
+    "answer": "The text color effects on REST+ image accuracy were measured using 50, 100, 200 DPI. [cita: doc=arxiv_230712057_external_reasoning_v2, p=12, frag=32] [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=24, frag=66]"
+  },
+  {
+    "question_id": "q52",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "In which section does the paper describe the three strategies for learning the reverse model?",
+    "type": "loc",
+    "answer": "4.1. Ablation: Learning to Approximate the Inverse [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=4, frag=9] [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=6, frag=16]"
+  },
+  {
+    "question_id": "q53",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "According to Table 3, how much faster is BiFlow compared to iTARFlow on TPU?",
+    "type": "loc",
+    "answer": "BiFlow achieves one to two orders of magnitude faster sampling on TPU, GPU, and CPU, while attaining superior generation quality. (The VAE decoder contains 49M parameters and requires 308 Gflops.) Experiments show that our BiFlow-B/2 surpasses the exact inverse of the improved TARFlow-XL/2 baseline in generation quality. Remarkably, BiFlow requires only a single function evaluation (1-NFE), compared to 2562 sequential decoding steps for the autoregressive inference of the exact analytic inverse — resulting in up to a 42 speedup for models of similar size on TPU. [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=7, frag=20] [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=9, frag=28]"
+  },
+  {
+    "question_id": "q54",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "Does the paper propose using a quantum neural network for training?",
+    "type": "impossible",
+    "answer": "It is not mentioned in the document."
+  },
+  {
+    "question_id": "q55",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "What is Group Diffusion?",
+    "type": "fact",
+    "answer": "GroupDiff is a group model that is a computationally lightweight model that can be used to aid in the denoising process. [cita: doc=arxiv_251210954_group_diffusion, p=4, frag=10] [cita: doc=arxiv_251210954_group_diffusion, p=3, frag=7]"
+  },
+  {
+    "question_id": "q56",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "What is the main contribution of GroupDiff?",
+    "type": "fact",
+    "answer": "GroupDiff consistently provides a substantially improved generation performance across various design choices, achieving a much better FID score than the vanilla model. [cita: doc=arxiv_251210954_group_diffusion, p=4, frag=10] [cita: doc=arxiv_251210954_group_diffusion, p=13, frag=42]"
+  },
+  {
+    "question_id": "q57",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "What is the scaling effect observed in GroupDiff?",
+    "type": "fact",
+    "answer": "The scaling effect is observed in GroupDiff. [cita: doc=arxiv_251210954_group_diffusion, p=4, frag=10] [cita: doc=arxiv_251210954_group_diffusion, p=5, frag=12]"
+  },
+  {
+    "question_id": "q58",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "Where in the paper is the definition of cross-attention score given?",
+    "type": "loc",
+    "answer": "Table 3. Ablation on group attention layers. Cross-sample attention score. Under a setting that encourages cross-image attention. [cita: doc=arxiv_251210954_group_diffusion, p=7, frag=18] [cita: doc=arxiv_251210954_group_diffusion, p=7, frag=17]"
+  },
+  {
+    "question_id": "q59",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "In which section are the limitations of GroupDiff discussed?",
+    "type": "loc",
+    "answer": "The group settings. [cita: doc=arxiv_251210954_group_diffusion, p=4, frag=10] [cita: doc=arxiv_251210954_group_diffusion, p=13, frag=42]"
+  },
+  {
+    "question_id": "q60",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "Does the paper mention the application of GroupDiff to quantum image generation?",
+    "type": "impossible",
+    "answer": "It is not mentioned in the document."
+  },
+  {
+    "question_id": "q61",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "What are the six subtasks of audiovisual temporal grounding introduced in ChronusOmni?",
+    "type": "fact",
+    "answer": "Video-to-Time, Time-to-Video, Audio-to-Time, Time-to-Audio, Videoto-Audio, and Audio-to-Video [cita: doc=arxiv_251209841_ChronusOmni, p=3, frag=6] [cita: doc=arxiv_251209841_ChronusOmni, p=1, frag=1]"
+  },
+  {
+    "question_id": "q62",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "Which large language model does ChronusOmni use as its backbone?",
+    "type": "fact",
+    "answer": "CIDEr. [cita: doc=arxiv_251210922_sparseswaps, p=10, frag=26] [cita: doc=arxiv_251209841_ChronusOmni, p=7, frag=22]"
+  },
+  {
+    "question_id": "q63",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "What is the name of the dataset introduced in the paper to support audiovisual temporal grounding?",
+    "type": "fact",
+    "answer": "ChronusAV. [cita: doc=arxiv_251209841_ChronusOmni, p=1, frag=1] [cita: doc=arxiv_251209841_ChronusOmni, p=2, frag=4]"
+  },
+  {
+    "question_id": "q64",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "What is the average duration of videos in the ChronusAV dataset in seconds?",
+    "type": "loc",
+    "answer": "226 seconds. [cita: doc=arxiv_251209841_ChronusOmni, p=5, frag=12] [cita: doc=arxiv_251209841_ChronusOmni, p=6, frag=15]"
+  },
+  {
+    "question_id": "q65",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "In the T2V subtask, what evaluation metric is used to measure caption quality besides BLEU-4 and CIDEr?",
+    "type": "loc",
+    "answer": "Semantic Accuracy. [cita: doc=arxiv_251209841_ChronusOmni, p=9, frag=28] [cita: doc=arxiv_251209841_ChronusOmni, p=12, frag=42]"
+  },
+  {
+    "question_id": "q66",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "According to the paper, what is the exact number of video frames sampled in the V2A subtask during training in Section 6.3?",
+    "type": "impossible",
+    "answer": "The model trained on 64 frames. [cita: doc=arxiv_251209841_ChronusOmni, p=14, frag=48] [cita: doc=arxiv_251209841_ChronusOmni, p=6, frag=17]"
+  },
+  {
+    "question_id": "q67",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "What is the name of the environment used in the paper to evaluate SCOPE?",
+    "type": "fact",
+    "answer": "Super-Natural. [cita: doc=arxiv_251209897_SCOPE, p=10, frag=27] [cita: doc=arxiv_230712057_external_reasoning_v2, p=11, frag=30]"
+  },
+  {
+    "question_id": "q68",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "How many parameters does the SCOPE model have according to Table 3?",
+    "type": "fact",
+    "answer": "SCOPE (ours) 0.52 175B SCOPE (ours) 0.58 11.04M SCOPE (without manager RL-finetuning) 0.24 11.04M SCOPE (without manager RL-finetuning) 0.24 11.04M [cita: doc=arxiv_251209897_SCOPE, p=7, frag=18] [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=20, frag=56]"
+  },
+  {
+    "question_id": "q69",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "What does the manager agent propose in the hierarchical planning framework?",
+    "type": "fact",
+    "answer": "A high-level plan based on the current environment state and the ultimate goal. [cita: doc=arxiv_251209897_SCOPE, p=4, frag=10] [cita: doc=arxiv_251209897_SCOPE, p=2, frag=5]"
+  },
+  {
+    "question_id": "q70",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "In Section 5.1, what is the rate at which random actions are injected into the generated trajectories to mimic human-like exploration?",
+    "type": "loc",
+    "answer": "The agent’s maximum step is 30 40 50 60 70 80 90 Pass@K (%) Pass@16 Pass@64 Pass@256 512 1024 2048 4096 8192 16384 32768 Total Steps (Sampling Time K * Agent Steps) 30 40 50 60 70 80 90 Pass@K (%) Step64 Step200 Pass@64 Pass@256 [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=7, frag=17] [cita: doc=arxiv_251209897_SCOPE, p=5, frag=13]"
+  },
+  {
+    "question_id": "q71",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "According to Table 4, which backend model achieves a success rate of 0.58 with 24B parameters?",
+    "type": "loc",
+    "answer": "GPT-4o (OpenAI et al., 2024a) 0.58 1.8T No Mistral Small 3 (Mistral AI, 2025) 0.58 24B Yes SCOPE (ours) 0.56 11.04M GPT-3.5 (Brown et al., 2020) 0.52 175B No GPT-4o mini (OpenAI et al., 2024a) 0.43 8B No DeepSeek-R1-Distill-Qwen-32B (DeepSeek-AI et al., 2025) 0.13 32B Yes Claude-3 Haiku (Anthropic AI, 2024) 0.00 20B No [cita: doc=arxiv_251209897_SCOPE, p=7, frag=18] [cita: doc=arxiv_230712057_external_reasoning_v2, p=18, frag=46]"
+  },
+  {
+    "question_id": "q72",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "In which year was the TextCraft environment first published, and who were its original creators?",
+    "type": "impossible",
+    "answer": "2024. [cita: doc=arxiv_251209897_SCOPE, p=4, frag=9] [cita: doc=arxiv_251209897_SCOPE, p=2, frag=3]"
+  },
+  {
+    "question_id": "q73",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "What is the name of the proposed method in this paper for Novel Class Discovery?",
+    "type": "fact",
+    "answer": "Autonovel. [cita: doc=arxiv_251210262_VLM_NCD, p=2, frag=4] [cita: doc=arxiv_251210262_VLM_NCD, p=8, frag=21]"
+  },
+  {
+    "question_id": "q74",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "Which pre-trained model is used as the backbone for multimodal feature extraction?",
+    "type": "fact",
+    "answer": "Vision. [cita: doc=arxiv_251210932_babyvlm_v2, p=13, frag=38] [cita: doc=arxiv_251210262_VLM_NCD, p=3, frag=7]"
+  },
+  {
+    "question_id": "q75",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "What is the evaluation metric used to measure clustering performance in the experiments?",
+    "type": "fact",
+    "answer": "ACC. [cita: doc=arxiv_251210262_VLM_NCD, p=5, frag=15] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=9, frag=17]"
+  },
+  {
+    "question_id": "q76",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "According to Table 1, how many classes are in the unlabelled set (|y_u|) for CIFAR-100?",
+    "type": "loc",
+    "answer": "0 [cita: doc=arxiv_251210262_VLM_NCD, p=5, frag=15] [cita: doc=arxiv_251210262_VLM_NCD, p=6, frag=16]"
+  },
+  {
+    "question_id": "q77",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "In Table 2, what is the accuracy achieved by the proposed method on the 'New' subset of ImageNet-100?",
+    "type": "loc",
+    "answer": "calCIFAR-10 CIFAR-100 ImageNet-100 |yL| 5 80 50 |yu| 10 100 100 |DL| 12.5k 20k 31.9k |Du| 37.5k 30k 95.3k [cita: doc=arxiv_251210262_VLM_NCD, p=5, frag=15] [cita: doc=arxiv_251210954_group_diffusion, p=5, frag=13]"
+  },
+  {
+    "question_id": "q78",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "What is the exact weight decay value used during the fine-tuning of the last block of the visual transformer in Section 4.1?",
+    "type": "impossible",
+    "answer": "The exact weight decay value is 0.0. [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=12, frag=37] [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=9, frag=32]"
+  },
+  {
+    "question_id": "q79",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What is the name of the SSL method used to pre-train StainNet?",
+    "type": "fact",
+    "answer": "MoCov3-based SSL approach. [cita: doc=arxiv_251210326_StainNet, p=2, frag=4] [cita: doc=arxiv_251210326_StainNet, p=9, frag=20]"
+  },
+  {
+    "question_id": "q80",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "How many patch images are used for pre-training StainNet?",
+    "type": "fact",
+    "answer": "1.4 million patch images. [cita: doc=arxiv_251210326_StainNet, p=4, frag=7] [cita: doc=arxiv_251210326_StainNet, p=1, frag=1]"
+  },
+  {
+    "question_id": "q81",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What is the main staining method that most existing pathology foundation models are pre-trained on?",
+    "type": "fact",
+    "answer": "HematoxylinEosin. [cita: doc=arxiv_251210326_StainNet, p=1, frag=1] [cita: doc=arxiv_251210326_StainNet, p=3, frag=5]"
+  },
+  {
+    "question_id": "q82",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "In which section of the paper is the pre-training loss curve of StainNet discussed?",
+    "type": "loc",
+    "answer": "[doc=arxiv_251210326_StainNet, p=4, frag=7] [cita: doc=arxiv_251210326_StainNet, p=9, frag=20] [cita: doc=arxiv_251210326_StainNet, p=4, frag=7]"
+  },
+  {
+    "question_id": "q83",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What database is used as the source of special staining WSIs for pre-training StainNet?",
+    "type": "loc",
+    "answer": "HISTAI. [cita: doc=arxiv_251210326_StainNet, p=1, frag=1] [cita: doc=arxiv_251210326_StainNet, p=3, frag=5]"
+  },
+  {
+    "question_id": "q84",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What specific hardware configuration was used to fine-tune the downstream tasks?",
+    "type": "impossible",
+    "answer": "NVIDIA A10 GPU. [cita: doc=arxiv_251210932_babyvlm_v2, p=7, frag=16] [cita: doc=arxiv_251209897_SCOPE, p=7, frag=19]"
+  },
+  {
+    "question_id": "q85",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "What is the name of the two-step approach proposed to resolve Contextual Blindness?",
+    "type": "fact",
+    "answer": "Visual Funnel. [cita: doc=arxiv_251210362_Visual_Funnel, p=8, frag=21] [cita: doc=arxiv_251210362_Visual_Funnel, p=1, frag=1]"
+  },
+  {
+    "question_id": "q86",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "Which model architecture does InstructBLIP use to compress visual information?",
+    "type": "fact",
+    "answer": "Q-Former. [cita: doc=arxiv_251210362_Visual_Funnel, p=6, frag=15] [cita: doc=arxiv_251210954_group_diffusion, p=10, frag=28]"
+  },
+  {
+    "question_id": "q87",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "What term is used to describe the failure that occurs when single-crop methods isolate fine details from their broader context?",
+    "type": "fact",
+    "answer": "Contextual Blindness. [cita: doc=arxiv_251210362_Visual_Funnel, p=2, frag=3] [cita: doc=arxiv_251210362_Visual_Funnel, p=4, frag=8]"
+  },
+  {
+    "question_id": "q88",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "In which section of the paper is the entropy-guided scale determination mechanism explained?",
+    "type": "loc",
+    "answer": "The main paper. [cita: doc=arxiv_251210362_Visual_Funnel, p=10, frag=31] [cita: doc=arxiv_230712057_external_reasoning_v2, p=8, frag=23]"
+  },
+  {
+    "question_id": "q89",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "Which dataset is used in the ablation study to evaluate the impact of portfolio size?",
+    "type": "loc",
+    "answer": "Private dataset. [cita: doc=arxiv_251210808_Graph_Laplacian_Transformer, p=7, frag=13] [cita: doc=arxiv_251209350_textguider, p=8, frag=20]"
+  },
+  {
+    "question_id": "q90",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "What is the name of the first author of the ViCrop paper referenced in this work?",
+    "type": "impossible",
+    "answer": "Vicuna-7B [cita: doc=arxiv_230712057_external_reasoning_v2, p=14, frag=35] [cita: doc=arxiv_230712057_external_reasoning_v2, p=16, frag=40]"
+  },
+  {
+    "question_id": "q91",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "What is the full name of the theorem proposed for Transformer-based policies?",
+    "type": "fact",
+    "answer": "Generalized Policy Gradient Theorem IT1 IT2 IT|input| OT1 OT2 s1 s2 = [s1, a1] ... ... The Transformer Blocks OT1 a1 OT2 ... a2 OT3 a3 s3 = [s2, a2] [cita: doc=arxiv_251210365_GPG, p=3, frag=5] [cita: doc=arxiv_251210365_GPG, p=11, frag=21]"
+  },
+  {
+    "question_id": "q92",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "Which algorithm does GRPO extend by using grouped trajectories for advantage computation?",
+    "type": "fact",
+    "answer": "GRPO uses a group of G output trajectories to compute the advantage Aold(s, a) as shown in Figure 1. This is especially useful for scenarios (e.g., math and coding) where the partial trajectory is not verifiable, but the whole trajectories can be evaluated with verified rewards. [cita: doc=arxiv_251210365_GPG, p=3, frag=4] [cita: doc=arxiv_251210365_GPG, p=8, frag=13]"
+  },
+  {
+    "question_id": "q93",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "What are the two special cases of the GPG framework mentioned in the paper?",
+    "type": "fact",
+    "answer": "Token-level Policy Gradient: When K = 1 (i.e., each macro-action corresponds to a single output token, MAi OTi), our GPG reduces to: J() = E |output| X i=1 log (OTi|MSi)Q(MSi, OTi) which is precisely the standard Policy Gradient Theorem, i.e., Equation (3). This establishes the standard policy gradient as a special case of our generalized framework. (2) Sequence-Level Policy Gradient: When K = 1 (i.e., the entire output sequence comprises a single macro-action), the framework reduces to: MA1 = MA OT1, OT2, . . . . , OT|output|. This configuration exactly recovers the GRPO paradigm where the complete output sequence functions as an indivisible action unit, reward signals and the advantages are evaluated over batches of complete output sequences, and gradient steps are performed at the full-sequence abstraction level. [cita: doc=arxiv_251210365_GPG, p=4, frag=7] [cita: doc=arxiv_251210365_GPG, p=7, frag=11]"
+  },
+  {
+    "question_id": "q94",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "In which section of the paper is the 'Macro-action Segmentation' step explained?",
+    "type": "loc",
+    "answer": "Section 4. [cita: doc=arxiv_251210365_GPG, p=4, frag=7] [cita: doc=arxiv_251210365_GPG, p=7, frag=12]"
+  },
+  {
+    "question_id": "q95",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "Which model is used as the judge in the LLM-as-Judge evaluation protocol?",
+    "type": "loc",
+    "answer": "LLM-as-a-Judge. [cita: doc=arxiv_251210365_GPG, p=10, frag=20] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=12, frag=22]"
+  },
+  {
+    "question_id": "q96",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "What is the name of the first author of the GRPO paper referenced in this work?",
+    "type": "impossible",
+    "answer": "Wang et al. [cita: doc=arxiv_230712057_external_reasoning_v2, p=14, frag=35] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=15, frag=40]"
+  },
+  {
+    "question_id": "q97",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "What is the name of the symbolic engine used as a tool by InternGeometry?",
+    "type": "fact",
+    "answer": "metry-DDAR. [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=13, frag=35] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=1, frag=1]"
+  },
+  {
+    "question_id": "q98",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "How many geometry problems from IMO 2000–2024 does InternGeometry solve?",
+    "type": "fact",
+    "answer": "IMO 2000–2024. [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=6, frag=16] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=2, frag=2]"
+  },
+  {
+    "question_id": "q99",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "What metric is used as an indicator of task complexity in the CBRL framework?",
+    "type": "fact",
+    "answer": "DDAR proof step count. [cita: doc=arxiv_251024031_llmloganalyzer, p=23, frag=28] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=5, frag=12]"
+  },
+  {
+    "question_id": "q100",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "In which appendix are the improvements to InternGeometry-DDAR described?",
+    "type": "loc",
+    "answer": "G. [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=13, frag=35] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=6, frag=16]"
+  },
+  {
+    "question_id": "q101",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "Which algorithm is described in Appendix D for generating geometry questions?",
+    "type": "loc",
+    "answer": "InternGeometry. [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=2, frag=2] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=9, frag=21]"
+  },
+  {
+    "question_id": "q102",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "What is the name of the first author of the AlphaGeometry 2 paper referenced in this work?",
+    "type": "impossible",
+    "answer": "Chervonyi et al. [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=6, frag=16] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=17, frag=45]"
+  },
+  {
+    "question_id": "q103",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "What are the two core types of tokens introduced in GETok?",
+    "type": "fact",
+    "answer": "MLLMs. [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=24, frag=67] [cita: doc=arxiv_251210554_Grounding_Tokens, p=1, frag=0]"
+  },
+  {
+    "question_id": "q104",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "Which base model is used for GETok in the experiments?",
+    "type": "fact",
+    "answer": "NIH Baby Toolbox®. [cita: doc=arxiv_251210932_babyvlm_v2, p=6, frag=13] [cita: doc=arxiv_251210877_guided_transfer_learning, p=7, frag=21]"
+  },
+  {
+    "question_id": "q105",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "What is the name of the greedy algorithm used to convert masks into grid tokens?",
+    "type": "fact",
+    "answer": "edy Mask-to-Token Conversion [cita: doc=arxiv_251210554_Grounding_Tokens, p=4, frag=12] [cita: doc=arxiv_251210554_Grounding_Tokens, p=4, frag=13]"
+  },
+  {
+    "question_id": "q106",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "In the Self-Improving RL framework, which token is used to enable iterative refinement and self-correction?",
+    "type": "loc",
+    "answer": "VAE. [cita: doc=arxiv_251208922_unit_tair, p=6, frag=18] [cita: doc=arxiv_251208922_unit_tair, p=11, frag=36]"
+  },
+  {
+    "question_id": "q107",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "According to the experiments, what grid size achieves a good trade-off between spatial precision and vocabulary overhead?",
+    "type": "loc",
+    "answer": "32 32. [cita: doc=arxiv_251210554_Grounding_Tokens, p=10, frag=31] [cita: doc=arxiv_251210554_Grounding_Tokens, p=8, frag=26]"
+  },
+  {
+    "question_id": "q108",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "What is the exact training loss value reported for GETok-SFT on the ReasonSeg validation set?",
+    "type": "impossible",
+    "answer": "0.00 0.03 [cita: doc=arxiv_251210938_stronger_normalization_free, p=22, frag=51] [cita: doc=arxiv_251210938_stronger_normalization_free, p=10, frag=23]"
+  },
+  {
+    "question_id": "q109",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "What are the names of the two main modules proposed in the GLAT framework?",
+    "type": "fact",
+    "answer": "GPT-4o mini (OpenAI et al., 2024) 0.43 8B No Mistral Small 3 (Mistral AI, 2025) 0.43 8B No Claude-3 Haiku (Anthropic AI, 2024) 0.00 20B No [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=4, frag=11] [cita: doc=arxiv_251209897_SCOPE, p=7, frag=18]"
+  },
+  {
+    "question_id": "q110",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "Which pretrained model is used for local feature extraction in the Iterative Refinement Module (IRM)?",
+    "type": "fact",
+    "answer": "iTARFlow. [cita: doc=arxiv_251210953_bidirectional_normalizing_flow, p=6, frag=16] [cita: doc=arxiv_230712057_external_reasoning_v2, p=9, frag=28]"
+  },
+  {
+    "question_id": "q111",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "How many publicly available datasets were used to evaluate the proposed model?",
+    "type": "fact",
+    "answer": "Three public sets. [cita: doc=arxiv_251210808_Graph_Laplacian_Transformer, p=7, frag=13] [cita: doc=arxiv_251210888_pubtables_v2, p=4, frag=8]"
+  },
+  {
+    "question_id": "q112",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "In the Graph Laplacian Transformer, what does the learnable filter L_θ optimize during training?",
+    "type": "loc",
+    "answer": "The modified graph laplacian attention mechanism is computed as: A′ = softmax Q′K′+ Lglobal dk (4) where is a tunable hyperparameter that regulates the influence of the spatial constraints, ensuring an optimal balance between feature-driven attention and structured spatial coherence within the GLA mechanism. [cita: doc=arxiv_251210808_Graph_Laplacian_Transformer, p=5, frag=8] [cita: doc=arxiv_251210877_guided_transfer_learning, p=2, frag=5]"
+  },
+  {
+    "question_id": "q113",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "According to the ablation study, which attention mechanism performed best in terms of spatial consistency for prostate cancer grading?",
+    "type": "loc",
+    "answer": "Graph Laplacian Attention-Based Transformer. [cita: doc=arxiv_251210808_Graph_Laplacian_Transformer, p=1, frag=1] [cita: doc=arxiv_251210808_Graph_Laplacian_Transformer, p=9, frag=15]"
+  },
+  {
+    "question_id": "q114",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "What is the exact FLOPs value reported for the full proposed model (Exp. 1) in Table 2?",
+    "type": "impossible",
+    "answer": "The FLOPs value for the full proposed model is 0.024. [cita: doc=arxiv_251210922_sparseswaps, p=7, frag=18] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=12, frag=22]"
+  },
+  {
+    "question_id": "q115",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "What is the total number of records in the superconductor database compiled using LLM extraction?",
+    "type": "fact",
+    "answer": "0 50 100 150 200 250 300 350 400 Smoothed count (compounds per K) Smoothed Count of Tc All Cuprates Iron-based FIG. 3. Smoothed distribution of superconducting transition temperatures (Tc) in the compiled database. Kernel-smoothed counts are shown for all superconductors (blue), cuprate families (red), and iron-based compounds (green). The distribution exhibits a strong peak at low temperatures and a secondary maximum near 90–100 K associated with cuprate high-Tc materials. 0 50 100 150 200 200 250 300 350 400 Smoothed count (compounds per K) Smoothed Count of Tc All Cuprates Iron-based FIG. 3. Smoothed distribution of superconducting transition temperatures (Tc) in the compiled database. Kernel-smoothed counts are shown for all superconductors (blue), cuprate families (red), and iron-based compounds (green). The distribution exhibits a strong peak at low temperatures and a secondary maximum near 90–100 K associated with cuprate high-Tc materials. [cita: doc=arxiv_251210847_Large_Language_Model, p=13, frag=35] [cita: doc=arxiv_251210847_Large_Language_Model, p=7, frag=17]"
+  },
+  {
+    "question_id": "q116",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "Which fine-tuning method was used to adapt the LLMs for superconductivity tasks?",
+    "type": "fact",
+    "answer": "The LLMs were fine-tuned by a coding method called a coding algorithm. [cita: doc=arxiv_251210847_Large_Language_Model, p=13, frag=35] [cita: doc=arxiv_251210847_Large_Language_Model, p=14, frag=45]"
+  },
+  {
+    "question_id": "q117",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "Which open-source LLM achieved the highest accuracy in the superconductivity classification task?",
+    "type": "fact",
+    "answer": "Na2LiZr(H6Ir)2 P-42m 14.0 14.0 14.0 14.0 60.09 8.77 24.28 16.5 0fe0fc19f1 YZr7H30 R3 115.0 144.0 145.0 144.0 42.53 7.36 48.49 28.46 10d228680c Ca9AcTaNbN10 P1 10.0 13.0 13.0 14.0 13.22 2.08 19.44 15.25 1245da3d42 Sc5TiH18 C2 135.0 117.0 144.0 101.0 39.48 6.38 37.87 15.65 137be06481 Rb5Ba(MoH9)3 Amm2 117.0 100.0 100.0 100.0 48.46 8.44 58.08 37.3 20ec23fb02 SrLi(H3Pt)2 Fm-3m 11.0 11.0 20.0 14.0 27.51 2.9 13.77 11.26 2abe6657b1 SrLi4 P6 3/mmc 11.0 34.0 11.05 13.5 11.76 5.89 20.98 22.11 2 [cita: doc=arxiv_251210847_Large_Language_Model, p=13, frag=35] [cita: doc=arxiv_251210847_Large_Language_Model, p=1, frag=0]"
+  },
+  {
+    "question_id": "q118",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "Why did the inclusion of full CIFs in the regression task lead to decreased performance compared to composition-only models?",
+    "type": "loc",
+    "answer": "CIF inputs produce substantially longer and more complex token sequences, making optimization more challenging, especially under parameter-efficient fine-tuning. [cita: doc=arxiv_251210847_Large_Language_Model, p=9, frag=23] [cita: doc=arxiv_251210847_Large_Language_Model, p=10, frag=27]"
+  },
+  {
+    "question_id": "q119",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "How many novel compositions did the inverse design model generate that were not present in the training set?",
+    "type": "loc",
+    "answer": "4,290 compositions not present in the training set. [cita: doc=arxiv_251210847_Large_Language_Model, p=11, frag=29] [cita: doc=arxiv_251210847_Large_Language_Model, p=11, frag=30]"
+  },
+  {
+    "question_id": "q120",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "What is the exact mean absolute error (MAE) reported for the Qwen3-14B model trained on composition + crystal system + space group inputs?",
+    "type": "impossible",
+    "answer": "Absolute Error (K) f 0 50 100 150 Actual Tc (K) 0 20 40 60 80 100 120 140 160 Predicted Tc (K) R2 = 0.84 MAE = 6 K RMSE = 14 K Fine Tuned Mistral-7B (Structure Informed) 0 10 20 30 40 50 60 70 Absolute Error (K) R2 = 0.83 MAE = 6 K RMSE = 14 K Fine Tuned Qwen3-14B (Structure Informed) 0 10 20 30 40 50 60 70 Absolute Error (K) R2 = 0.57 MAE = 4 K RMSE = 10 K Fine-Tuned Mistral-7B (CIF Informed) 0 5 10 15 20 25 30 35 40 Absolute Error (K) i 0 25 50 75 100 125 Actual Tc (K) 0 20 40 60 80 100 120 140 Predicted Tc (K) R2 = 0.73 MAE = 4 K RMSE = 11 K Fine-Tuned Qwen3-14B (CIF Informed) [cita: doc=arxiv_251210847_Large_Language_Model, p=10, frag=25] [cita: doc=arxiv_251210847_Large_Language_Model, p=9, frag=22]"
+  },
+  {
+    "question_id": "q121",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "What is the main goal of the External Reasoning framework proposed in the paper?",
+    "type": "fact",
+    "answer": "The establishment of a tiered policy for External Reasoning. [cita: doc=arxiv_230712057_external_reasoning_v2, p=2, frag=2] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=11, frag=28]"
+  },
+  {
+    "question_id": "q122",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "What are the three levels of assistance defined in the policy-oriented multi-LLM system?",
+    "type": "fact",
+    "answer": "a teacher, a student, and a teacher. [cita: doc=arxiv_251210365_GPG, p=10, frag=20] [cita: doc=arxiv_251209897_SCOPE, p=1, frag=2]"
+  },
+  {
+    "question_id": "q123",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "Which embedding model is used by default to encode documents and queries in the retrieval component?",
+    "type": "fact",
+    "answer": "Text-embedding-ada. [cita: doc=arxiv_230712057_external_reasoning_v2, p=4, frag=10] [cita: doc=arxiv_230712057_external_reasoning_v2, p=1, frag=0]"
+  },
+  {
+    "question_id": "q124",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "In which section does the paper describe the policy-oriented multi-LLM assistance mechanism and escalation strategy?",
+    "type": "loc",
+    "answer": "6.3 Agentic Policy Optimization. [cita: doc=arxiv_251210365_GPG, p=10, frag=20] [cita: doc=arxiv_251209897_SCOPE, p=1, frag=2]"
+  },
+  {
+    "question_id": "q125",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "Where does the paper explain how summarization improves retrieval performance for implicit (Type 2) questions?",
+    "type": "loc",
+    "answer": "[doc=arxiv_230712057_external_reasoning_v2, p=5, frag=13] This part of the template specifies the question and asks the LLM for a detailed response based on its findings. The template for this part is as follows: Query: [query]. Please provide detailed findings in response to the query: This structured approach ensures that the LLM is provided with clear context, guided instructions, and the specific query, which collectively contribute to eliciting a well-formed, accurate, and informative response. Prompt engineering in this manner can substantially enhance the efficacy and applicability of LLMs in QA systems. 2.5. Summarization Performance Enhancement. During our experiments, we observed that raw text chunks occasionally struggled to encapsulate semantic meanings or exhibit relevance, especially in the context of Type 2 questions, which often embody implicit meanings in conjunction with user queries. In light of this, we carried out a series of experiments to devise a mechanism that could distill the essential ideas from each text chunk through summarization. In our approach, we leveraged sum [cita: doc=arxiv_230712057_external_reasoning_v2, p=5, frag=13] [cita: doc=arxiv_230712057_external_reasoning_v2, p=6, frag=14]"
+  },
+  {
+    "question_id": "q126",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "What was the total monetary cost in USD of training and evaluating the full External Reasoning system?",
+    "type": "impossible",
+    "answer": "$.025 [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=12, frag=22] [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=16, frag=41]"
+  },
+  {
+    "question_id": "q127",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "What is the name of the clustering-based log analysis chatbot proposed in the paper?",
+    "type": "fact",
+    "answer": "LLMLogAnalyzer. [cita: doc=arxiv_251024031_llmloganalyzer, p=4, frag=5] [cita: doc=arxiv_251024031_llmloganalyzer, p=1, frag=0]"
+  },
+  {
+    "question_id": "q128",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "Which log parsing algorithm is used by LLMLogAnalyzer to convert raw logs into structured data?",
+    "type": "fact",
+    "answer": "The Drain algorithm is used to parse raw logs into a structured format with associated events. [cita: doc=arxiv_251024031_llmloganalyzer, p=9, frag=11] [cita: doc=arxiv_251024031_llmloganalyzer, p=6, frag=7]"
+  },
+  {
+    "question_id": "q129",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "What are the four main stages of the LLMLogAnalyzer framework?",
+    "type": "fact",
+    "answer": "Log recognizer and log parser. Log recognizer leverages the capabilities of LLM to identify log categories. Log parser employs Drain to transform unstructured logs into a structured format with unique event IDs. [cita: doc=arxiv_251024031_llmloganalyzer, p=9, frag=11] [cita: doc=arxiv_251024031_llmloganalyzer, p=7, frag=9]"
+  },
+  {
+    "question_id": "q130",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "In which section does the paper describe the routing mechanism that classifies queries into all, partial, and general tiers?",
+    "type": "loc",
+    "answer": "The Router, a critical component of LLMLogAnalyzer, performs query analysis, categorizing queries into three distinct categories: all events, partial, and general. [cita: doc=arxiv_251024031_llmloganalyzer, p=7, frag=9] [cita: doc=arxiv_251024031_llmloganalyzer, p=13, frag=15]"
+  },
+  {
+    "question_id": "q131",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "Where does the paper explain the use of ROUGE-1 and cosine similarity as evaluation metrics?",
+    "type": "loc",
+    "answer": "Log analysis applications. [cita: doc=arxiv_251024031_llmloganalyzer, p=22, frag=27] [cita: doc=arxiv_251024031_llmloganalyzer, p=19, frag=22]"
+  },
+  {
+    "question_id": "q132",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "What was the exact training time in hours required to train the LLMLogAnalyzer model from scratch?",
+    "type": "impossible",
+    "answer": "The LLMLogAnalyzer model was trained from scratch for 60 hours. [cita: doc=arxiv_251210534_Achieving_Olympia_Level, p=8, frag=19] [cita: doc=arxiv_251024031_llmloganalyzer, p=23, frag=28]"
+  },
+  {
+    "question_id": "q133",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "What is the main objective of the STRinGS framework proposed in the paper?",
+    "type": "fact",
+    "answer": "Selective text refinement in 3D Gaussian Splatting. [cita: doc=arxiv_251207230_strings, p=1, frag=0] [cita: doc=arxiv_251207230_strings, p=3, frag=6]"
+  },
+  {
+    "question_id": "q134",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "What metric is introduced by the authors to quantitatively evaluate text readability in reconstructed 3D scenes?",
+    "type": "fact",
+    "answer": "OCR-CER. [cita: doc=arxiv_251207230_strings, p=2, frag=2] [cita: doc=arxiv_251207230_strings, p=3, frag=6]"
+  },
+  {
+    "question_id": "q135",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "What dataset do the authors introduce to benchmark text reconstruction performance in text-rich 3D scenes?",
+    "type": "fact",
+    "answer": "STRinGS2 3DGS Mip-Splatting 3DGS-MCMC EDC-AbsGS STRinGS (Ours) Ground Truth [cita: doc=arxiv_251207230_strings, p=2, frag=5] [cita: doc=arxiv_251207230_strings, p=6, frag=16]"
+  },
+  {
+    "question_id": "q136",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "In which section does the paper describe the two-phase optimization strategy for selective text refinement?",
+    "type": "loc",
+    "answer": "Phase 2: Full Scene Refinement. [cita: doc=arxiv_251207230_strings, p=4, frag=11] [cita: doc=arxiv_230712057_external_reasoning_v2, p=20, frag=48]"
+  },
+  {
+    "question_id": "q137",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "Where does the paper explain how OCR-CER is computed using OCR outputs from rendered and ground-truth images?",
+    "type": "loc",
+    "answer": "[doc=arxiv_251207230_strings, p=5, frag=15] API [5] on the rendered views and the corresponding ground-truth images. For each evaluation image, we compute the Character Error Rate (CER): the normalized Levenshtein distance between recognized and ground-truth text, using a recall-based approach that penalizes missing and mismatched ground-truth characters. OCR-CER reflects how well the reconstructed image retains readable and accurate textual information. The CER scores are aggregated across all evaluation views within each scene. Additional details are provided in Appendix C. 5.2. Comparison with Existing Works Baselines. [cita: doc=arxiv_251207230_strings, p=5, frag=15] [cita: doc=arxiv_251207230_strings, p=7, frag=20]"
+  },
+  {
+    "question_id": "q138",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "Does the STRinGS framework incorporate a reinforcement learning component to optimize Gaussian parameters?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251207230_strings, p=4, frag=11] [cita: doc=arxiv_251209897_SCOPE, p=13, frag=35]"
+  },
+  {
+    "question_id": "q139",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "What is the main objective of the UniT framework?",
+    "type": "fact",
+    "answer": "To improve the performance of the DocVQA dataset. [cita: doc=arxiv_251210362_Visual_Funnel, p=7, frag=20] [cita: doc=arxiv_251210362_Visual_Funnel, p=11, frag=34]"
+  },
+  {
+    "question_id": "q140",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Which three main components are integrated in the UniT framework?",
+    "type": "fact",
+    "answer": "Image preprocessing, visual encoding, and language generation. [cita: doc=arxiv_251210362_Visual_Funnel, p=11, frag=34] [cita: doc=arxiv_251210932_babyvlm_v2, p=14, frag=40]"
+  },
+  {
+    "question_id": "q141",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Which Vision-Language Model is selected as the VLM component in UniT?",
+    "type": "fact",
+    "answer": "Visionllm is a large language model. [cita: doc=arxiv_251210554_Grounding_Tokens, p=18, frag=64] [cita: doc=arxiv_251210942_vl_jepa, p=11, frag=41]"
+  },
+  {
+    "question_id": "q142",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "In which section does the paper describe the complementary roles of the VLM and TSM?",
+    "type": "loc",
+    "answer": "The intermediate OCR predictions generated by TSM function as reliable textual grounding for correcting erroneous VLM [2] text predictions, thereby enabling the VLM to refine its initial textual output and achieve more accurate text restoration. [cita: doc=arxiv_251208922_unit_tair, p=13, frag=40] [cita: doc=arxiv_251208922_unit_tair, p=11, frag=36]"
+  },
+  {
+    "question_id": "q143",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Which figure illustrates the overall UniT framework architecture?",
+    "type": "loc",
+    "answer": "Figure 14. [cita: doc=arxiv_251210894_duetsvg, p=14, frag=41] [cita: doc=arxiv_251210362_Visual_Funnel, p=7, frag=20]"
+  },
+  {
+    "question_id": "q144",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Does UniT employ reinforcement learning to optimize the diffusion denoising process?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210877_guided_transfer_learning, p=8, frag=24] [cita: doc=arxiv_251210877_guided_transfer_learning, p=4, frag=12]"
+  },
+  {
+    "question_id": "q145",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "What is the main issue investigated in this paper regarding multimodal large language models?",
+    "type": "fact",
+    "answer": "Multimodal large language models are a major issue. [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=10, frag=34] [cita: doc=arxiv_251210554_Grounding_Tokens, p=18, frag=60]"
+  },
+  {
+    "question_id": "q146",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "What types of multimodal tasks are primarily used to evaluate cross-modal inconsistency in the study?",
+    "type": "fact",
+    "answer": "Multimodal large language models (MLLMs) are trained to represent vision and language in a shared space. But does this joint representation enable consistent reasoning across modalities? We introduce REST and REST+ as benchmarks to measure cross-modal inconsistency. Unlike previous benchmarks, we include a new set of tasks (SOEBENCH) that is guaranteed to not be seen during pre-training and control for OCR complexity. Next, we evaluate 15 frontier MLLMs and find substantial inconsistencies across modalities (at least 10% inconsistency), even when controlling for OCR. This leaves a notable gap of solvable questions that current models fail to capture. Finally, we analyse the internal representations of matching samples (i.e., samples with the same information in different modalities) and find that they show higher cosine similarity than non-matching pairs, and that this similarity magnitude correlates with our consistency score. We will release all code and data upon publication. [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=1, frag=0] [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=2, frag=4]"
+  },
+  {
+    "question_id": "q147",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "What evaluation strategy is proposed to systematically measure cross-modal inconsistency?",
+    "type": "fact",
+    "answer": "REST and REST+. [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=1, frag=0] [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=2, frag=4]"
+  },
+  {
+    "question_id": "q148",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "In which section does the paper define the formal concept of cross-modal inconsistency?",
+    "type": "loc",
+    "answer": "The paper defines the formal concept of cross-modal inconsistency in MLLMs. [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=1, frag=0] [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=2, frag=4]"
+  },
+  {
+    "question_id": "q149",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "Where does the paper discuss empirical results comparing different multimodal large language models?",
+    "type": "loc",
+    "answer": "National Science Review, 11(12): nwae403, 2024. [cita: doc=arxiv_251208923_cross_modal_inconsistency_mllms, p=10, frag=34] [cita: doc=arxiv_251210931_asynchronous_reasoning, p=10, frag=33]"
+  },
+  {
+    "question_id": "q150",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "Does the paper report the exact energy consumption in kilowatt-hours for training the evaluated models?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_230712057_external_reasoning_v2, p=16, frag=40] [cita: doc=arxiv_251210877_guided_transfer_learning, p=2, frag=5]"
+  },
+  {
+    "question_id": "q151",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "What problem in text-to-image generation does TextGuider specifically aim to address?",
+    "type": "fact",
+    "answer": "Visual text rendering. [cita: doc=arxiv_251209350_textguider, p=2, frag=4] [cita: doc=arxiv_251209350_textguider, p=10, frag=29]"
+  },
+  {
+    "question_id": "q152",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "What two loss functions are introduced in TextGuider to improve attention alignment during text rendering?",
+    "type": "fact",
+    "answer": "Split loss and wrap loss. [cita: doc=arxiv_251209350_textguider, p=11, frag=30] [cita: doc=arxiv_251209350_textguider, p=4, frag=10]"
+  },
+  {
+    "question_id": "q153",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "Which evaluation metrics are used to assess text rendering quality in the experiments?",
+    "type": "fact",
+    "answer": "Sentence Accuracy (Sen. Acc.) and Normalized Edit Distance (NED) are evaluation metrics. [cita: doc=arxiv_251208922_unit_tair, p=15, frag=46] [cita: doc=arxiv_251209350_textguider, p=5, frag=13]"
+  },
+  {
+    "question_id": "q154",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "In which section of the paper are the split loss and wrap loss formally defined and explained?",
+    "type": "loc",
+    "answer": "The paper is a review of the literature on the subject. [cita: doc=arxiv_251210877_guided_transfer_learning, p=10, frag=31] [cita: doc=arxiv_251210931_asynchronous_reasoning, p=4, frag=13]"
+  },
+  {
+    "question_id": "q155",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "Which figure illustrates the difference in attention maps between successful and failed text rendering cases?",
+    "type": "loc",
+    "answer": "The opening quotation mark shows a distinct peak in attention concentration within the text region during the early denoising stage, followed by a decrease, whereas the closing quotation mark shows significantly lower and flatter activation. This confirms that the opening quotation mark plays a dominant role in establishing the text layout. These findings indicate that precise alignment of the attention maps of the quotation mark token and textual content tokens with the local text regions during early denoising steps is critical for preventing text omission. [cita: doc=arxiv_251209350_textguider, p=4, frag=9] [cita: doc=arxiv_251209350_textguider, p=1, frag=2]"
+  },
+  {
+    "question_id": "q156",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "Does the paper report experiments evaluating TextGuider on real-world printed documents scanned with OCR hardware?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251207230_strings, p=1, frag=0] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=13, frag=25]"
+  },
+  {
+    "question_id": "q157",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "What is the main motivation for introducing a new benchmark for mathematical formula extraction from PDFs?",
+    "type": "fact",
+    "answer": "The goal of the paper is to provide a baseline for document parsing. [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=3, frag=4] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=4, frag=7]"
+  },
+  {
+    "question_id": "q158",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "What synthetic data source is used to generate formulas for the benchmark PDFs, and how are trivial formulas filtered out?",
+    "type": "fact",
+    "answer": "The benchmark dataset component generates synthetic PDFs with precise ground truth by randomly combining sampled formulas from this dataset with text segments and inline formulas using randomly composed LaTeX templates. The evaluation pipeline component matches parsed text against ground truth using two-stage LLM-based matching and evaluates all formula pairs. [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=4, frag=7] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=5, frag=8]"
+  },
+  {
+    "question_id": "q159",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "Which evaluation approach shows the highest correlation with human judgment for formula correctness and semantic equivalence?",
+    "type": "fact",
+    "answer": "Human evaluation as a reference standard. [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=7, frag=12] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=8, frag=13]"
+  },
+  {
+    "question_id": "q160",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "In which section of the paper is the robust two-stage LLM-based formula matching pipeline described?",
+    "type": "loc",
+    "answer": "[doc=arxiv_251209874_pdf_formula_benchmark, p=7, frag=11] Benchmarking Document Parsers on Formula Extraction 7 Robust Two-Stage LLM-Based Matching To address the matching challenges outlined above, we developed a robust two-stage approach that combines LLM-based semantic matching with deterministic fuzzy matching validation, following the principle of turning unstable models into stable systems. Stage 1: LLM-Based Formula Extraction. We employ GPT-5-mini to extract formulas from the parsed markdown, which we found to provide reliable extraction quality at modest computational cost. The model receives the ordered ground truth formulas and the parsed output, and is instructed to identify each match while maintaining sequential order and extracting formulas verbatim. The structured output returns a JSON array with extracted formulas (or empty strings if missing) and flags indicating grouped formulas that require subsequent splitting. Stage 2: Fuzzy Matching Validation. While the LLM reliably identifies the correct formula matches, its extractions frequently differ textually from the actual parsed content [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=7, frag=11] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=8, frag=14]"
+  },
+  {
+    "question_id": "q161",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "Which figure presents the correlation comparison between automated metrics and human evaluation scores?",
+    "type": "loc",
+    "answer": "Figure 2 confirms no correlation exists between these metrics and human evaluation scores, rendering them unsuitable for formula parsing evaluation. [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=9, frag=17] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=8, frag=13]"
+  },
+  {
+    "question_id": "q162",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "Does the paper report an evaluation of the benchmark on scanned historical documents from the 19th century?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210888_pubtables_v2, p=14, frag=35] [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=3, frag=4]"
+  },
+  {
+    "question_id": "q163",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "What is the primary goal of Guided Transfer Learning (GTL) for discrete diffusion models?",
+    "type": "fact",
+    "answer": "This enables sampling from a target distribution without modifying the pretrained denoiser. [cita: doc=arxiv_251210877_guided_transfer_learning, p=1, frag=0] [cita: doc=arxiv_251210877_guided_transfer_learning, p=2, frag=3]"
+  },
+  {
+    "question_id": "q164",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "How does Guided Transfer Learning (GTL) address computational challenges in discrete diffusion models with large vocabularies and long sequences?",
+    "type": "fact",
+    "answer": "This enables sampling from a target distribution without modifying the pretrained denoiser. The same guidance formulation applies to both discrete-time diffusion and continuous-time score-based discrete diffusion, yielding a unified treatment. [cita: doc=arxiv_251210877_guided_transfer_learning, p=1, frag=0] [cita: doc=arxiv_251210877_guided_transfer_learning, p=1, frag=2]"
+  },
+  {
+    "question_id": "q165",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "Which task was used to evaluate GTL in the paper, and how did GTL perform compared to vanilla and fine-tuned models?",
+    "type": "fact",
+    "answer": "We used GTL to evaluate discrete diffusion models. GTL outperformed vanilla and fine-tuned diffusion models. [cita: doc=arxiv_251209897_SCOPE, p=7, frag=19] [cita: doc=arxiv_251210877_guided_transfer_learning, p=2, frag=3]"
+  },
+  {
+    "question_id": "q166",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "In which section of the paper is the computational cost comparison between different methods discussed?",
+    "type": "loc",
+    "answer": "Params/Cost. [cita: doc=arxiv_251209874_pdf_formula_benchmark, p=12, frag=22] [cita: doc=arxiv_251210922_sparseswaps, p=3, frag=7]"
+  },
+  {
+    "question_id": "q167",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "Which figure shows the performance comparison of GTL with vanilla and fine-tuned models across different target-domain training data fractions?",
+    "type": "loc",
+    "answer": "Figure 1: GTL outperforms with 7% of the parameters. MAUVE () vs. fraction of target-domain training data (e.g., 100% = all 79,631 arXiv Physics abstracts; 1% 800). Our results, GTL surpasses vanilla and fine-tuned diffusion across all data-scarcity regimes while training only 7% as many parameters (Fig. 1). We summarize our contributions as follows: 1. We introduce GTL, an effective transfer learning framework for discrete diffusion models. GTL keeps the source denoiser fixed while training a lightweight ratio estimator on both source and target data to enable sampling from the target distribution. GTL achieves scalability by using an unmasking position for the top-nratio candidates, dramatically reducing the per-step computational cost, without sacrificing performance in practice. Our results, GTL surpasses vanilla and fine-tuned diffusion across all data-scarcity regimes while training only 7% as many parameters (Fig. 1). We summarize our contributions as follows: 1. We introduce GTL, an effective transfer learning framework for discrete diffusion models. GT [cita: doc=arxiv_251210877_guided_transfer_learning, p=2, frag=3] [cita: doc=arxiv_251210888_pubtables_v2, p=6, frag=13]"
+  },
+  {
+    "question_id": "q168",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "Does the paper provide experiments evaluating GTL's performance on real-world image datasets?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210554_Grounding_Tokens, p=18, frag=61] [cita: doc=arxiv_251210877_guided_transfer_learning, p=2, frag=3]"
+  },
+  {
+    "question_id": "q169",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "What is the main contribution of PubTables-1M v2 compared to the original PubTables-1M dataset?",
+    "type": "fact",
+    "answer": "PubTables-v2 is the first large-scale dataset for evaluating models on fully end-to-end document-level table extraction and the first dataset containing multi-page tables. Each table is annotated with its structure, content, and the bounding boxes for each section of the table on each page it spans. [cita: doc=arxiv_251210888_pubtables_v2, p=3, frag=4] [cita: doc=arxiv_251210888_pubtables_v2, p=5, frag=10]"
+  },
+  {
+    "question_id": "q170",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "From which types of documents are the tables in PubTables-1M v2 primarily sourced?",
+    "type": "fact",
+    "answer": "Full documents. [cita: doc=arxiv_251210888_pubtables_v2, p=5, frag=10] [cita: doc=arxiv_251210888_pubtables_v2, p=3, frag=4]"
+  },
+  {
+    "question_id": "q171",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "Which table-related tasks are explicitly supported and evaluated using the PubTables-1M v2 dataset?",
+    "type": "fact",
+    "answer": "Table structure recognition, page-object table transformer, and full-page table extraction. [cita: doc=arxiv_251210888_pubtables_v2, p=3, frag=4] [cita: doc=arxiv_251210888_pubtables_v2, p=5, frag=10]"
+  },
+  {
+    "question_id": "q172",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "In which section of the paper is the annotation process and quality control methodology described?",
+    "type": "loc",
+    "answer": "The 'references' section of the paper is described. [cita: doc=arxiv_230712057_external_reasoning_v2, p=13, frag=33] [cita: doc=arxiv_230712057_external_reasoning_v2, p=4, frag=8]"
+  },
+  {
+    "question_id": "q173",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "Which figure illustrates examples of annotated tables and their corresponding structural labels?",
+    "type": "loc",
+    "answer": "Tables with a single-part table and their corresponding structural labels are shown in Figure 3. [cita: doc=arxiv_251210888_pubtables_v2, p=4, frag=7] [cita: doc=arxiv_251210888_pubtables_v2, p=10, frag=26]"
+  },
+  {
+    "question_id": "q174",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "Does the paper report experiments using PubTables-1M v2 for financial document table extraction in industry settings?",
+    "type": "impossible",
+    "answer": "Yes. [cita: doc=arxiv_251210888_pubtables_v2, p=5, frag=10] [cita: doc=arxiv_251210888_pubtables_v2, p=2, frag=2]"
+  },
+  {
+    "question_id": "q175",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "What is the main contribution of the Flex scene encoder presented in the paper?",
+    "type": "fact",
+    "answer": "A new scene encoder that produces a compact, yet highly effective, scene representation from the massive amount of visual inputs, which improves efficiency during training and inference, and enhances driving performance of the policy model. [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=5, frag=17] [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=3, frag=7]"
+  },
+  {
+    "question_id": "q176",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "How does Flex achieve a significant reduction in the computational load for policy models in autonomous driving systems?",
+    "type": "fact",
+    "answer": "Flex consistently improves both accuracy and throughput (2–3) compared to the baseline. Each data point for our approach requires roughly 650 to 1,000 A100 GPU hours for training while baselines take around 1,300 to 1,800 GPU hours. [cita: doc=arxiv_251210365_GPG, p=11, frag=23] [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=6, frag=19]"
+  },
+  {
+    "question_id": "q177",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "On what type of dataset was Flex evaluated, and how large is the dataset used?",
+    "type": "fact",
+    "answer": "A vision-language-action model. [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=6, frag=19] [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=3, frag=7]"
+  },
+  {
+    "question_id": "q178",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "In which section of the paper is the design and performance of the Flex scene encoder described?",
+    "type": "loc",
+    "answer": "III. [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=5, frag=17] [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=3, frag=7]"
+  },
+  {
+    "question_id": "q179",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "Which figure illustrates the comparison of Flex with the baseline method regarding the efficiency and performance trade-off?",
+    "type": "loc",
+    "answer": "Flex consistently improves both accuracy and throughput (2–3) compared to the baseline. [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=6, frag=19] [cita: doc=arxiv_251210922_sparseswaps, p=8, frag=21]"
+  },
+  {
+    "question_id": "q180",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "Does the paper evaluate Flex in real-world driving conditions, such as in off-road or rural areas?",
+    "type": "impossible",
+    "answer": "Flex is a well-designed multi-camera encoding system that is able to perform in real-world driving conditions. [cita: doc=arxiv_251210947_flex_multi_camera_encoding, p=6, frag=19] [cita: doc=arxiv_251210554_Grounding_Tokens, p=12, frag=37]"
   }
 ]
