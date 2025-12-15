@@ -74,7 +74,7 @@ La generación de embeddings se realizó de forma batch-based para reducir laten
 
 Ejecución:
 
-python src/common/embeddings/build_faiss.py
+    python -m src.common.embeddings.build_faiss
 
 Se utilizó la biblioteca FAISS en modo CPU para construir un índice vectorial global.
 
@@ -120,7 +120,7 @@ Este archivo permite recuperar la evidencia textual exacta correspondiente a cad
 
 Ejecución:
 
-python src/common/embeddings/validate_index.py
+    python src/common/embeddings/validate_index.py
 
 Se implementó un script de validación que realiza:
 

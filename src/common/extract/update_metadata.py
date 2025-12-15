@@ -10,9 +10,11 @@ def contar_texto_limpio(ruta_jsonl):
             total += len(registro.get("clean_text", ""))
     return total
 
-def actualizar_metadata():
-    ruta_csv = Path("data/pdf_metadata.csv")
-    carpeta_texto = Path("data/preprocessed")
+def actualizar_metadata(base_data_dir="data"):
+    base_data_dir = Path(base_data_dir)
+
+    ruta_csv = base_data_dir / "pdf_metadata.csv"
+    carpeta_texto = base_data_dir / "preprocessed"
 
     df = pd.read_csv(ruta_csv)
 

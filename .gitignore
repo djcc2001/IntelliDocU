@@ -13,3 +13,7 @@ __pycache__/
 
 # Archivos sensibles
 *.env
+
+UI/data
+UI/indices
+UI/logs

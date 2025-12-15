@@ -1,8 +1,17 @@
 # run_baseline.py
 import random
-from src.v1_baseline.prompts import build_prompt
-from src.v1_baseline.config import TEMPERATURE, MAX_TOKENS, SEED
+#from src.common.llm.qwen_llm import QwenLLM
 from src.common.llm.flan_t5_llm import FlanT5LLM
+
+SEED = 42
+
+def build_prompt(question):
+    system_prompt = (
+        "You are a helpful academic assistant. "
+        "Answer the question as clearly and accurately as possible."
+    )
+    user_prompt = f"Question: {question}\nAnswer:"
+    return system_prompt, user_prompt
 
 def run_baseline(question):
     random.seed(SEED)
@@ -13,7 +22,7 @@ def run_baseline(question):
     return response
 
 if __name__ == "__main__":
-    question = "How does SPARSESWAPS improve pruning for LLMs compared to traditional magnitude pruning methods?"
+    question = "Does DuetSVG implement a reinforcement learning module for path optimization?"
     answer = run_baseline(question)
     print("\n=== BASELINE RESPONSE ===\n")
     print(answer)

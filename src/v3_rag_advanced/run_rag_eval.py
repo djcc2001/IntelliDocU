@@ -1,115 +1,89 @@
-# src/v3_rag_advanced/run_rag_eval.py
+"""Evaluación completa sobre el dataset de preguntas (pipeline ajustado)."""
+
 import json
 from pathlib import Path
-from src.common.retriever.retriever import Retriever
+from tqdm import tqdm
 from src.common.llm.flan_t5_llm import FlanT5LLM
-from src.v3_rag_advanced.abstention import debe_abstener
-from src.v3_rag_advanced.context_builder import build_limited_context
+from src.v3_rag_advanced.rag_pipeline import RAGAdvancedPipeline
+from src.v3_rag_advanced.config import ABSTENTION_TEXT
 
-
-# =============================
-# Configuración
-# =============================
+# Rutas
 QUESTIONS_PATH = Path("data/questions/questions.json")
-OUTPUT_PATH = Path("results/v3_rag_advanced/rag_advanced_answers.json")
-MAX_CONTEXT_CHARS = 2000         # máximo de caracteres del contexto
-TOP_K = 10                       # cantidad de fragmentos a recuperar
-MAX_FRAGMENTS = 10               # cantidad máxima de fragmentos a incluir en el contexto
-SCORE_MINIMO_ABSTENCION = 0.15  # score mínimo para abstenerse
+OUTPUT_DIR = Path("results/v3_rag_advanced")
+OUTPUT_FILE = OUTPUT_DIR / "rag_advanced_answers.json"
 
 
-# =============================
-# Funciones de prompt
-# =============================
-def build_prompt_literal(fragmentos):
-    """Extrae literal los fragmentos importantes para mostrar al LLM."""
-    textos = []
-    for f in fragmentos:
-        # Incluimos doc_id, página y frag_id para la generación de citas
-        textos.append(f"[doc={f['doc_id']}, p={f.get('page','?')}, frag={f['frag_id']}] {f['text']}")
-    return "\n\n".join(textos)
+def evaluate():
+    """Evalúa el sistema RAG Advanced sobre todas las preguntas."""
 
-def build_prompt_summary(literal_context, question):
-    """
-    Prompt ajustado para RAG avanzado con:
-    - Grounding estricto
-    - Abstención controlada (no binaria)
-    - Mejora ligera de F1 sin alucinación
-    """
-    return (
-        "You are an assistant helping to explain academic research papers.\n"
-        "Instructions:\n"
-        "1. Use ONLY the information explicitly stated in the provided context.\n"
-        "2. If the context contains relevant evidence that partially answers the question, "
-        "give a cautious and factual explanation limited to that evidence.\n"
-        "3. If the context clearly supports a full answer, explain it clearly.\n"
-        "4. If the context contains NO relevant information to answer the question, "
-        "reply EXACTLY with: \"It is not mentioned in the document.\" and nothing else.\n"
-        "5. Do NOT guess, infer beyond the text, or add external knowledge.\n"
-        "6. If the question asks for a comparison, explicitly compare ONLY what is stated.\n"
-        "7. The language of the answer MUST be the same as the language of the question.\n"
-        "8. Keep the answer concise (1–3 sentences).\n\n"
-        f"Context:\n{literal_context}\n\n"
-        f"Question:\n{question}\n\n"
-        "Answer:\n"
-    )
-
-def agregar_citas(respuesta, fragmentos_usados):
-    """Agrega todas las citas de los fragmentos usados al final de la respuesta."""
-    if respuesta == "It is not mentioned in the document.":
-        return respuesta  # No agregamos citas si es abstención
-    citas = []
-    for f in fragmentos_usados:
-        citas.append(f"[cita: doc={f['doc_id']}, p={f.get('page','?')}, frag={f['frag_id']}]")
-    if citas:
-        return f"{respuesta} {' '.join(citas)}"
-    return respuesta
-
-def main():
-    retriever = Retriever()
-    llm = FlanT5LLM()
-
+    # Cargar preguntas
+    print("Cargando preguntas...")
     with open(QUESTIONS_PATH, "r", encoding="utf-8") as f:
         questions = json.load(f)
 
+    print(f"Total de preguntas: {len(questions)}")
+
+    # Inicializar sistema
+    print("Inicializando RAG Advanced...")
+    llm = FlanT5LLM()
+    rag = RAGAdvancedPipeline(llm)
+
+    # Procesar preguntas
     results = []
+    abstenciones = 0
+    posibles_hallucinations = 0
 
-    for q in questions:
-        pregunta = q["question"]
+    for q in tqdm(questions, desc="Evaluando"):
+        result = rag.answer(q["question"])
 
-        # 1. Recuperar fragmentos
-        fragmentos = retriever.retrieve(pregunta, k=TOP_K)
-        # Construir contexto limitado
-        contexto, usados = build_limited_context(fragmentos, max_fragments=MAX_FRAGMENTS)
+        is_abstain = result["answer"] == ABSTENTION_TEXT
+        if is_abstain:
+            abstenciones += 1
+        elif not result["fragments"]:
+            # No se abstuvo pero no hay fragmentos → posible hallucination
+            posibles_hallucinations += 1
 
-        # 2. Abstención si no hay suficiente info
-        if debe_abstener(pregunta, usados, score_minimo=SCORE_MINIMO_ABSTENCION):
-            respuesta = "It is not mentioned in the document."
-        else:
-            # 1) Extraer literalmente los fragmentos
-            literal_context = build_prompt_literal(usados)
-
-            # 2) Generar explicación resumida basada solo en esos fragmentos
-            prompt = build_prompt_summary(literal_context, pregunta)
-            respuesta = llm.generate(prompt).strip()
-            # 3) Agregar citas de todos los fragmentos usados
-            respuesta = agregar_citas(respuesta, usados)
-        
-        # 4. Guardar resultado
         results.append({
             "question_id": q["id"],
             "doc_id": q["doc_id"],
-            "question": pregunta,
+            "question": q["question"],
             "type": q["type"],
-            "answer": respuesta
+            "answer": result["answer"],
+            "abstained": is_abstain,
+            "num_fragments": len(result["fragments"])
         })
 
-    # 5. Guardar todo en archivo JSON
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+    # Guardar resultados
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
-    print("Resultados de RAG advanced guardados correctamente.")
+    # Estadísticas
+    print(f"\n✓ Evaluación completada")
+    print(f"  Resultados guardados en: {OUTPUT_FILE}")
+    print(f"\nEstadísticas generales:")
+    print(f"  - Total de preguntas: {len(results)}")
+    print(f"  - Respuestas generadas: {len(results) - abstenciones}")
+    print(f"  - Abstenciones: {abstenciones}")
+    print(f"  - Posibles hallucinations: {posibles_hallucinations}")
+    print(f"  - Tasa de abstención: {abstenciones/len(results)*100:.1f}%")
+
+    # Estadísticas por tipo
+    factual = [r for r in results if r["type"] == "factual"]
+    impossible = [r for r in results if r["type"] == "impossible"]
+
+    if factual:
+        abs_fact = sum(1 for r in factual if r["abstained"])
+        print(f"\n  Preguntas factuales:")
+        print(f"    - Total: {len(factual)}")
+        print(f"    - Abstenciones: {abs_fact}")
+
+    if impossible:
+        abs_imp = sum(1 for r in impossible if r["abstained"])
+        print(f"\n  Preguntas imposibles:")
+        print(f"    - Total: {len(impossible)}")
+        print(f"    - Abstenciones: {abs_imp} (ideal: {len(impossible)})")
+
 
 if __name__ == "__main__":
-    main()
+    evaluate()

@@ -1,32 +1,32 @@
-def debe_abstener(pregunta, fragmentos, score_minimo=0.15):
-    """
-    Decide si la pregunta no tiene respuesta en los fragmentos disponibles.
-    """
+"""Módulo de abstención: decide cuándo no responder."""
 
-    # 1️⃣ No hay fragmentos
+from src.v3_rag_advanced.config import (
+    SCORE_MINIMO,
+    MIN_RELEVANT_FRAGMENTS,
+    MIN_QUESTION_WORDS
+)
+
+def debe_abstener(pregunta, fragmentos, score_minimo=None):
+    if score_minimo is None:
+        score_minimo = SCORE_MINIMO
+
+    # 1) No se recuperó nada
     if not fragmentos:
         return True
 
-    # 2️⃣ Ningún fragmento relevante según score
-    if all(f["score"] < score_minimo for f in fragmentos):
+    # 2) Ningún fragmento con score razonable
+    if max(f.get("score", 0.0) for f in fragmentos) < score_minimo:
         return True
 
-    # 3️⃣ Preguntas imposibles o fuera de dominio
-    palabras_imposibles = [
-        "quantum", "weather", "capital of", "president", "hola", "como estas", "chiste"
+    # 3) Pregunta demasiado corta
+    if len(pregunta.strip().split()) < MIN_QUESTION_WORDS:
+        return True
+
+    # 4) Verificar fragmentos realmente relevantes
+    relevantes = [
+        f for f in fragmentos if f.get("score", 0.0) >= score_minimo
     ]
-    pregunta_lower = pregunta.lower()
-    if any(p in pregunta_lower for p in palabras_imposibles):
+    if len(relevantes) < MIN_RELEVANT_FRAGMENTS:
         return True
 
-    # 4️⃣ Opcional: abstenerse si pregunta demasiado corta o sin keywords
-    if len(pregunta.split()) < 3:
-        return True
-
-    # 5️⃣ Si fragmentos relevantes son muy pocos (<2)
-    fragmentos_relevantes = [f for f in fragmentos if f["score"] >= score_minimo]
-    if len(fragmentos_relevantes) < 2:
-        return True
-
-    # Si pasó todos los filtros, no se abstiene
     return False

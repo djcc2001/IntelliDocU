@@ -1,23 +1,26 @@
-MAX_CONTEXT_CHARS = 1200  # aumentar ligeramente para Flan-T5 (~300 tokens)
+# src/v2_rag_basic/prompt.py
 
-def build_prompt(question, fragments):
-    contexto = ""
-    for i, frag in enumerate(fragments):
-        fragment_text = (
-            f"[FRAGMENT {i+1}] (doc:{frag['doc_id']}, page:{frag['page']}, frag:{frag['frag_id']}):\n"
-            f"{frag['text']}\n\n"
+MAX_CONTEXT_CHARS = 1200
+MAX_FRAGMENTS = 5
+
+def build_literal_context(fragments):
+    textos = []
+    for f in fragments[:MAX_FRAGMENTS]:
+        textos.append(
+            f"[doc={f['doc_id']}, p={f.get('page','?')}, frag={f['frag_id']}]\n{f['text']}"
         )
-        if len(contexto) + len(fragment_text) > MAX_CONTEXT_CHARS:
-            break
-        contexto += fragment_text
+    return "\n\n".join(textos)
 
-    prompt = (
-        "You are an assistant that answers questions using ONLY the provided context.\n"
-        "If the question asks 'what is', provide a concise definition.\n"
-        "If the question asks about methods/results, summarize based on context.\n"
-        "If the answer is not in the context, respond exactly: 'It is not mentioned in the document.'\n\n"
-        f"Context:\n{contexto}\n"
+
+def build_partial_summary_prompt(context, question):
+    return (
+        "You are an assistant helping to explain research papers.\n"
+        "Instructions:\n"
+        "1. Using ONLY the provided context, answer the question.\n"
+        "2. The answer may be approximate or incomplete.\n"
+        "3. Do NOT invent new concepts.\n"
+        "4. Keep it short (2-3 sentences).\n\n"
+        f"Context:\n{context}\n\n"
         f"Question:\n{question}\n\n"
-        "Answer:"
+        "Answer:\n"
     )
-    return prompt

@@ -6,7 +6,7 @@ from embedder import Embedder
 # ===============================
 # Configuración
 # ===============================
-INDEX_DIR = "indices/faiss_global"
+INDEX_DIR = "data/indices/faiss"
 QUERY = "SparseSwaps pruning mask refinement algorithm"
 K = 5  # Número de resultados a devolver
 

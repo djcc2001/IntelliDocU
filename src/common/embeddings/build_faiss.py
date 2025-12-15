@@ -3,38 +3,30 @@ import faiss
 import numpy as np
 from pathlib import Path
 from tqdm import tqdm
+import argparse
 
-from embedder import Embedder
+from src.common.embeddings.embedder import Embedder
 
-# ===============================
-# Configuración de rutas
-# ===============================
-FRAGMENTS_DIR = Path("data/fragments")
-INDEX_DIR = Path("indices/faiss_global")
-INDEX_DIR.mkdir(parents=True, exist_ok=True)
+BATCH_SIZE = 32
 
-# ===============================
-# Parámetros de batch
-# ===============================
-BATCH_SIZE = 32  # Número de fragments a procesar por batch
+def build_faiss_index(base_data_dir="data"):
+    base_data_dir = Path(base_data_dir)
 
-# ===============================
-# Construcción del índice FAISS
-# ===============================
-def build_index():
+    fragments_dir = base_data_dir / "fragments"
+    index_dir = base_data_dir / "indices" / "faiss"
+    index_dir.mkdir(parents=True, exist_ok=True)
+
     embedder = Embedder()
 
     all_embeddings = []
     mapping = []
     vector_id = 0
 
-    fragment_files = list(FRAGMENTS_DIR.glob("*.jsonl"))
-
+    fragment_files = list(fragments_dir.glob("*.jsonl"))
     if not fragment_files:
-        print("No se encontraron fragments en", FRAGMENTS_DIR)
-        return
+        raise RuntimeError("No se encontraron fragments")
 
-    for frag_file in tqdm(fragment_files, desc="Procesando fragments"):
+    for frag_file in tqdm(fragment_files, desc="FAISS indexing"):
         batch_texts = []
         batch_data = []
 
@@ -42,7 +34,6 @@ def build_index():
             for line in f:
                 data = json.loads(line)
 
-                # Excluir referencias
                 if data.get("section") == "references":
                     continue
 
@@ -53,56 +44,64 @@ def build_index():
                 batch_texts.append(text)
                 batch_data.append(data)
 
-                # Procesar batch completo
                 if len(batch_texts) == BATCH_SIZE:
-                    embeddings = embedder.encode(batch_texts)
-                    for emb, dat in zip(embeddings, batch_data):
-                        all_embeddings.append(emb)
-                        mapping.append({
-                            "vector_id": vector_id,
-                            "doc_id": dat["doc_id"],
-                            "page": dat["page"],
-                            "section": dat.get("section"),
-                            "frag_id": dat["frag_id"],
-                            "text": dat["text"]
-                        })
-                        vector_id += 1
+                    _process_batch(
+                        embedder,
+                        batch_texts,
+                        batch_data,
+                        all_embeddings,
+                        mapping,
+                        vector_id
+                    )
+                    vector_id += len(batch_texts)
                     batch_texts, batch_data = [], []
 
-        # Procesar batch final si queda algo
         if batch_texts:
-            embeddings = embedder.encode(batch_texts)
-            for emb, dat in zip(embeddings, batch_data):
-                all_embeddings.append(emb)
-                mapping.append({
-                    "vector_id": vector_id,
-                    "doc_id": dat["doc_id"],
-                    "page": dat["page"],
-                    "section": dat.get("section"),
-                    "frag_id": dat["frag_id"],
-                    "text": dat["text"]
-                })
-                vector_id += 1
+            _process_batch(
+                embedder,
+                batch_texts,
+                batch_data,
+                all_embeddings,
+                mapping,
+                vector_id
+            )
+            vector_id += len(batch_texts)
 
     if not all_embeddings:
-        raise RuntimeError("No se generaron embeddings. Revisa los fragments.")
+        raise RuntimeError("No se generaron embeddings")
 
-    # Convertir a matriz numpy
     embeddings_matrix = np.vstack(all_embeddings).astype("float32")
 
-    # Crear índice FAISS (cosine similarity usando inner product con embeddings normalizados)
     dim = embeddings_matrix.shape[1]
     index = faiss.IndexFlatIP(dim)
     index.add(embeddings_matrix)
 
-    # Guardar índice y mapping
-    faiss.write_index(index, str(INDEX_DIR / "index.faiss"))
-    with open(INDEX_DIR / "mapping.json", "w", encoding="utf-8") as f:
+    faiss.write_index(index, str(index_dir / "index.faiss"))
+    with open(index_dir / "mapping.json", "w", encoding="utf-8") as f:
         json.dump(mapping, f, indent=2, ensure_ascii=False)
 
-    print("Índice FAISS construido correctamente")
-    print(f"Total vectores: {index.ntotal}")
+    print(f"FAISS listo — vectores: {index.ntotal}")
+
+
+def _process_batch(embedder, texts, datas, all_embeddings, mapping, start_id):
+    embeddings = embedder.encode(texts)
+    for i, (emb, dat) in enumerate(zip(embeddings, datas)):
+        all_embeddings.append(emb)
+        mapping.append({
+            "vector_id": start_id + i,
+            "doc_id": dat["doc_id"],
+            "page": dat["page"],
+            "section": dat.get("section"),
+            "frag_id": dat["frag_id"],
+            "text": dat["text"]
+        })
+
+def main():
+    try:
+        build_faiss_index(base_data_dir="data")
+    except Exception as e:
+        print(f"[ERROR] No se pudo construir FAISS: {e}")
 
 
 if __name__ == "__main__":
-    build_index()
+    main()

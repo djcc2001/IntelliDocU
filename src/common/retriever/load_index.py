@@ -1,23 +1,16 @@
-# Carga del índice FAISS y del mapeo de fragmentos
-
 import faiss
 import json
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parents[3]
 
-INDEX_PATH = BASE_DIR / "indices" / "faiss_global" / "index.faiss"
-MAPPING_PATH = BASE_DIR / "indices" / "faiss_global" / "mapping.json"
-
-
-def load_faiss_index():
-    """Carga y devuelve el índice FAISS"""
-    index = faiss.read_index(str(INDEX_PATH))
-    return index
+def load_faiss_index(base_data_dir="data"):
+    base_data_dir = Path(base_data_dir)
+    index_path = base_data_dir / "indices" / "faiss" / "index.faiss"
+    return faiss.read_index(str(index_path))
 
 
-def load_mapping():
-    """Carga y devuelve el mapeo de fragmentos"""
-    with open(MAPPING_PATH, "r", encoding="utf-8") as f:
-        mapping = json.load(f)
-    return mapping
+def load_mapping(base_data_dir="data"):
+    base_data_dir = Path(base_data_dir)
+    mapping_path = base_data_dir / "indices" / "faiss" / "mapping.json"
+    with open(mapping_path, "r", encoding="utf-8") as f:
+        return json.load(f)
