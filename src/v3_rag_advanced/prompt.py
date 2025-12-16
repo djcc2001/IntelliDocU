@@ -2,55 +2,63 @@
 
 from src.v3_rag_advanced.config import ABSTENTION_TEXT
 
-def build_prompt(context, question):
-    return (
-        "You are an assistant helping to explain research papers.\n"
-        "Instructions:\n"
-        "1. Answer the question using ONLY the provided context.\n"
-        "2. The answer MUST directly address the question and explain the main idea, not copy titles or captions.\n"
-        "3. If the question asks for a comparison, explicitly compare the methods mentioned.\n"
-        "4. The language of the answer MUST be the same as the language of the question.\n"
-        "5. If the context does NOT contain enough information to answer the question, "
-        "reply EXACTLY with: \"It is not mentioned in the document.\"\n"
-        "6. Do NOT guess, infer, or provide approximate explanations when information is missing.\n"
-        "7. If answered, keep the explanation concise (2–3 sentences).\n\n"
-        f"Context:\n{context}\n\n"
-        f"Question:\n{question}\n\n"
-        "Answer:\n"
-    )
 
+def build_prompt(context, question):
+    return f"""You are a careful academic assistant.
+
+Answer the question using ONLY the provided context.
+
+Rules:
+- Answer ONLY if the information is EXPLICITLY stated in the context.
+- Do NOT infer, generalize, or use external knowledge.
+- If the answer is NOT explicitly stated, respond EXACTLY with:
+"{ABSTENTION_TEXT}"
+- Be concise and factual (max 2 sentences).
+
+Context:
+{context}
+
+Question: {question}
+
+Answer (in the same language as the question):
+"""
+
+
+
+
+
+def build_prompt_without_context(question):
+    return f"""You are an academic assistant.
+
+There is NO document context available.
+
+Respond EXACTLY with:
+"{ABSTENTION_TEXT}"
+
+Question: {question}
+"""
 
 
 
 def format_answer_with_citations(respuesta, fragmentos):
-    """
-    Añade citaciones a la respuesta.
-    
-    Args:
-        respuesta: Respuesta generada por el LLM
-        fragmentos: Fragmentos usados como contexto
-    
-    Returns:
-        Respuesta con citaciones
-    """
-    # No añadir citas si es abstención
+    """Añade citaciones o disclaimer."""
     if respuesta.strip() == ABSTENTION_TEXT:
         return respuesta
     
-    # No añadir citas si no hay fragmentos
+    # Sin fragmentos: añadir disclaimer
     if not fragmentos:
-        return respuesta
+        return f"{respuesta}\n\n Nota: Respuesta basada en conocimiento general, sin fuentes específicas del documento."
     
-    # Construir citaciones compactas
+    # Con fragmentos: añadir citaciones
     citas = []
-    for frag in fragmentos:
-        cita = (
-            f"[Doc: {frag['doc_id']}, "
-            f"P.{frag.get('page', '?')}, "
-            f"Sec: {frag.get('section', 'unknown')}]"
-        )
-        citas.append(cita)
+    seen = set()
     
-    # Añadir citas al final
+    for frag in fragmentos:
+        cita_key = (frag['doc_id'], frag.get('page', '?'), frag.get('section', 'unknown'))
+        if cita_key not in seen:
+            seen.add(cita_key)
+            cita = f"[Doc: {frag['doc_id']}, P.{frag.get('page', '?')}, Sec: {frag.get('section', 'unknown')}]"
+            citas.append(cita)
+    
     citas_str = " ".join(citas)
     return f"{respuesta}\n\n📚 Fuentes: {citas_str}"
