@@ -1,8 +1,8 @@
 # src/v2_rag_basic/run_rag_eval.py
 import json
 from pathlib import Path
-#from src.common.llm.qwen_llm import QwenLLM
-from src.common.llm.flan_t5_llm import FlanT5LLM
+from src.common.llm.qwen_llm import QwenLLM
+#from src.common.llm.flan_t5_llm import FlanT5LLM
 from src.v2_rag_basic.rag_pipeline import RAGPipeline
 
 QUESTIONS_PATH = Path("data/questions/questions.json")
@@ -12,7 +12,7 @@ def main():
     with open(QUESTIONS_PATH, "r", encoding="utf-8") as f:
         questions = json.load(f)
 
-    llm = FlanT5LLM()
+    llm = QwenLLM()
     rag = RAGPipeline(llm)
 
     results = []

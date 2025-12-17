@@ -7,8 +7,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-#from src.common.llm.qwen_llm import QwenLLM
-from src.common.llm.flan_t5_llm import FlanT5LLM
+from src.common.llm.qwen_llm import QwenLLM
+#from src.common.llm.flan_t5_llm import FlanT5LLM
 import random
 
 # =============================
@@ -30,7 +30,7 @@ def run_baseline_ui(question: str) -> str:
     """
     random.seed(SEED)
 
-    llm = FlanT5LLM()
+    llm = QwenLLM()
     prompt = build_prompt(question)
     response = llm.generate(prompt).strip()
 

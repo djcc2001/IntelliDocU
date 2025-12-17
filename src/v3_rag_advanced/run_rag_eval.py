@@ -3,7 +3,8 @@
 import json
 from pathlib import Path
 from tqdm import tqdm
-from src.common.llm.flan_t5_llm import FlanT5LLM
+from src.common.llm.qwen_llm import QwenLLM
+#from src.common.llm.flan_t5_llm import FlanT5LLM
 from src.v3_rag_advanced.rag_pipeline import RAGAdvancedPipeline
 from src.v3_rag_advanced.config import ABSTENTION_TEXT
 
@@ -25,7 +26,7 @@ def evaluate():
 
     # Inicializar sistema
     print("Inicializando RAG Advanced...")
-    llm = FlanT5LLM()
+    llm = QwenLLM()
     rag = RAGAdvancedPipeline(llm)
 
     # Procesar preguntas

@@ -7,14 +7,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-#from src.common.llm.qwen_llm import QwenLLM
-from src.common.llm.flan_t5_llm import FlanT5LLM
+from src.common.llm.qwen_llm import QwenLLM
+#from src.common.llm.flan_t5_llm import FlanT5LLM
 from src.v2_rag_basic.rag_pipeline import RAGPipeline
 
 # =============================
 # Inicialización global
 # =============================
-_llm = FlanT5LLM()
+_llm = QwenLLM()
 _rag = RAGPipeline(_llm)
 
 def run_rag_basic_ui(question: str) -> str:

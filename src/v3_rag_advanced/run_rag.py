@@ -1,7 +1,7 @@
 """Script para probar RAG Advanced con una pregunta."""
 
-#from src.common.llm.qwen_llm import QwenLLM
-from src.common.llm.flan_t5_llm import FlanT5LLM
+from src.common.llm.qwen_llm import QwenLLM
+#from src.common.llm.flan_t5_llm import FlanT5LLM
 from src.v3_rag_advanced.rag_pipeline import RAGAdvancedPipeline
 
 
@@ -15,7 +15,7 @@ def main():
     
     # Inicializar sistema
     print("Inicializando RAG Advanced...")
-    llm = FlanT5LLM()
+    llm = QwenLLM()
     rag = RAGAdvancedPipeline(llm)
     
     # Generar respuesta
