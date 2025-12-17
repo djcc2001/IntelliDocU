@@ -1,15 +1,15 @@
 Preparación y Organización del Dataset - FASE 1
 -------------------------------------
-
-Esta fase tuvo como objetivo construir un dataset mixto compuesto por documentos académicos en PDF y sus metadatos asociados, siguiendo la metodología del proyecto IntelliDocU. El resultado final es un conjunto de PDFs verificados, estandarizados y documentados que servirán como base para las siguientes fases: extracción, chunking, recuperación (RAG) y evaluación del sistema.
-
+Esta fase tuvo como objetivo construir un dataset mixto compuesto por documentos académicos en PDF 
+y sus metadatos asociados, siguiendo la metodología del proyecto IntelliDocU. El resultado final es 
+un conjunto de PDFs verificados, estandarizados y documentados que servirán como base para las 
+siguientes fases: extracción, chunking, recuperación (RAG) y evaluación del sistema.
 
 ==================================================
 1. Selección de fuentes de datos
 ==================================================
-
 Para asegurar consistencia y disponibilidad, se decidió utilizar una sola fuente primaria:
-👉 arXiv.org, el repositorio abierto de artículos científicos.
+    arXiv.org, el repositorio abierto de artículos científicos.
 
 Se eligió arXiv porque:
     - todos los documentos están en inglés,
@@ -21,12 +21,10 @@ Se eligió arXiv porque:
 ==================================================
 2. Descarga estructurada de PDFs
 ==================================================
-
 Se creó el directorio:
     IntelliDocU/data/pdfs/
 
 Luego se descargaron manualmente los PDFs siguiendo estos criterios:
-
     - documentos exclusivamente en inglés,
     - entre 10 y 30 páginas,
     - distribuidos en diferentes áreas (IA, visión, modelos multimodales, gráficos, optimización),
@@ -39,7 +37,6 @@ Cada archivo fue guardado usando este formato estándar:
 ==================================================
 3. Creación del archivo de metadatos (CSV)
 ==================================================
-
 Se creó un archivo principal para registrar todos los metadatos:
     IntelliDocU/data/pdf_metadata.csv
 
@@ -55,4 +52,3 @@ Descripción de cada columna:
     - language: siempre "English"
     - file_type: "digital" (todos provienen de arXiv)
     - notes: breve resumen o palabras clave sobre la temática del paper
-

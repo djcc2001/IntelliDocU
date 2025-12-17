@@ -1,26 +1,27 @@
 Extracción y Limpieza del Texto - FASE 2
 
-Esta fase tuvo como objetivo convertir los documentos académicos en formato PDF, previamente organizados en la Fase 1, en texto estructurado y limpio, listo para ser utilizado en las siguientes etapas del proyecto IntelliDocU, especialmente chunking, recuperación aumentada (RAG) y verificación de evidencia. El resultado final es un conjunto de archivos de texto por página, normalizados y correctamente documentados.
+Esta fase tuvo como objetivo convertir los documentos académicos en formato PDF, previamente organizados en la Fase 1, 
+en texto estructurado y limpio, listo para ser utilizado en las siguientes etapas del proyecto IntelliDocU, especialmente 
+chunking, recuperación aumentada (RAG) y verificación de evidencia. El resultado final es un conjunto de archivos de 
+texto por página, normalizados y correctamente documentados.
 
 ==================================================
 1. Objetivo de la Fase 2
 ==================================================
-
 El objetivo principal de esta fase fue:
 
-- extraer el texto completo de cada PDF del dataset,
-- conservar la estructura por páginas,
-- limpiar el texto eliminando ruido típico de PDFs,
-- asignar una sección semántica a cada fragmento de texto,
-- generar archivos intermedios reutilizables,
-- actualizar los metadatos del dataset con información del proceso de extracción.
+    - extraer el texto completo de cada PDF del dataset,
+    - conservar la estructura por páginas,
+    - limpiar el texto eliminando ruido típico de PDFs,
+    - asignar una sección semántica a cada fragmento de texto,
+    - generar archivos intermedios reutilizables,
+    - actualizar los metadatos del dataset con información del proceso de extracción.
 
 Esta fase es fundamental para garantizar que el sistema trabaje con información textual confiable, consistente y bien estructurada.
 
 ==================================================
 2. Organización de carpetas
 ==================================================
-
 Se crearon los siguientes directorios dentro del proyecto:
 
     IntelliDocU/data/extracted/
@@ -29,18 +30,18 @@ Se crearon los siguientes directorios dentro del proyecto:
 
 Su propósito es el siguiente:
 
-- extracted/: almacena el texto crudo extraído directamente de los PDFs, organizado por páginas.
-- preprocessed/: almacena el texto limpio, normalizado y enriquecido con información de sección.
-- extract/: contiene el código modular y reutilizable para la extracción, limpieza y validación del texto.
+    - extracted/: almacena el texto crudo extraído directamente de los PDFs, organizado por páginas.
+    - preprocessed/: almacena el texto limpio, normalizado y enriquecido con información de sección.
+    - extract/: contiene el código modular y reutilizable para la extracción, limpieza y validación del texto.
 
 ==================================================
 3. Extracción de texto desde PDFs
 ==================================================
-
 Ejecutar:
     python src/common/extract/extractor.py
 
-La extracción de texto se realizó utilizando la librería PyMuPDF (fitz), elegida por su velocidad y precisión en documentos académicos digitales.
+La extracción de texto se realizó utilizando la librería PyMuPDF (fitz), elegida por su velocidad y precisión en documentos 
+académicos digitales.
 
 Para cada PDF:
     - se abrió el documento página por página,
@@ -61,20 +62,26 @@ Cada registro generado contiene:
 ==================================================
 4. Limpieza y normalización del texto
 ==================================================
-
 Ejecutar:
     python src/common/extract/cleaner.py
 
-El texto extraído desde los PDFs contiene ruido típico de documentos científicos debido al formato de columnas, saltos de línea y partición artificial de palabras. Para corregir estos problemas, se aplicaron las siguientes operaciones de limpieza:
+El texto extraído desde los PDFs contiene ruido típico de documentos científicos debido al formato de columnas, 
+saltos de línea y partición artificial de palabras. Para corregir estos problemas, se aplicaron las siguientes 
+operaciones de limpieza:
 
     - unión de palabras cortadas por guiones al final de línea,
     - eliminación de saltos de línea innecesarios,
     - normalización de espacios múltiples,
     - preservación del contenido textual sin alteraciones semánticas.
 
-Adicionalmente, se realizó la asignación de una sección semántica a cada página del documento. Esta asignación se basa en la detección de palabras clave mediante expresiones regulares (por ejemplo: "abstract", "introduction", "method", "results", "conclusion", "appendix").
+Adicionalmente, se realizó la asignación de una sección semántica a cada página del documento. Esta asignación 
+se basa en la detección de palabras clave mediante expresiones regulares (por ejemplo: "abstract", "introduction", 
+"method", "results", "conclusion", "appendix"). Los patrones de sección incluyen títulos en inglés y español,
+aunque el dataset actual contiene documentos en inglés.
 
-El algoritmo analiza los primeros caracteres del texto de cada página. Cuando se detecta una nueva sección, esta se establece como sección activa y se mantiene para las páginas siguientes hasta que se identifica otra sección. En caso de no detectarse ninguna, el texto se clasifica como "unknown".
+El algoritmo analiza las primeras líneas del texto (hasta 15 líneas) de cada página. Cuando se detecta una nueva sección, 
+esta se establece como sección activa y se mantiene para las páginas siguientes hasta que se identifica otra sección. 
+En caso de no detectarse ninguna, el texto se clasifica como "unknown".
 
 Cada registro limpio conserva:
     - texto original extraído,
@@ -91,7 +98,6 @@ Limitaciones:
 ==================================================
 5. Actualización del archivo de metadatos
 ==================================================
-
 Ejecutar:
     python src/common/extract/update_metadata.py
 
@@ -100,7 +106,6 @@ Una vez finalizada la extracción y limpieza, se actualizó automáticamente el 
     IntelliDocU/data/pdf_metadata.csv
 
 Se añadieron las siguientes columnas:
-
     - cleaned_length: número total de caracteres del texto limpio por PDF,
     - extraction_method: método utilizado para la extracción del texto (pymupdf),
     - ocr_applied: indicador de uso de OCR (False para todos los documentos actuales).
@@ -113,24 +118,22 @@ Esta información permite:
 ==================================================
 6. Validación de la Fase 2
 ==================================================
-
 Ejecutar:
     python src/common/extract/test_fase2.py
 
 La correcta ejecución de esta fase se validó mediante:
-
     - ejecución exitosa de los scripts de extracción y limpieza,
     - verificación de la generación de archivos en extracted/ y preprocessed/,
     - inspección visual del texto limpio,
     - comprobación de las columnas añadidas en el archivo de metadatos CSV,
     - ejecución de un script de prueba automatizado.
 
-El script de prueba valida la integridad mínima de los datos generados, asegurando la presencia de los campos esperados y un volumen de texto razonable por página.
+El script de prueba valida la integridad mínima de los datos generados, asegurando la presencia de los campos 
+esperados y un volumen de texto razonable por página.
 
 ==================================================
 7. Resultado final de la Fase 2
 ==================================================
-
 Al finalizar la Fase 2, el proyecto cuenta con:
 
     - texto estructurado por página para cada PDF,
@@ -139,5 +142,3 @@ Al finalizar la Fase 2, el proyecto cuenta con:
     - metadatos actualizados y cuantificados,
     - una base sólida para aplicar recuperación aumentada (RAG),
     - código modular y reutilizable para futuras versiones del sistema.
-
-La Fase 2 deja el proyecto completamente preparado para avanzar hacia la Fase 3: Chunking y Preparación para Recuperación Aumentada (RAG).

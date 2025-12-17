@@ -1,11 +1,14 @@
 Chunking y Preparación para Recuperación Aumentada (RAG) – FASE 3
 
-Esta fase tuvo como objetivo transformar el texto limpio obtenido en la Fase 2 en fragmentos semánticos (chunks) de tamaño controlado, preparados para la generación de embeddings y la posterior recuperación de información dentro del sistema IntelliDocU. El resultado final es un conjunto de fragmentos tokenizados, solapados y validados, acompañados de metadatos suficientes para garantizar trazabilidad, citación y verificación de evidencia.
+Esta fase tuvo como objetivo transformar el texto limpio obtenido en la Fase 2 en fragmentos semánticos (chunks) 
+de tamaño controlado, preparados para la generación de embeddings y la posterior recuperación de información dentro 
+del sistema IntelliDocU. El resultado final es un conjunto de fragmentos generados a partir de tokenización subword, 
+solapados y validados, acompañados de metadatos suficientes para garantizar trazabilidad, citación y verificación 
+de evidencia.
 
 ==================================================
 1. Objetivo de la Fase 3
 ==================================================
-
 El objetivo principal de esta fase fue:
 
 - dividir el texto limpio en fragmentos manejables para modelos de lenguaje,
@@ -18,12 +21,10 @@ El objetivo principal de esta fase fue:
 ==================================================
 2. Insumos utilizados
 ==================================================
-
 Los insumos principales de esta fase fueron:
-
-- archivos `.jsonl` generados en la Fase 2,
-- texto limpio normalizado por página,
-- metadatos asociados a cada documento (identificador y número de página).
+    - archivos `.jsonl` generados en la Fase 2,
+    - texto limpio normalizado por página,
+    - metadatos asociados a cada documento (identificador y número de página).
 
 Los archivos de entrada se ubicaron en:
 
@@ -32,60 +33,46 @@ Los archivos de entrada se ubicaron en:
 ==================================================
 3. Estrategia de chunking
 ==================================================
-
 Se adoptó una estrategia de chunking basada en tokens, utilizando un tokenizer compatible con modelos de lenguaje modernos.
 
 Parámetros definidos:
+    - tokenizer: google/flan-t5-base y Qwen/Qwen2.5-1.5B-Instruct
+    - tamaño máximo de fragmento: 512 tokens
+    - solapamiento entre fragmentos: 100 tokens
+    - tamaño mínimo de fragmento: 50 tokens
+    - unidad base de procesamiento: página del documento
 
-- tokenizer: google/flan-t5-base
-- tamaño máximo de fragmento: 512 tokens
-- solapamiento entre fragmentos: 100 tokens
-- tamaño mínimo de fragmento: 50 tokens
-- unidad base de procesamiento: página del documento
-
-El uso de fragmentos solapados permite preservar el contexto semántico entre segmentos consecutivos, reduciendo la pérdida de información relevante en los límites de cada chunk. Asimismo, se definió un tamaño mínimo de fragmento para evitar la generación de segmentos residuales demasiado pequeños, los cuales aportan poco valor semántico en la recuperación de información.
+El uso de fragmentos solapados permite preservar el contexto semántico entre segmentos consecutivos, reduciendo la pérdida 
+de información relevante en los límites de cada chunk. Asimismo, se definió un tamaño mínimo de fragmento para evitar la 
+generación de segmentos residuales demasiado pequeños, los cuales aportan poco valor semántico en la recuperación de información.
 
 ==================================================
 4. Detección de secciones del documento
 ==================================================
-
-Como parte del proceso de chunking, se implementó un mecanismo automático de detección de secciones semánticas del documento utilizando expresiones regulares jerárquicas. Este mecanismo permite clasificar cada fragmento en una de las siguientes categorías:
-
-- abstract
-- introduction
-- method
-- results
-- conclusion
-- appendix
-- unknown (en caso de no coincidencia)
-
-La detección se realiza analizando los encabezados presentes en el texto, priorizando secciones estructurales comunes en documentos técnicos y científicos. Esta información se almacena como metadato del fragmento y puede ser utilizada posteriormente para filtrado, priorización o recuperación contextual dentro del sistema RAG.
+La información de sección semántica utilizada durante el chunking proviene del proceso de detección realizado en la Fase 2. 
+Cada fragmento hereda la sección asignada a la página de origen, preservando laclasificación estructural del documento.
 
 ==================================================
 5. Generación de fragmentos
 ==================================================
-
 Ejecución:
-
     python src/common/chunking/chunker.py
 
 El proceso de generación de fragmentos consistió en:
-
-- lectura secuencial del texto limpio por página,
-- tokenización del contenido textual,
-- división del texto en fragmentos de tamaño controlado con solapamiento,
-- asignación de identificadores únicos a cada fragmento,
-- detección automática de la sección semántica del documento,
-- almacenamiento de los fragmentos en formato JSONL.
+    - lectura secuencial del texto limpio por página,
+    - tokenización del contenido textual,
+    - división del texto en fragmentos de tamaño controlado con solapamiento,
+    - asignación de identificadores únicos a cada fragmento,
+    - detección automática de la sección semántica del documento,
+    - almacenamiento de los fragmentos en formato JSONL.
 
 Cada fragmento contiene la siguiente información:
-
-- doc_id: identificador del documento original,
-- page: número de página de origen,
-- section: sección semántica del documento,
-- frag_id: identificador único del fragmento dentro del documento,
-- text: contenido textual del fragmento,
-- token_count: número de tokens del fragmento.
+    - doc_id: identificador del documento original,
+    - page: número de página de origen,
+    - section: sección semántica del documento,
+    - frag_id: identificador único del fragmento dentro del documento,
+    - text: contenido textual del fragmento,
+    - token_count: número de tokens del fragmento.
 
 Los fragmentos generados se almacenaron en:
 
@@ -94,30 +81,25 @@ Los fragmentos generados se almacenaron en:
 ==================================================
 6. Validación automática del chunking
 ==================================================
-
 Ejecución:
-
     python src/common/chunking/validate_chunks.py
 
 Para garantizar la calidad del proceso, se implementó un script de validación automática que verifica:
+    - la existencia de fragmentos para cada documento procesado,
+    - la ausencia de fragmentos vacíos,
+    - el cumplimiento de los límites mínimo y máximo de tokens,
+    - la distribución estadística del tamaño de los fragmentos.
 
-- la existencia de fragmentos para cada documento procesado,
-- la ausencia de fragmentos vacíos,
-- el cumplimiento de los límites mínimo y máximo de tokens,
-- la distribución estadística del tamaño de los fragmentos.
-
-El validador genera estadísticas por documento, incluyendo el número total de fragmentos, fragmentos vacíos, tamaño mínimo, máximo y promedio de tokens, permitiendo detectar posibles inconsistencias antes de la generación de embeddings.
+El validador genera estadísticas por documento, incluyendo el número total de fragmentos, fragmentos vacíos, tamaño mínimo, 
+máximo y promedio de tokens, permitiendo detectar posibles inconsistencias antes de la generación de embeddings. La validación 
+no modifica los fragmentos, solo detecta anomalías.
 
 ==================================================
 7. Resultado final de la Fase 3
 ==================================================
-
 Al finalizar la Fase 3, el proyecto cuenta con:
-
-- fragmentos semánticos listos para la generación de embeddings,
-- solapamiento adecuado para preservar el contexto,
-- metadatos completos para trazabilidad, citación y análisis,
-- identificación automática de secciones del documento,
-- validación automatizada del proceso de chunking.
-
-Esta fase establece el puente directo entre el preprocesamiento textual y la recuperación semántica, permitiendo avanzar de forma consistente hacia la Fase 4: Generación de Embeddings y Construcción del Índice Vectorial.
+    - fragmentos semánticos listos para la generación de embeddings,
+    - solapamiento adecuado para preservar el contexto,
+    - metadatos completos para trazabilidad, citación y análisis,
+    - identificación automática de secciones del documento,
+    - validación automatizada del proceso de chunking.

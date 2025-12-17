@@ -1,39 +1,30 @@
 Recuperación Semántica con FAISS (Retriever) - FASE 5
 ---------------------------------------------------
 
-Esta fase tuvo como objetivo implementar y validar el módulo de recuperación de información
-(retriever) del sistema IntelliDocU. Este componente es fundamental dentro del enfoque RAG,
-ya que permite localizar fragmentos relevantes de documentos PDF a partir de consultas
-en lenguaje natural, utilizando embeddings semánticos y búsqueda vectorial.
+Esta fase tuvo como objetivo implementar y validar el módulo de recuperación de información (retriever) del sistema IntelliDocU. 
+Este componente es fundamental dentro del enfoque RAG, ya que permite localizar fragmentos relevantes de documentos PDF a partir 
+de consultas en lenguaje natural, utilizando embeddings semánticos y búsqueda vectorial.
 
 ==================================================
 1. Objetivo de la Fase
 ==================================================
-
 El objetivo principal de esta fase fue:
-
     - Construir un sistema de recuperación semántica basado en FAISS
-    - Validar que, dada una pregunta en lenguaje natural, el sistema
-      sea capaz de recuperar fragmentos relevantes desde múltiples documentos
-    - Preparar la base técnica necesaria para las versiones v2 (RAG básico)
-      y v3 (RAG avanzado con verificación)
+    - Validar que, dada una pregunta en lenguaje natural, el sistema sea capaz de recuperar fragmentos relevantes 
+      desde múltiples documentos
+    - Preparar la base técnica necesaria para las versiones v2 (RAG básico) y v3 (RAG avanzado con verificación)
 
-En esta fase no se generan respuestas finales al usuario; únicamente se valida
-la correcta recuperación de evidencia textual.
+En esta fase no se generan respuestas finales al usuario; únicamente se valida la correcta recuperación de evidencia textual.
 
 ==================================================
 2. Carga del índice FAISS y mapping
 ==================================================
-
 Se utilizaron los siguientes archivos generados en la Fase 4:
+    - indices/faiss/index.faiss
+    - indices/faiss/mapping.json
 
-    - indices/faiss_global/index.faiss
-    - indices/faiss_global/mapping.json
-
-El archivo del índice FAISS contiene los embeddings de todos los fragmentos del
-dataset, mientras que el archivo de mapping permite relacionar cada vector con
-su información original, incluyendo:
-
+El archivo del índice FAISS contiene los embeddings de todos los fragmentos del dataset, mientras que el archivo de mapping 
+permite relacionar cada vector con su información original, incluyendo:
     - identificador del documento
     - número de página
     - identificador del fragmento
@@ -41,24 +32,21 @@ su información original, incluyendo:
     - texto del fragmento
 
 Se implementaron funciones dedicadas para:
-
     - cargar el índice FAISS desde disco
     - cargar el mapping de fragmentos
     - garantizar la consistencia entre índices vectoriales y metadatos
 
-Las rutas de los archivos se resuelven dinámicamente a partir de la ubicación
-del módulo, asegurando portabilidad dentro de la estructura del proyecto.
+Las rutas de los archivos se resuelven dinámicamente a partir de la ubicación del módulo, asegurando portabilidad dentro de 
+la estructura del proyecto.
 
 ==================================================
 3. Implementación del Retriever
 ==================================================
-
 Se implementó la clase Retriever en:
 
     src/common/retriever/retriever.py
 
 Esta clase se encarga de:
-
     - recibir una pregunta del usuario
     - generar el embedding de la consulta utilizando el mismo modelo
       empleado para los fragmentos del corpus
@@ -66,16 +54,11 @@ Esta clase se encarga de:
     - devolver los k fragmentos más similares junto con su score de similitud
 
 El modelo de embeddings utilizado es:
-
     sentence-transformers/all-MiniLM-L6-v2
 
-El índice FAISS empleado es de tipo IndexFlatIP (Inner Product).
-Para que este índice represente similitud coseno, todos los embeddings
-(documentos y consultas) son normalizados a norma unitaria antes de ser
-insertados o consultados en el índice.
+Los scores corresponden a la similitud coseno cruda (inner product) devuelta por FAISS, sin normalización adicional.
 
 Cada resultado recuperado incluye:
-
     - score de similitud semántica
     - identificador del documento de origen
     - sección del documento
@@ -86,7 +69,6 @@ Cada resultado recuperado incluye:
 ==================================================
 4. Validación del Retriever
 ==================================================
-
 Ejecución del script de validación:
 
     python -m src.common.retriever.validate_retriever
@@ -96,66 +78,44 @@ Se implementó un script de validación ubicado en:
     src/common/retriever/validate_retriever.py
 
 Este script permite:
-
     - ejecutar consultas manuales en lenguaje natural
     - inspeccionar los fragmentos recuperados
     - verificar que los documentos y secciones correctas aparezcan
     - analizar los valores de similitud obtenidos
 
-Durante la validación se utilizó filtrado opcional por sección del documento
-(por ejemplo: "abstract"), con el fin de analizar el comportamiento del
-sistema bajo distintos escenarios de recuperación.
+Durante la validación se utilizó filtrado opcional por sección del documento (por ejemplo: "abstract"), con el fin de 
+analizar el comportamiento del sistema bajo distintos escenarios de recuperación.
 
 ==================================================
 5. Observaciones sobre los resultados
 ==================================================
-
 A partir de las pruebas realizadas se observó que:
+    - preguntas genéricas (por ejemplo: "What is the main contribution?") producen resultados más dispersos, lo cual es esperado
+    - preguntas específicas (por ejemplo: "What is SparseSwaps?") generan fragmentos altamente relevantes y coherentes
 
-    - preguntas genéricas (por ejemplo: "What is the main contribution?")
-      producen resultados más dispersos, lo cual es esperado
-    - preguntas específicas (por ejemplo: "What is SparseSwaps?")
-      generan fragmentos altamente relevantes y coherentes
+En las pruebas empíricas, las consultas específicas tendieron a producir scores de similitud relativamente altos (en torno a 0.4 
+o superiores), lo cual es consistente con el comportamiento del modelo MiniLM y el uso de similitud coseno como métrica.
 
-En las pruebas empíricas, las consultas específicas tendieron a producir
-scores de similitud relativamente altos (en torno a 0.4 o superiores),
-lo cual es consistente con el comportamiento del modelo MiniLM y el uso
-de similitud coseno como métrica.
-
-Estos resultados confirman que el sistema de embeddings y la búsqueda
-vectorial con FAISS funcionan correctamente.
+Estos resultados confirman que el sistema de embeddings y la búsqueda vectorial con FAISS funcionan correctamente.
 
 ==================================================
 6. Alcances y límites de la Fase
 ==================================================
-
 En esta fase:
-
     - NO se filtra por documento específico
     - NO se generan respuestas finales al usuario
     - NO se aplica citación ni verificación automática
-    - El filtrado por sección es opcional y se utiliza únicamente
-      con fines experimentales y de validación
+    - El filtrado por sección es opcional y se utiliza únicamente con fines experimentales y de validación
 
-Estos aspectos serán abordados en fases posteriores dentro de
-las versiones v2 y v3 del sistema.
+Estos aspectos serán abordados en fases posteriores dentro de las versiones v2 y v3 del sistema.
 
-El propósito de esta fase es puramente técnico:
-asegurar una recuperación semántica robusta, estable y confiable.
+El propósito de esta fase es puramente técnico: asegurar una recuperación semántica robusta, estable y confiable.
 
 ==================================================
 7. Resultado Final de la Fase
 ==================================================
-
 Al finalizar esta fase se obtuvo:
-
     - un índice FAISS funcional y correctamente cargado
     - un sistema de recuperación semántica estable
-    - evidencia de que el sistema localiza fragmentos relevantes
-      de manera consistente
-    - una base sólida para implementar RAG y estrategias
-      de reducción de alucinaciones
-
-Con esto, la FASE 5 se considera COMPLETADA satisfactoriamente
-y el proyecto se encuentra listo para iniciar la construcción
-de las versiones del sistema ChatPDF (v1, v2 y v3).
+    - evidencia de que el sistema localiza fragmentos relevantes de manera consistente
+    - una base sólida para implementar RAG y estrategias de reducción de alucinaciones

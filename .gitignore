@@ -4,7 +4,6 @@ venv/
 
 # Archivos grandes
 data/
-indices/
 
 # Archivos temporales
 __pycache__/
@@ -14,6 +13,5 @@ __pycache__/
 # Archivos sensibles
 *.env
 
+# Carpetas de UI
 UI/data
-UI/indices
-UI/logs

@@ -70,7 +70,7 @@ class QwenLLM:
             'input_ids': inputs.input_ids,
             'attention_mask': inputs.attention_mask,
             'max_new_tokens': max_new_tokens,
-            'do_sample': False,          # 🔒 CLAVE: Sin sampling (determinista)
+            'do_sample': False,          
             'pad_token_id': self.tokenizer.pad_token_id,
             'eos_token_id': self.tokenizer.eos_token_id,
         }

@@ -1,77 +1,67 @@
 Embeddings y Construcción del Índice Vectorial – FASE 4
 
-Esta fase tuvo como objetivo transformar los fragmentos textuales generados en la Fase 3 en representaciones vectoriales densas (embeddings) y organizarlas en un índice vectorial eficiente que permita la recuperación semántica de información dentro del sistema IntelliDocU.
+Esta fase tuvo como objetivo transformar los fragmentos textuales generados en la Fase 3 en representaciones vectoriales 
+densas (embeddings) y organizarlas en un índice vectorial eficiente que permita la recuperación semántica de información 
+dentro del sistema IntelliDocU.
 
 ==================================================
 1. Objetivo de la Fase 4
 ==================================================
-
 El objetivo principal de esta fase fue:
-
-- generar embeddings semánticos normalizados para cada fragmento textual,
-- construir un índice vectorial eficiente para búsqueda por similitud,
-- preservar la correspondencia exacta entre vectores y fragmentos originales,
-- permitir recuperación semántica rápida y escalable para el sistema RAG.
+    - generar embeddings semánticos normalizados para cada fragmento textual,
+    - construir un índice vectorial eficiente para búsqueda por similitud,
+    - preservar la correspondencia exacta entre vectores y fragmentos originales,
+    - permitir recuperación semántica rápida y escalable para el sistema RAG.
 
 ==================================================
 2. Insumos utilizados
 ==================================================
-
 Los insumos principales de esta fase fueron:
-
-- archivos JSONL de fragmentos generados en la Fase 3,
-- texto validado y limpiado por fragmento,
-- metadatos asociados a cada fragmento.
+    - archivos JSONL de fragmentos generados en la Fase 3,
+    - texto validado y limpiado por fragmento,
+    - metadatos asociados a cada fragmento.
 
 Cada fragmento incluye los siguientes campos relevantes:
-
-- doc_id
-- page
-- section
-- frag_id
-- text
+    - doc_id
+    - page
+    - section
+    - frag_id
+    - text
 
 Los archivos de entrada se ubicaron en:
-
-IntelliDocU/data/fragments/
+    IntelliDocU/data/fragments/
 
 ==================================================
 3. Modelo de embeddings
 ==================================================
-
 Se seleccionó un modelo liviano y eficiente de Sentence Transformers:
-
-- modelo: sentence-transformers/all-MiniLM-L6-v2
-- dimensión del embedding: 384
-- tipo: embeddings densos normalizados (L2)
+    - modelo: sentence-transformers/all-MiniLM-L6-v2
+    - dimensión del embedding: 384
+    - tipo: embeddings densos normalizados (L2)
 
 Este modelo fue elegido por su adecuado balance entre:
-
-- calidad semántica,
-- velocidad de inferencia,
-- bajo consumo de memoria,
-- amplia adopción en sistemas RAG.
+    - calidad semántica,
+    - velocidad de inferencia,
+    - bajo consumo de memoria,
+    - amplia adopción en sistemas RAG.
 
 ==================================================
 4. Generación de embeddings
 ==================================================
-
 Para cada archivo de fragmentos se ejecutó el siguiente proceso:
-
-- lectura secuencial de fragmentos desde archivos JSONL,
-- exclusión explícita de fragmentos pertenecientes a la sección "references",
-- filtrado de fragmentos vacíos o inválidos,
-- agrupación de fragmentos en batches para optimizar el rendimiento,
-- generación de embeddings mediante Sentence Transformers,
-- normalización L2 automática de los vectores,
-- almacenamiento temporal de los embeddings en memoria.
+    - lectura secuencial de fragmentos desde archivos JSONL,
+    - exclusión explícita de fragmentos pertenecientes a la sección "references",
+    - filtrado de fragmentos vacíos o inválidos,
+    - agrupación de fragmentos en batches para optimizar el rendimiento,
+    - generación de embeddings mediante Sentence Transformers,
+    - normalización L2 automática de los vectores,
+    - almacenamiento temporal de los embeddings en memoria.
 
 La generación de embeddings se realizó de forma batch-based para reducir latencia y consumo de recursos.
 
 ==================================================
 5. Construcción del índice FAISS
 ==================================================
-
 Ejecución:
 
     python -m src.common.embeddings.build_faiss
@@ -79,69 +69,59 @@ Ejecución:
 Se utilizó la biblioteca FAISS en modo CPU para construir un índice vectorial global.
 
 Configuración del índice:
-
-- tipo de índice: IndexFlatIP
-- métrica: producto interno (inner product)
-- similitud efectiva: cosine similarity (debido a la normalización previa)
-- estructura: índice plano global único
+    - tipo de índice: IndexFlatIP
+    - métrica: producto interno (inner product)
+    - similitud efectiva: cosine similarity (debido a la normalización previa)
+    - estructura: índice plano global único
 
 Pasos realizados:
-
-- inicialización del índice FAISS con la dimensión correcta,
-- adición secuencial de todos los embeddings generados,
-- asignación de un vector_id único por embedding,
-- persistencia del índice en disco,
-- generación de un archivo de mapeo vector → fragmento.
+    - inicialización del índice FAISS con la dimensión correcta,
+    - adición secuencial de todos los embeddings generados,
+    - asignación de un vector_id único por embedding,
+    - persistencia del índice en disco,
+    - generación de un archivo de mapeo vector → fragmento.
 
 Los archivos generados se almacenaron en:
 
-IntelliDocU/indices/faiss_global/
+    IntelliDocU/data/indices/faiss_global/
 
 ==================================================
 6. Archivo de mapeo de fragmentos
 ==================================================
-
 Se generó un archivo mapping.json que asocia cada vector del índice con su fragmento original.
 
 Cada entrada del mapeo incluye:
-
-- vector_id
-- doc_id
-- page
-- section
-- frag_id
-- text
+    - vector_id
+    - doc_id
+    - page
+    - section
+    - frag_id
+    - text
 
 Este archivo permite recuperar la evidencia textual exacta correspondiente a cada resultado devuelto por el índice FAISS.
 
 ==================================================
 7. Validación del índice
 ==================================================
-
 Ejecución:
 
     python src/common/embeddings/validate_index.py
 
 Se implementó un script de validación que realiza:
-
-- carga correcta del índice FAISS desde disco,
-- carga del archivo de mapeo asociado,
-- generación de embeddings para consultas de prueba,
-- búsqueda por similitud semántica (top-K),
-- verificación manual de coherencia semántica entre consulta y resultados,
-- comprobación implícita de la correspondencia índice ↔ mapeo.
+    - carga correcta del índice FAISS desde disco,
+    - carga del archivo de mapeo asociado,
+    - generación de embeddings para consultas de prueba,
+    - búsqueda por similitud semántica (top-K),
+    - verificación manual de coherencia semántica entre consulta y resultados,
+    - comprobación implícita de la correspondencia índice ↔ mapeo.
 
 Los resultados obtenidos confirmaron que el índice es funcional y devuelve fragmentos semánticamente relevantes.
 
 ==================================================
 8. Resultado final de la Fase 4
 ==================================================
-
 Al finalizar la Fase 4, el proyecto cuenta con:
-
-- embeddings semánticos normalizados para todos los fragmentos válidos,
-- un índice FAISS global persistente,
-- un mapeo completo entre vectores y fragmentos originales,
-- infraestructura lista para recuperación semántica eficiente.
-
-Esta fase habilita directamente la Fase 5: Implementación del Recuperador (Retriever) y marca la transición formal hacia el sistema RAG de IntelliDocU.
+    - embeddings semánticos normalizados para todos los fragmentos válidos,
+    - un índice FAISS global persistente,
+    - un mapeo completo entre vectores y fragmentos originales,
+    - infraestructura lista para recuperación semántica eficiente.

@@ -1,0 +1,178 @@
+Fase 8: RAG Avanzado con Abstención y Citación Basada en Fragmentos
+-----------------------------------------------------------------
+
+Esta fase tuvo como objetivo implementar y validar la versión v3_rag_advanced del sistema IntelliDocU, incorporando 
+mecanismos explícitos de control sobre la generación de respuestas mediante políticas de abstención y citación
+basada en fragmentos recuperados. El enfoque de esta versión prioriza la confiabilidad y la trazabilidad documental, 
+evitando la generación de contenido no respaldado por evidencia textual.
+
+A diferencia de la versión RAG básica (v2), esta fase introduce un control estricto sobre cuándo el sistema puede 
+responder y bajo qué condiciones, consolidando un enfoque orientado a la reducción sistemática de alucinaciones.
+
+==================================================
+1. Objetivo de la fase
+==================================================
+El objetivo principal de la Fase 8 fue:
+    - Extender el pipeline RAG básico hacia una versión avanzada (v3_rag_advanced).
+    - Restringir la generación de respuestas exclusivamente al contenido presente en los fragmentos recuperados.
+    - Incorporar citación explícita basada en documento, página y fragmento.
+    - Implementar una política de abstención robusta y multinivel.
+    - Reducir la generación de respuestas no fundamentadas o especulativas.
+
+Esta fase prioriza la precisión y la trazabilidad documental por encima de la
+cobertura de respuestas.
+
+==================================================
+2. Estructura de archivos utilizada
+==================================================
+La estructura utilizada en esta fase es la siguiente:
+
+    IntelliDocU/
+        src/
+            common/
+                retriever/
+                    retriever.py
+                    load_index.py
+                llm/
+                    flan_t5_llm.py
+                    qwen_llm.py
+            v3_rag_advanced/
+                abstention.py
+                config.py
+                context_builder.py
+                prompt.py
+                rag_pipeline.py
+                run_rag.py
+                run_rag_eval.py
+
+Los componentes comunes (recuperación y modelo de lenguaje) se reutilizan, mientras que la lógica 
+avanzada del pipeline RAG se encapsula en el módulo v3_rag_advanced, siguiendo principios de 
+modularidad y separación de responsabilidades.
+
+==================================================
+3. Construcción del pipeline RAG avanzado (v3)
+==================================================
+El pipeline principal se implementa en el archivo:
+    src/v3_rag_advanced/rag_pipeline.py
+
+El flujo completo del sistema es el siguiente:
+    1. Recepción de la pregunta del usuario.
+    2. Aplicación de una política de abstención temprana para detectar consultas fuera de dominio 
+       o no académicas.
+    3. Recuperación de fragmentos relevantes mediante el índice FAISS.
+    4. Evaluación de la fuerza de la evidencia recuperada.
+    5. Construcción de un contexto limitado a partir de los fragmentos más relevantes.
+    6. Generación de la respuesta mediante un prompt restrictivo.
+    7. Evaluación post-generación para verificar el anclaje de la respuesta al contexto.
+    8. Entrega de la respuesta final con citación explícita o abstención, según corresponda.
+
+Este diseño permite controlar la generación en múltiples etapas del proceso.
+
+==================================================
+4. Política de abstención implementada
+==================================================
+La versión v3_rag_advanced implementa una política de abstención multinivel, diseñada para evitar 
+la generación de respuestas no respaldadas por evidencia documental.
+
+La abstención puede activarse en las siguientes etapas del pipeline:
+    1. Abstención temprana:
+        Se detectan preguntas claramente fuera de dominio académico, saludos o
+        consultas no relacionadas con documentos científicos, y el sistema se
+        abstiene antes de realizar la recuperación.
+
+    2. Abstención por recuperación:
+        Si no se recuperan fragmentos relevantes desde el índice FAISS, el sistema
+        se abstiene automáticamente.
+
+    3. Abstención por debilidad de evidencia:
+        Se evalúa la fuerza de la evidencia recuperada en función del score de
+        similitud semántica. Si los fragmentos no alcanzan un nivel mínimo de
+        relevancia, el sistema se abstiene.
+
+    4. Abstención post-generación:
+        Tras la generación de la respuesta, se verifica que el contenido generado
+        reutilice información presente en los fragmentos recuperados. Si la
+        respuesta es genérica, definicional o no muestra anclaje explícito al
+        contexto, el sistema se abstiene.
+
+En todos los casos de abstención, el sistema devuelve el mensaje estándar:
+    "It is not mentioned in the document."
+
+==================================================
+5. Construcción del contexto y control del prompt
+==================================================
+La construcción del contexto se implementa en:
+    src/v3_rag_advanced/context_builder.py
+
+El contexto se construye a partir de los fragmentos recuperados, respetando límites estrictos de 
+longitud total y tamaño máximo por fragmento, con el fin de mantener estabilidad en la generación 
+y evitar desbordes de contexto.
+
+El prompt utilizado instruye explícitamente al modelo a:
+    - Utilizar únicamente la información presente en el contexto.
+    - No inferir ni generalizar conocimiento externo.
+    - Responder de forma breve y factual.
+    - Devolver el mensaje de abstención cuando la información no esté explícitamente indicada en 
+      los fragmentos.
+
+==================================================
+6. Citación basada en fragmentos
+==================================================
+Las respuestas generadas incluyen citación explícita basada en los fragmentos utilizados para la 
+construcción del contexto.
+
+El formato de citación es el siguiente:
+
+    [Doc: DOC_ID, P.PAGE, Sec.SECTION]
+
+Las citas se agregan de forma global al final de la respuesta y corresponden a todos los fragmentos 
+empleados durante la generación. No se implementa citación a nivel de afirmación individual ni 
+validación automática de citas.
+
+==================================================
+7. Ejecución del sistema
+==================================================
+Para ejecutar una prueba individual del sistema:
+
+    python -m src.v3_rag_advanced.run_rag
+
+Durante la validación manual se utilizaron preguntas tanto respondibles como no respondibles, 
+observándose que el sistema activa correctamente la política de abstención cuando no existe 
+evidencia textual suficiente.
+
+
+==================================================
+8. Evaluación sobre el conjunto de preguntas
+==================================================
+La evaluación automática se realiza mediante el script:
+
+    python -m src.v3_rag_advanced.run_rag_eval
+
+Este script:
+    - Ejecuta el pipeline RAG avanzado para cada pregunta del dataset.
+    - Aplica la política de abstención cuando corresponde.
+    - Almacena las respuestas generadas en formato JSON.
+    - Registra métricas básicas como número de abstenciones y fragmentos usados.
+
+Los resultados se almacenan en:
+    results/v3_rag_advanced/rag_advanced_answers.json
+
+==================================================
+9. Resultados de la fase
+==================================================
+Al finalizar esta fase se confirmó que:
+    - El pipeline RAG avanzado funciona de forma estable.
+    - El sistema responde únicamente cuando existe evidencia suficiente.
+    - La abstención se activa de manera consistente ante preguntas no respondibles.
+    - Las respuestas generadas son más conservadoras, pero más confiables.
+    - Se reduce significativamente el riesgo de generación de contenido no fundamentado.
+
+
+==================================================
+10. Conclusión
+==================================================
+La Fase 8 consolida un enfoque de RAG orientado a confiabilidad y trazabilidad documental dentro 
+del sistema IntelliDocU. Mediante la combinación de recuperación semántica, abstención explícita 
+y citación basada en fragmentos, el sistema prioriza la precisión sobre la cobertura, 
+estableciendo una base sólida para futuras extensiones orientadas a evaluación comparativa,
+validación automática de citas y control más fino de la generación de respuestas.

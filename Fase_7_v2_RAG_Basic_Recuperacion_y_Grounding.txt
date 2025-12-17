@@ -1,0 +1,165 @@
+Fase 7: RAG Basic – Recuperación y Grounding
+--------------------------------------------
+
+Esta fase tuvo como objetivo implementar y validar la versión v2_rag_basic del sistema IntelliDocU, basada en el enfoque de 
+Recuperación Aumentada con Generación (Retrieval-Augmented Generation, RAG). En esta etapa se integró el índice vectorial FAISS, 
+el mecanismo de recuperación semántica y la construcción de prompts con contexto explícito, con el fin de reducir alucinaciones 
+y garantizar que las respuestas del modelo estén fundamentadas exclusivamente en evidencia proveniente de los documentos PDF 
+procesados.
+
+A diferencia de fases posteriores, esta etapa se centra en validar el flujo de recuperación y grounding, y no en optimizar la 
+calidad lingüística final de las respuestas generadas.
+
+==================================================
+1. Objetivo de la fase
+==================================================
+El objetivo principal de la Fase 7 fue:
+  - Integrar el índice vectorial FAISS construido en fases anteriores.
+  - Implementar y validar un componente de recuperación semántica (Retriever).
+  - Construir un pipeline RAG básico (v2_rag_basic).
+  - Verificar que el contexto relevante sea correctamente entregado al modelo de lenguaje.
+  - Evaluar el comportamiento del sistema cuando la información no está presente en los documentos, observando posibles respuestas 
+  incompletas o imprecisas.
+
+Esta fase no busca aún generar respuestas completamente precisas o exhaustivas, sino validar el proceso de grounding mediante 
+recuperación de fragmentos relevantes.
+
+==================================================
+2. Estructura de archivos utilizada
+==================================================
+La siguiente estructura fue utilizada dentro del proyecto:
+
+IntelliDocU/
+  src/
+    common/
+      retriever/
+        retriever.py
+        load_index.py
+        validate_retriever.py
+      llm/
+        flan_t5_llm.py
+        qwen_llm.py
+    v2_rag_basic/
+      prompt.py
+      rag_pipeline.py
+      run_rag_eval.py
+    v2_rag/
+      run_rag_v2_partial.py
+
+Los componentes compartidos se mantuvieron en src/common/, siguiendo el principio de reutilización y 
+separación de responsabilidades.
+
+==================================================
+3. Implementación del Retriever
+==================================================
+Se implementó la clase Retriever, encargada de:
+  - Cargar el índice FAISS previamente construido.
+  - Cargar el archivo de mapeo de fragmentos (metadata).
+  - Transformar la pregunta del usuario en un embedding.
+  - Recuperar los K fragmentos más similares semánticamente.
+  - Retornar los fragmentos junto con sus metadatos (doc_id, página y frag_id).
+
+El score de similitud es calculado internamente por FAISS, pero en esta fase no se utiliza directamente 
+dentro del prompt, ya que el enfoque está en validar la recuperación y no en el re-ranqueo.
+
+El funcionamiento del retriever fue validado mediante el script:
+    src/common/retriever/validate_retriever.py
+
+Las pruebas confirmaron que las preguntas recuperan fragmentos coherentes y pertenecientes al documento correcto.
+
+==================================================
+4. Construcción del pipeline RAG básico (v2_rag_basic)
+==================================================
+El pipeline RAG básico fue implementado en el archivo:
+    src/v2_rag_basic/rag_pipeline.py
+
+El flujo completo es el siguiente:
+  1. Recepción de la pregunta del usuario.
+  2. Recuperación de los fragmentos más relevantes usando FAISS.
+  3. Truncamiento de fragmentos excesivamente largos para controlar el tamaño del contexto.
+  4. Construcción de un prompt estructurado que incluye:
+    - Instrucciones explícitas para evitar alucinaciones.
+    - Contexto delimitado por fragmentos numerados.
+    - Metadatos de cada fragmento (documento, página y fragmento).
+    - La pregunta original del usuario.
+  5. Envío del prompt al modelo de lenguaje.
+
+Este pipeline encapsula la lógica principal del enfoque RAG utilizado en esta fase.
+
+==================================================
+5. Construcción del prompt y control de contexto
+==================================================
+La lógica de construcción del prompt se implementó en:
+    src/v2_rag_basic/prompt.py
+
+Se definió un límite máximo de caracteres (MAX_CONTEXT_CHARS) para el contexto, con el objetivo de:
+  - Evitar desbordar la ventana de contexto del modelo Flan-T5.
+  - Priorizar los fragmentos más relevantes.
+  - Mantener un comportamiento estable y reproducible.
+
+Además, los fragmentos individuales se truncaron a una longitud máxima configurable para evitar que
+fragmentos extensos dominen el contexto total.
+
+El prompt instruye explícitamente al modelo a:
+  - Responder únicamente usando el contexto proporcionado.
+  - Evitar introducir información no presente en los fragmentos recuperados.
+  - Permitir respuestas aproximadas o incompletas cuando la evidencia es limitada.
+
+==================================================
+6. Modelo de lenguaje utilizado
+==================================================
+En esta fase, el pipeline RAG se diseñó de forma agnóstica al modelo de lenguaje. El objetivo fue validar 
+el flujo de recuperación y grounding, independientemente del modelo generativo utilizado.
+
+La comparación entre distintos modelos de lenguaje se abordará en la fase de evaluación y métricas del 
+sistema.
+
+==================================================
+7. Ejecución de evaluación sobre el dataset de preguntas
+==================================================
+Para evaluar el comportamiento del sistema sobre múltiples preguntas, se utilizó el script:
+    python -m src.v2_rag_basic.run_rag_eval
+
+Este script:
+  - Carga un conjunto de preguntas desde un archivo JSON.
+  - Recupera fragmentos relevantes para cada pregunta.
+  - Construye un contexto literal con metadatos.
+  - Genera respuestas cortas y parcialmente correctas.
+
+El prompt de evaluación permite respuestas aproximadas o incompletas, ya que el objetivo es analizar el 
+impacto del grounding y no la exactitud semántica final.
+
+Las respuestas generadas se almacenan en formato JSON para su posterior análisis y comparación con otras 
+versiones del sistema.
+
+==================================================
+8. Ejecución de prueba manual (v2_rag)
+==================================================
+Adicionalmente, se implementó un script de prueba manual:
+    src/v2_rag_basic/run_rag_.py
+
+Este script permite:
+  - Probar el pipeline RAG con una pregunta específica.
+  - Inspeccionar manualmente la respuesta generada.
+  - Validar de forma cualitativa el comportamiento del sistema.
+
+Esta ejecución no forma parte del baseline automático, pero resulta útil para depuración y análisis exploratorio.
+
+==================================================
+9. Resultados de la fase
+==================================================
+Al finalizar esta fase se confirmó que:
+  - El índice FAISS funciona correctamente.
+  - El retriever recupera fragmentos relevantes y coherentes.
+  - El contexto entregado al modelo está correctamente estructurado.
+  - El sistema RAG reduce la posibilidad de alucinaciones al depender de evidencia documental.
+  - La versión v2_rag_basic es funcional y estable como baseline de recuperación y grounding.
+
+==================================================
+10. Conclusión
+==================================================
+La Fase 7 demuestra que la integración de recuperación semántica con modelos de lenguaje es efectiva 
+para controlar la generación de respuestas basadas en documentos. El sistema IntelliDocU avanza desde 
+un modelo generativo sin control (v1) hacia un sistema fundamentado en evidencia (v2), estableciendo 
+una base sólida para fases posteriores donde se incorporarán mecanismos avanzados como citación 
+obligatoria, abstención explícita y verificación cruzada (v3_rag_advanced).
