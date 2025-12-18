@@ -1,0 +1,151 @@
+==================================================
+Fase 10 – Interfaz de Usuario (UI)
+==================================================
+Esta fase tiene como objetivo proporcionar una interfaz gráfica interactiva que permita a los usuarios finales interactuar con el 
+sistema IntelliDocU de manera intuitiva. La interfaz integra todas las versiones del sistema (v1, v2 y v3), permitiendo comparar 
+su comportamiento en tiempo real sobre documentos académicos en formato PDF.
+
+La UI actúa como una capa de orquestación que conecta el preprocesamiento, la recuperación de información y la generación de respuestas, 
+manteniendo la trazabilidad y el control de alucinaciones definidos en fases previas.
+
+==================================================
+1. Estructura general de la interfaz
+==================================================
+La interfaz se encuentra ubicada en el directorio:
+
+    IntelliDocU/UI/
+
+Estructura relevante:
+    UI/
+      app.py
+      extraccion.py
+      metadata_init.py
+      run_baseline_ui.py
+      run_rag_basic_ui.py
+      run_rag_advanced_ui.py
+      data/
+        pdfs/
+        extracted/
+        preprocessed/
+        chunks/
+        indices/
+        pdf_metadata.csv
+
+El subdirectorio UI/data/ replica la estructura de datos utilizada en el pipeline principal, permitiendo que la interfaz funcione de 
+manera autónoma sin interferir con los experimentos offline.
+
+==================================================
+2. Tecnología utilizada
+==================================================
+La interfaz fue implementada utilizando:
+    - Streamlit: framework ligero para aplicaciones web interactivas en Python.
+    - HTML/CSS embebido: para personalización visual y experiencia de usuario.
+    - Qwen/Qwen2.5-1.5B-Instruct: modelo de lenguaje utilizado en todas las
+      versiones de la UI.
+
+Streamlit fue elegido por su simplicidad, rapidez de desarrollo y capacidad para integrar pipelines de NLP complejos de forma interactiva.
+
+==================================================
+3. Aplicación principal (app.py)
+==================================================
+El archivo app.py actúa como punto de entrada de la interfaz y cumple las siguientes funciones principales:
+    - Configuración global de la aplicación (layout, estilos, estado).
+    - Gestión del estado de sesión (chat, PDF cargado, versión seleccionada).
+    - Carga y preprocesamiento de documentos PDF.
+    - Orquestación de las distintas versiones del sistema IntelliDocU.
+    - Renderizado de la conversación tipo chat.
+
+La interfaz permite seleccionar dinámicamente entre tres versiones del sistema:
+    - v1_baseline: modelo sin acceso a documentos.
+    - v2_rag_basic: Recuperación, sin citación obligatoria ni verificación cruzada.
+    - v3_rag_advanced: Grounding + citación + abstención + verificación cruzada
+
+==================================================
+4. Flujo de carga y preprocesamiento de documentos
+==================================================
+Cuando el usuario sube un archivo PDF desde la barra lateral, se ejecuta el siguiente flujo:
+    1. El PDF se almacena en UI/data/pdfs/.
+    2. Se inicializa o actualiza el archivo pdf_metadata.csv mediante
+        metadata_init.py.
+    3. Se ejecuta el preprocesamiento completo a través de extraccion.py, que
+    incluye:
+        - Extracción de texto del PDF.
+        - Limpieza del contenido textual.
+        - Actualización de metadatos.
+        - Generación de fragmentos (chunking).
+        - Construcción del índice vectorial FAISS.
+
+Este diseño garantiza que cada documento cargado esté completamente integrado al sistema RAG antes de permitir preguntas.
+
+==================================================
+5. Gestión del estado y experiencia de usuario
+==================================================
+La UI utiliza el estado de sesión de Streamlit para manejar:
+    - Historial de conversación.
+    - Documento PDF actualmente cargado.
+    - Versión del sistema seleccionada.
+    - Estado de carga durante la generación de respuestas.
+
+Esto permite una experiencia fluida, evitando recargas innecesarias y asegurando coherencia entre las preguntas y el documento activo.
+
+La conversación se presenta en formato chat, diferenciando claramente las intervenciones del usuario y del sistema IntelliDocU.
+
+==================================================
+6. Ejecución de las versiones del sistema
+==================================================
+Cada versión del sistema está encapsulada en un archivo independiente:
+    - run_baseline_ui.py
+    - run_rag_basic_ui.py
+    - run_rag_advanced_ui.py
+
+Estas funciones actúan como adaptadores entre la UI y los pipelines internos, retornando únicamente la respuesta textual que será 
+mostrada al usuario.
+
+Todas las versiones utilizan el modelo Qwen como LLM, asegurando consistencia en la comparación de comportamientos entre enfoques 
+con y sin recuperación.
+
+==================================================
+7. Integración del modelo Qwen en la UI
+==================================================
+A diferencia de fases anteriores donde se evaluaron múltiples modelos, la interfaz utiliza exclusivamente Qwen/Qwen2.5-1.5B-Instruct 
+debido a:
+    - Mejor obediencia a instrucciones restrictivas.
+    - Mayor estabilidad al responder únicamente con información del contexto.
+    - Mejor soporte multilingüe.
+    - Menor propensión a alucinaciones en escenarios RAG.
+
+La elección de un único modelo en la UI simplifica la experiencia del usuario y asegura un comportamiento predecible del sistema.
+
+==================================================
+8. Versiones disponibles en la interfaz
+==================================================
+La interfaz permite comparar visualmente tres enfoques distintos:
+    - V1 – Baseline:
+        Respuestas generadas únicamente a partir del conocimiento interno del modelo, sin acceso al documento.
+
+    - V2 – RAG Básico:
+        Recuperación semántica de fragmentos relevantes mediante FAISS, con respuestas condicionadas por el contexto.
+
+    - V3 – RAG Avanzado:
+        Recuperación avanzada con citación explícita, verificación de evidencia y abstención ante preguntas imposibles.
+
+Esta comparación directa refuerza el objetivo del proyecto de demostrar cómo el grounding progresivo reduce las alucinaciones.
+
+==================================================
+9. Consideraciones de diseño
+==================================================
+    - La interfaz no realiza entrenamiento ni ajuste fino del modelo.
+    - Todo el procesamiento se realiza bajo demanda, al cargar el documento.
+    - La UI prioriza claridad, trazabilidad y control sobre la fluidez conversacional.
+    - La abstención en v3 se refleja directamente en la respuesta mostrada al usuario.
+
+==================================================
+10. Conclusión de la fase
+==================================================
+La Fase 10 consolida IntelliDocU como un sistema completo y utilizable, integrando un pipeline RAG avanzado dentro de una 
+interfaz accesible.
+
+La UI no solo permite interactuar con documentos académicos, sino que también sirve como una herramienta experimental para 
+observar, en tiempo real, el impacto de la recuperación, la citación y la abstención en la reducción de alucinaciones.
+
+Con esta fase, IntelliDocU pasa de ser un prototipo experimental a una aplicación funcional orientada a confiabilidad y uso práctico.

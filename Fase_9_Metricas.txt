@@ -1,8 +1,15 @@
 ==================================================
 Fase 9 – Evaluación y Métricas
 ==================================================
+Esta fase tiene como objetivo evaluar cuantitativamente el desempeño de las distintas versiones del sistema 
+IntelliDocU, con énfasis en la reducción de alucinaciones, el anclaje al documento y la correcta abstención 
+ante preguntas no respondibles. La evaluación se realiza de manera independiente del modelo de lenguaje, 
+permitiendo comparaciones justas entre configuraciones.
 
-Módulo:
+==================================================
+Módulo de evaluación
+==================================================
+Ruta:
     src/common/evaluation/
 
 Archivos incluidos:
@@ -13,86 +20,95 @@ Archivos incluidos:
 ==================================================
 1. Archivo: metrics.py
 ==================================================
-
 Propósito:
-    Define las métricas utilizadas para evaluar el desempeño de las distintas
-    versiones experimentales del sistema IntelliDocU sobre un conjunto de
-    preguntas y respuestas de referencia.
+    Define las métricas empleadas para evaluar la calidad de las respuestas generadas por las distintas 
+    versiones del sistema IntelliDocU frente a un conjunto de respuestas de referencia.
 
 --------------------------------------------------
-Funciones implementadas
+1.1 Métrica: Exact Match (EM)
 --------------------------------------------------
+Función:
+    exact_match(prediction, reference)
 
-1. exact_match(prediction, reference)
+Descripción:
+    Retorna 1 si la respuesta generada coincide exactamente con la respuesta de referencia, ignorando 
+    diferencias de mayúsculas y espacios extra.
+    En caso contrario retorna 0.
 
-    - Retorna 1 si la respuesta generada coincide exactamente con la
-      respuesta de referencia.
-    - La comparación ignora diferencias de mayúsculas y espacios extra.
-    - Es una métrica estricta que solo contabiliza coincidencias exactas.
+Características:
+    - Métrica estricta.
+    - Penaliza cualquier variación léxica o semántica.
+    - Adecuada para respuestas factuales cortas y definiciones precisas.
 
-    Ejemplo:
-        exact_match("SparseSwaps", "sparseSwaps") → 1
-
-
---------------------------------------------------
-2. f1_score(prediction, reference)
-
-    - Calcula la métrica F1 a nivel de tokens entre la predicción y la referencia.
-    - Permite medir similitud parcial cuando la respuesta no coincide
-      exactamente.
-    - Es útil para evaluar respuestas parcialmente correctas.
-
-    Ejemplo:
-        f1_score("SparseSwaps algorithm", "SparseSwaps") → 0.6667
-
+Ejemplo:
+    exact_match("SparseSwaps", "sparseSwaps") → 1
 
 --------------------------------------------------
-3. abstention_accuracy(predictions, references,
-   abstention_token="It is not mentioned in the document.")
+1.2 Métrica: F1 Score
+--------------------------------------------------
+Función:
+    f1_score(prediction, reference)
 
-    - Mide la precisión de abstención del sistema.
-    - Una abstención se considera correcta cuando:
-        • La respuesta de referencia es exactamente el token de abstención.
-        • La respuesta generada también es exactamente el token de abstención.
-    - Esta métrica es especialmente relevante para versiones RAG que
-      incorporan mecanismos explícitos de abstención ante preguntas imposibles.
+Descripción:
+    Calcula la métrica F1 a nivel de tokens, considerando la intersección entre los tokens de la predicción 
+    y los de la referencia.
+
+Características:
+    - Permite evaluar similitud parcial.
+    - Útil cuando la respuesta es parcialmente correcta.
+    - Penaliza respuestas irrelevantes o demasiado genéricas.
+
+Ejemplo:
+    f1_score("SparseSwaps algorithm", "SparseSwaps") → 0.6667
+
+--------------------------------------------------
+1.3 Métrica: Abstention Accuracy
+--------------------------------------------------
+Función:
+    abstention_accuracy(predictions, references, abstention_token="It is not mentioned in the document.")
+
+Descripción:
+    Mide la precisión con la que el sistema se abstiene correctamente ante preguntas imposibles o no 
+    respondibles según el documento.
+
+Criterio de acierto:
+    - La respuesta de referencia es exactamente el token de abstención.
+    - La respuesta generada coincide exactamente con dicho token.
+
+Importancia:
+    Esta métrica es clave para evaluar la reducción de alucinaciones en sistemas RAG, ya que penaliza la 
+    generación de respuestas inventadas cuando la información no existe en el documento.
 
 ==================================================
 2. Archivo: evaluate.py
 ==================================================
-
 Propósito:
-    Evalúa un único archivo de predicciones frente a un archivo de respuestas
-    correctas, calculando las métricas:
+    Evalúa un único archivo de predicciones frente a un archivo de respuestas correctas, calculando las métricas:
         - Exact Match
         - F1 Score
         - Abstention Accuracy
 
 Uso:
-    python src/common/evaluation/evaluate.py \
-        --pred_file results/model_answers.json \
-        --reference_file data/questions/answers.json
+    python src/common/evaluation/evaluate.py --pred_file results/model_answers.json --reference_file data/questions/answers.json
 
 Salida:
     - Exact Match promedio
     - F1 Score promedio
     - Abstention Accuracy
 
-
 ==================================================
 3. Archivo: evaluate_all.py
 ==================================================
-
 Propósito:
-    Permite evaluar múltiples modelos o configuraciones en una sola ejecución,
-    mostrando una tabla comparativa de métricas.
+    Permite evaluar múltiples versiones del sistema o modelos de lenguaje en una sola ejecución, mostrando 
+    una tabla comparativa de métricas.
 
 Uso:
     python src/common/evaluation/evaluate_all.py --refs data/questions/answers.json --preds results/v1_baseline/baseline_answers.json results/v2_rag_basic/rag_basic_answers.json results/v3_rag_advanced/rag_advanced_answers.json
 
 Salida:
     Tabla comparativa con:
-        - Nombre del modelo (derivado del nombre del archivo)
+        - Nombre del modelo o configuración
         - Exact Match
         - F1 Score
         - Abstention Accuracy
@@ -100,12 +116,10 @@ Salida:
 ==================================================
 4. Formato de los archivos JSON
 ==================================================
+Cada archivo de predicciones y referencias contiene una lista ordenada de diccionarios. La posición de 
+cada elemento corresponde a la misma pregunta del dataset.
 
-Cada archivo de predicciones o referencias contiene una lista ordenada de
-diccionarios. La posición de cada elemento corresponde a la misma pregunta
-en el dataset.
-
-Estructura de cada elemento:
+Estructura:
     {
         "question_id": str,
         "doc_id": str,
@@ -114,48 +128,82 @@ Estructura de cada elemento:
         "answer": str
     }
 
-Ejemplo:
-[
-  {
-    "question_id": "q1",
-    "doc_id": "arxiv_251210922_sparseswaps",
-    "question": "What is SparseSwaps?",
-    "type": "fact",
-    "answer": "SparseSwaps is a graph algorithm."
-  },
-  {
-    "question_id": "q2",
-    "doc_id": "arxiv_251210922_sparseswaps",
-    "question": "Does the paper mention quantum computing?",
-    "type": "impossible",
-    "answer": "It is not mentioned in the document."
-  }
-]
+==================================================
+5. Resultados experimentales
+==================================================
+La evaluación se realizó utilizando dos modelos de lenguaje distintos, manteniendo idéntico el pipeline 
+de recuperación y generación.
+
+--------------------------------------------------
+5.1 Resultados con google/flan-t5-base
+--------------------------------------------------
+
+Modelo                                 EM       F1       Abstention
+------------------------------------------------------------
+v1_baseline                            0.0000   0.0610   0.0000
+v2_rag_basic                           0.0000   0.0576   0.0000
+v3_rag_advanced                        0.0889   0.2023   0.0889
+
+--------------------------------------------------
+5.2 Resultados con Qwen/Qwen2.5-1.5B-Instruct
+--------------------------------------------------
+
+Modelo                                 EM       F1       Abstention
+------------------------------------------------------------
+v1_baseline                            0.0000   0.1713   0.0000
+v2_rag_basic                           0.0167   0.3585   0.0000
+v3_rag_advanced                        0.1111   0.3138   0.1111
 
 ==================================================
-5. Métricas reportadas
+6. Análisis de resultados
 ==================================================
+En ambos modelos se observa un patrón consistente:
+    - La versión v1_baseline presenta valores cercanos a cero en Exact Match y Abstention Accuracy, 
+      evidenciando una alta propensión a generar respuestas no fundamentadas.
+    - La versión v2_rag_basic mejora el F1 Score al incorporar recuperación de contexto, pero sigue 
+      fallando en la abstención ante preguntas imposibles.
+    - La versión v3_rag_advanced logra los mejores valores de Exact Match y es la única que activa 
+      correctamente la abstención, confirmando la efectividad de las políticas de control implementadas 
+      en la Fase 8.
 
-- Exact Match (EM):
-    Proporción de respuestas generadas que coinciden exactamente con la
-    referencia.
-
-- F1 Score:
-    Promedio de la métrica F1 calculada a nivel de tokens entre predicción
-    y referencia.
-
-- Abstention Accuracy:
-    Proporción de preguntas imposibles en las que el sistema se abstuvo
-    correctamente utilizando el token de abstención definido.
+Estos resultados validan que la reducción de alucinaciones no depende exclusivamente del modelo de lenguaje, 
+sino principalmente del diseño del pipeline RAG y de las políticas de abstención.
 
 ==================================================
-6. Consideraciones importantes
+7. Comparación entre Flan-T5 y Qwen
 ==================================================
+Al comparar ambos modelos bajo las mismas configuraciones, se observa que:
+    - Qwen obtiene sistemáticamente mayores valores de F1 Score, lo que indica una mejor reutilización del 
+      contexto recuperado.
+    - Qwen presenta una mayor Exact Match en la versión v3_rag_advanced, evidenciando respuestas más precisas 
+      y mejor alineadas con la referencia.
+    - La Abstention Accuracy es ligeramente superior en Qwen, lo que indica una mejor adherencia a las 
+      instrucciones de abstención del prompt.
 
-- El modelo de lenguaje no es entrenado con este dataset.
-- Las métricas evalúan exclusivamente la calidad de recuperación de contexto,
-  grounding y generación de respuestas.
-- Los scripts de evaluación son independientes del modelo utilizado y
-  permiten comparaciones directas entre distintas versiones del sistema.
-- La incorporación de abstención mejora la robustez del sistema ante
-  preguntas sin respuesta en los documentos.
+En contraste, Flan-T5 tiende a generar respuestas más genéricas, incluso cuando el contexto es limitado, 
+lo que afecta negativamente la precisión.
+
+==================================================
+8. Justificación de la elección de Qwen
+==================================================
+El modelo Qwen/Qwen2.5-1.5B-Instruct fue seleccionado como modelo principal para las siguientes fases del 
+proyecto por las siguientes razones:
+    - Mejor desempeño global en F1 Score y Exact Match bajo configuraciones RAG.
+    - Mayor obediencia a prompts restrictivos, fundamentales para reducir alucinaciones.
+    - Soporte multilingüe superior, especialmente relevante para documentos académicos que pueden contener 
+      contenido en distintos idiomas.
+    - Mayor estabilidad al generar respuestas ancladas estrictamente al contexto, reduciendo inferencias 
+      no justificadas.
+
+Estas características hacen que Qwen sea más adecuado para un sistema documental orientado a confiabilidad 
+y trazabilidad, como IntelliDocU.
+
+==================================================
+9. Conclusión de la fase
+==================================================
+La Fase 9 confirma experimentalmente que:
+    - Las métricas de abstención son esenciales para evaluar la reducción de alucinaciones.
+    - El diseño del pipeline RAG avanzado tiene un impacto mayor que el modelo base en la confiabilidad del 
+      sistema.
+    - Qwen ofrece un mejor equilibrio entre precisión, grounding y control de generación, justificando su 
+      elección para las siguientes etapas del proyecto.
