@@ -1,6 +1,6 @@
-NOTAS TÉCNICAS — FASE 0
--------------------------------------
-
+===================================================================
+FASE 0 - Notas técnicas
+===================================================================
 Este documento describe paso a paso la preparación técnica necesaria para iniciar
 el proyecto IntelliDocU. No contiene metodología ni teoría: únicamente los
 procedimientos prácticos para configurar el entorno de desarrollo, instalar

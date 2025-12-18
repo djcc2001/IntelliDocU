@@ -1,6 +1,6 @@
+===================================================================
 Fase 8: RAG Avanzado con Abstención y Citación Basada en Fragmentos
------------------------------------------------------------------
-
+===================================================================
 Esta fase tuvo como objetivo implementar y validar la versión v3_rag_advanced del sistema IntelliDocU, incorporando 
 mecanismos explícitos de control sobre la generación de respuestas mediante políticas de abstención y citación
 basada en fragmentos recuperados. El enfoque de esta versión prioriza la confiabilidad y la trazabilidad documental, 

@@ -1,5 +1,6 @@
-Embeddings y Construcción del Índice Vectorial – FASE 4
-
+===================================================================
+FASE 4 - Embeddings y Construcción del Índice Vectorial
+===================================================================
 Esta fase tuvo como objetivo transformar los fragmentos textuales generados en la Fase 3 en representaciones vectoriales 
 densas (embeddings) y organizarlas en un índice vectorial eficiente que permita la recuperación semántica de información 
 dentro del sistema IntelliDocU.

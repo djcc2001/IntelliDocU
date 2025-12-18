@@ -1,5 +1,6 @@
+===================================================================
 FASE 6 – v1_baseline (Modelo sin Recuperación)
----------------------------------------------
+===================================================================
 
 El objetivo de esta fase fue implementar y evaluar un sistema base de preguntas y respuestas sobre documentos académicos, 
 sin utilizar ningún mecanismo de recuperación de información. Esta versión, denominada v1_baseline, sirve como línea base 

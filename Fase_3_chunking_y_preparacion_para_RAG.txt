@@ -1,5 +1,6 @@
-Chunking y Preparación para Recuperación Aumentada (RAG) – FASE 3
-
+===================================================================
+FASE 3 - Chunking y Preparación para Recuperación Aumentada (RAG)
+===================================================================
 Esta fase tuvo como objetivo transformar el texto limpio obtenido en la Fase 2 en fragmentos semánticos (chunks) 
 de tamaño controlado, preparados para la generación de embeddings y la posterior recuperación de información dentro 
 del sistema IntelliDocU. El resultado final es un conjunto de fragmentos generados a partir de tokenización subword, 

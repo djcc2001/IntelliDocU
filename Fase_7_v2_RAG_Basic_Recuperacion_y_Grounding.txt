@@ -1,5 +1,6 @@
+===================================================================
 Fase 7: RAG Basic – Recuperación y Grounding
---------------------------------------------
+===================================================================
 
 Esta fase tuvo como objetivo implementar y validar la versión v2_rag_basic del sistema IntelliDocU, basada en el enfoque de 
 Recuperación Aumentada con Generación (Retrieval-Augmented Generation, RAG). En esta etapa se integró el índice vectorial FAISS, 

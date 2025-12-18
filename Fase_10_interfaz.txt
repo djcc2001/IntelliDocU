@@ -55,10 +55,13 @@ El archivo app.py actúa como punto de entrada de la interfaz y cumple las sigui
     - Orquestación de las distintas versiones del sistema IntelliDocU.
     - Renderizado de la conversación tipo chat.
 
+Ejecución:
+    streamlit run UI/app.py
+
 La interfaz permite seleccionar dinámicamente entre tres versiones del sistema:
     - v1_baseline: modelo sin acceso a documentos.
-    - v2_rag_basic: Recuperación, sin citación obligatoria ni verificación cruzada.
-    - v3_rag_advanced: Grounding + citación + abstención + verificación cruzada
+    - v2_rag_basic: Recuperación + grounding, sin citación obligatoria ni verificación cruzada.
+    - v3_rag_advanced: citación + abstención + verificación cruzada
 
 ==================================================
 4. Flujo de carga y preprocesamiento de documentos

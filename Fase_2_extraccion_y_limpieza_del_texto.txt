@@ -1,5 +1,6 @@
-Extracción y Limpieza del Texto - FASE 2
-
+===================================================================
+FASE 2 - Extracción y Limpieza del Texto
+===================================================================
 Esta fase tuvo como objetivo convertir los documentos académicos en formato PDF, previamente organizados en la Fase 1, 
 en texto estructurado y limpio, listo para ser utilizado en las siguientes etapas del proyecto IntelliDocU, especialmente 
 chunking, recuperación aumentada (RAG) y verificación de evidencia. El resultado final es un conjunto de archivos de 

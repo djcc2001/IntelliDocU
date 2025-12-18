@@ -1,5 +1,6 @@
-Preparación y Organización del Dataset - FASE 1
--------------------------------------
+===================================================================
+FASE 1 - Preparación y Organización del Dataset
+===================================================================
 Esta fase tuvo como objetivo construir un dataset mixto compuesto por documentos académicos en PDF 
 y sus metadatos asociados, siguiendo la metodología del proyecto IntelliDocU. El resultado final es 
 un conjunto de PDFs verificados, estandarizados y documentados que servirán como base para las 

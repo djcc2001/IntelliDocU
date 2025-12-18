@@ -1,6 +1,6 @@
-Recuperación Semántica con FAISS (Retriever) - FASE 5
----------------------------------------------------
-
+===================================================================
+FASE 5 – Recuperación Semántica con FAISS (Retriever) 
+===================================================================
 Esta fase tuvo como objetivo implementar y validar el módulo de recuperación de información (retriever) del sistema IntelliDocU. 
 Este componente es fundamental dentro del enfoque RAG, ya que permite localizar fragmentos relevantes de documentos PDF a partir 
 de consultas en lenguaje natural, utilizando embeddings semánticos y búsqueda vectorial.
