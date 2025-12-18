@@ -23,8 +23,10 @@ def main():
             "doc_id": q["doc_id"],
             "question": q["question"],
             "type": q["type"],
-            "answer": out["answer"]
+            "answer": out["answer"],
+            "abstained": "not contain enough information" in out["answer"].lower()
         })
+
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:

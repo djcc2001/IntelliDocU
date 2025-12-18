@@ -9,7 +9,7 @@ def build_prompt(context, question):
 Answer the question using ONLY the provided context.
 
 Rules:
-- Answer ONLY if the information is EXPLICITLY stated in the context.
+- The answer MUST be directly supported by at least one sentence in the context.
 - Do NOT infer, generalize, or use external knowledge.
 - If the answer is NOT explicitly stated, respond EXACTLY with:
 "{ABSTENTION_TEXT}"
@@ -20,10 +20,8 @@ Context:
 
 Question: {question}
 
-Answer (in the same language as the question):
+Answer:
 """
-
-
 
 
 
@@ -61,4 +59,4 @@ def format_answer_with_citations(respuesta, fragmentos):
             citas.append(cita)
     
     citas_str = " ".join(citas)
-    return f"{respuesta}\n\n📚 Fuentes: {citas_str}"
+    return f"{respuesta}\n\n📚 Evidence: {citas_str}"

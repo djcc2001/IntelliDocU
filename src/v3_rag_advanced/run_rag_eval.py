@@ -69,6 +69,16 @@ def evaluate():
     print(f"  - Posibles hallucinations: {posibles_hallucinations}")
     print(f"  - Tasa de abstención: {abstenciones/len(results)*100:.1f}%")
 
+
+    # Respuestas con soporte documental explícito
+    supported_answers = [
+        r for r in results
+        if not r["abstained"] and r["num_fragments"] > 0
+    ]
+
+    print(f"  - Respuestas con soporte documental: {len(supported_answers)}")
+
+
     # Estadísticas por tipo
     factual = [r for r in results if r["type"] == "factual"]
     impossible = [r for r in results if r["type"] == "impossible"]

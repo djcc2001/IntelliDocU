@@ -2,10 +2,7 @@ import json
 import re
 from pathlib import Path
 
-# Patrones de sección en orden de prioridad (más específicos primero)
-# Busca patrones que indiquen TÍTULOS de sección, no menciones en el texto
 SECTION_PATTERNS = [
-    # Español
     (r"^\s*resumen\s*$", "abstract"),
     (r"^\s*abstract\s*$", "abstract"),
     (r"^\s*introducci[óo]n\s*$", "introduction"),
@@ -20,57 +17,47 @@ SECTION_PATTERNS = [
     (r"^\s*discussion\s*$", "discussion"),
     (r"^\s*conclusi[óo]n(es)?\s*$", "conclusion"),
     (r"^\s*conclusions?\s*$", "conclusion"),
-    (r"^\s*referencias?\s*(bibliogr[áa]ficas?)?\s*$", "references"),
-    (r"^\s*(references|bibliography)\s*$", "references"),
-    (r"^\s*(ap[ée]ndice|anexo)[sa]?\s*$", "appendix"),
-    (r"^\s*appendi(x|ces)\s*$", "appendix"),
+    (r"^\s*(referencias?|bibliography)\s*$", "references"),
+    (r"^\s*(ap[ée]ndice|appendi(x|ces))\s*$", "appendix"),
 ]
 
 def detectar_seccion(texto):
-    """
-    Detecta la sección buscando títulos en las primeras líneas.
-    Solo considera líneas cortas que parezcan títulos.
-    """
-    lineas = texto.split('\n')[:15]  # Primeras 15 líneas
-    
+    lineas = texto.split("\n")[:10]
+
     for linea in lineas:
-        linea_limpia = linea.strip().lower()
-        
-        # Ignorar líneas muy largas (probablemente no son títulos)
-        if len(linea_limpia) > 50:
+        linea = linea.strip().lower()
+
+        if len(linea) == 0 or len(linea) > 40:
             continue
-            
-        # Ignorar líneas con números de página o metadata
-        if re.match(r'^\d+\s*$', linea_limpia):
+
+        if re.match(r"^\d+$", linea):
             continue
-            
-        # Buscar coincidencias con patrones de sección
-        for patron, nombre_seccion in SECTION_PATTERNS:
-            if re.match(patron, linea_limpia, re.IGNORECASE):
-                return nombre_seccion
-    
+
+        for patron, seccion in SECTION_PATTERNS:
+            if re.match(patron, linea, re.IGNORECASE):
+                return seccion
+
     return None
 
 def limpiar_texto(texto):
-    """Limpia el texto eliminando artefactos de PDF"""
-    # Unir palabras cortadas por guion al final de línea
-    texto = re.sub(r"-\n", "", texto)
-    
-    # Reemplazar saltos de línea por espacio
-    texto = texto.replace("\n", " ")
-    
-    # Eliminar espacios múltiples
+    # Unir palabras cortadas por guión
+    texto = re.sub(r"-\s*\n\s*", "", texto)
+
+    # Preservar párrafos
+    texto = re.sub(r"\n{2,}", "\n\n", texto)
+    texto = re.sub(r"(?<!\n)\n(?!\n)", " ", texto)
+
+    # Espacios extra
     texto = re.sub(r"\s+", " ", texto)
-    
+
     return texto.strip()
 
 def limpiar_archivo(ruta_entrada, carpeta_salida):
-    """Procesa un archivo JSONL y genera versión limpia"""
     pdf_id = Path(ruta_entrada).stem
     ruta_salida = Path(carpeta_salida) / f"{pdf_id}.jsonl"
 
     seccion_actual = "unknown"
-    paginas_procesadas = 0
+    paginas = 0
 
     with open(ruta_entrada, "r", encoding="utf-8") as fin, \
          open(ruta_salida, "w", encoding="utf-8") as fout:
@@ -78,31 +65,36 @@ def limpiar_archivo(ruta_entrada, carpeta_salida):
         for linea in fin:
             registro = json.loads(linea)
             texto_original = registro["text"]
+
+            # Detectar sección solo si es probable encabezado
+            if len(texto_original) < 500:
+                nueva = detectar_seccion(texto_original)
+                if nueva:
+                    seccion_actual = nueva
+
             texto_limpio = limpiar_texto(texto_original)
 
-            # Detectar sección usando texto ORIGINAL (mantiene saltos de línea)
-            nueva_seccion = detectar_seccion(texto_original)
-            if nueva_seccion:
-                seccion_actual = nueva_seccion
+            if len(texto_limpio) < 80:
+                continue
 
             registro["clean_text"] = texto_limpio
             registro["section"] = seccion_actual
 
             fout.write(json.dumps(registro, ensure_ascii=False) + "\n")
-            paginas_procesadas += 1
+            paginas += 1
 
-    print(f"✓ {pdf_id}: {paginas_procesadas} páginas procesadas")
+    print(f"✓ {pdf_id}: {paginas} páginas limpias")
 
 if __name__ == "__main__":
-    carpeta_entrada = "data/extracted"
-    carpeta_salida = "data/preprocessed"
+    entrada = Path("data/extracted")
+    salida = Path("data/preprocessed")
 
-    Path(carpeta_salida).mkdir(parents=True, exist_ok=True)
+    salida.mkdir(parents=True, exist_ok=True)
 
-    archivos = list(Path(carpeta_entrada).glob("*.jsonl"))
+    archivos = list(entrada.glob("*.jsonl"))
     print(f"Procesando {len(archivos)} archivo(s)...\n")
-    
+
     for archivo in archivos:
-        limpiar_archivo(archivo, carpeta_salida)
-    
-    print(f"\n✓ Limpieza completada: {len(archivos)} archivo(s)")
+        limpiar_archivo(archivo, salida)
+
+    print("\n✓ Limpieza completada")

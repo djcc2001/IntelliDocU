@@ -38,16 +38,17 @@ class RAGAdvancedPipeline:
 
     def evidence_strength(self, fragmentos):
         """
-        Evalúa la fuerza de la evidencia según score L2 normalizado.
+        Evalúa fuerza de evidencia para cosine similarity.
+        Score ∈ [0,1], mayor es mejor.
         """
         if not fragmentos:
             return "none"
 
-        top_score = fragmentos[0].get("score", 1.0)
+        top_score = fragmentos[0].get("score", 0.0)
 
-        if top_score < 0.35:
+        if top_score >= 0.6:
             return "strong"
-        if top_score < 0.65:
+        if top_score >= 0.4:
             return "weak"
         return "none"
 
@@ -70,26 +71,17 @@ class RAGAdvancedPipeline:
         return hits >= 1
 
     def should_abstain_early(self, question):
-        """
-        Abstención temprana solo para casos obvios fuera de dominio.
-        """
         q = question.lower().strip()
 
-        greetings = {
-            "hi", "hello", "hola", "thanks", "gracias",
-            "how are you", "como estas", "qué tal"
-        }
+        if len(q.split()) < 2:
+            return True
+
+        greetings = {"hi", "hello", "hola", "thanks", "gracias"}
         if q in greetings:
             return True
 
-        non_academic = [
-            "joke", "chiste", "recipe", "receta",
-            "weather", "clima", "song", "canción"
-        ]
-        if any(p in q for p in non_academic):
-            return True
-
         return False
+
 
     # ------------------------------------------------------------------
     # PIPELINE PRINCIPAL
@@ -140,15 +132,6 @@ class RAGAdvancedPipeline:
 
         # 6️⃣ Abstención post-LLM
         if not respuesta or respuesta == ABSTENTION_TEXT:
-            return {
-                "question": question,
-                "answer": ABSTENTION_TEXT,
-                "fragments": usados,
-                "abstained": True
-            }
-
-        # 7️⃣ Filtro anti-respuesta genérica
-        if not self.answer_uses_context(respuesta, usados):
             return {
                 "question": question,
                 "answer": ABSTENTION_TEXT,

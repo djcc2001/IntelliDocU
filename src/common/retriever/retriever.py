@@ -1,93 +1,96 @@
 import numpy as np
 from src.common.embeddings.embedder import Embedder
-from src.common.retriever.load_index import load_faiss_index, load_mapping
+from src.common.retriever.load_index import (
+    load_faiss_index,
+    load_mapping,
+    load_index_meta
+)
 
 
 class Retriever:
     """
-    FAISS-based retriever with normalized similarity scores.
+    FAISS-based retriever (cosine similarity).
+    Compatible con el pipeline completo de chunking + embeddings.
     """
 
-    def __init__(self, base_data_dir="data", model_name="sentence-transformers/all-MiniLM-L6-v2"):
+    def __init__(
+        self,
+        base_data_dir="data",
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    ):
         self.embedder = Embedder(model_name)
         self.index = load_faiss_index(base_data_dir)
         self.mapping = load_mapping(base_data_dir)
-        
-        # Detectar tipo de índice
+        self.index_meta = load_index_meta(base_data_dir)
+
+        self.similarity = self.index_meta.get("similarity", "cosine")
+
+        # Detectar tipo REAL de índice
         self.index_type = self._detect_index_type()
-        print(f"🔍 Retriever inicializado - Tipo de índice: {self.index_type}")
+        print(f"🔍 Retriever listo — índice: {self.index_type}, sim: {self.similarity}")
 
     def _detect_index_type(self):
-        """Detecta si el índice usa L2 o Inner Product."""
-        index_str = str(type(self.index))
-        if "L2" in index_str or "Flat" in index_str:
-            return "L2"
-        elif "IP" in index_str:
-            return "IP"
-        else:
-            return "unknown"
+        if isinstance(self.index, type(self.index)):
+            # FAISS no expone bien el tipo, usamos class name
+            name = self.index.__class__.__name__
+            if "IP" in name:
+                return "IP"
+            if "L2" in name:
+                return "L2"
+        return "unknown"
 
-    def _normalize_scores(self, scores):
+    def retrieve(
+        self,
+        query: str,
+        k: int = 5,
+        allowed_sections=None,
+        min_score: float = 0.25
+    ):
         """
-        Normaliza scores a rango [0, 1] donde 1 = mejor match.
-        Maneja overflow y casos extremos.
+        Recupera los k chunks más relevantes.
+
+        Args:
+            query: pregunta del usuario
+            k: número de chunks finales
+            allowed_sections: lista de secciones permitidas
+            min_score: umbral mínimo de similitud (cosine)
+
+        Returns:
+            Lista de dicts con metadata + score
         """
-        # Proteger contra valores inválidos
-        scores = np.array(scores, dtype=np.float64)
-        scores = np.nan_to_num(scores, nan=0.0, posinf=0.0, neginf=0.0)
-        
-        if self.index_type == "L2":
-            # L2: distancias, invertir y normalizar
-            max_score = np.max(scores) if len(scores) > 0 else 1.0
-            
-            if max_score == 0 or np.isinf(max_score):
-                return np.ones_like(scores)
-            
-            # Normalizar primero, luego invertir (más robusto)
-            normalized = scores / (max_score + 1.0)  # +1.0 en vez de 1e-6
-            normalized = 1.0 - np.clip(normalized, 0, 1)
-            return normalized
-        
-        elif self.index_type == "IP":
-            # Inner Product: mayor es mejor
-            min_score = np.min(scores)
-            max_score = np.max(scores)
-            
-            if max_score == min_score:
-                return np.ones_like(scores) * 0.5
-            
-            normalized = (scores - min_score) / (max_score - min_score + 1e-6)
-            return np.clip(normalized, 0, 1)
-        
-        else:
-            # Unknown: devolver clipped a [0,1]
-            return np.clip(scores, 0, 1)
+        query_vec = self.embedder.encode([query]).astype("float32")
 
-    def retrieve(self, query, k=5, allowed_sections=None):
-      query_vec = self.embedder.encode([query]).astype("float32")
+        # Buscar más para poder filtrar
+        search_k = max(k * 5, k)
+        scores, indices = self.index.search(query_vec, search_k)
 
-      distances, indices = self.index.search(query_vec, k * 5)
+        results = []
+        fallback = []
 
-      results = []
-      fallback = []
+        for score, idx in zip(scores[0], indices[0]):
+            if idx < 0 or idx >= len(self.mapping):
+                continue
 
-      for dist, idx in zip(distances[0], indices[0]):
-          if idx < 0 or idx >= len(self.mapping):
-              continue
+            frag = dict(self.mapping[idx])
+            frag["score"] = float(score)  # cosine similarity
 
-          frag = dict(self.mapping[idx])
-          frag["score"] = float(dist)  # DISTANCIA REAL
-          section = frag.get("section", "unknown")
+            # Filtrar por score mínimo
+            if score < min_score:
+                continue
 
-          if allowed_sections is None or section in allowed_sections:
-              results.append(frag)
-          else:
-              fallback.append(frag)
+            section = frag.get("section", "unknown")
 
-          if len(results) == k:
-              break
+            if allowed_sections is None or section in allowed_sections:
+                results.append(frag)
+            else:
+                fallback.append(frag)
 
-      if len(results) < k:
-          results.extend(fallback[: k - len(results)])
+        # Ordenar explícitamente por score descendente
+        results.sort(key=lambda x: x["score"], reverse=True)
+        fallback.sort(key=lambda x: x["score"], reverse=True)
 
-      return results
+        # Completar con fallback si falta
+        if len(results) < k:
+            results.extend(fallback[: k - len(results)])
+
+        return results[:k]
