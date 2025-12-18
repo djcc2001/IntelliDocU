@@ -2,7 +2,26 @@
 
 from src.v3_rag_advanced.config import MAX_CONTEXT_CHARS, MAX_FRAGMENT_TEXT
 
-def build_limited_context(fragmentos, max_fragments=None, max_chars=None):
+def build_limited_context(fragments, max_fragments=5):
+    usados = []
+    context_parts = []
+
+    for frag in fragments:
+        text = frag.get("text", "").strip()
+        if not text:
+            continue
+
+        usados.append(frag)
+        context_parts.append(
+            f"[{len(usados)}] {text}"
+        )
+
+        if len(usados) >= max_fragments:
+            break
+
+    context = "\n\n".join(context_parts)
+    return context, usados
+
     """
     Construye un contexto limitado a partir de los fragmentos.
     

@@ -46,7 +46,8 @@ def build_faiss_index(base_data_dir="data"):
                     "section": data.get("section"),
                     "pages": data.get("pages"),
                     "frag_id": data.get("frag_id"),
-                    "chunk_in_section": data.get("chunk_in_section")
+                    "chunk_in_section": data.get("chunk_in_section"),
+                    "text": text 
                 })
 
                 if len(batch_texts) == BATCH_SIZE:

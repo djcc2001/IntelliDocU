@@ -14,8 +14,11 @@ from src.v2_rag_basic.rag_pipeline import RAGPipeline
 # =============================
 # Inicialización global
 # =============================
+
+DATA_DIR = "UI/data"
+
 _llm = QwenLLM()
-_rag = RAGPipeline(_llm)
+_rag = RAGPipeline(_llm, base_data_dir=DATA_DIR)
 
 def run_rag_basic_ui(question: str) -> str:
     """

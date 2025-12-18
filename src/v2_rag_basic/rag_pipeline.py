@@ -9,11 +9,12 @@ from src.v2_rag_basic.prompt import (
 
 
 class RAGPipeline:
-    def __init__(self, llm, top_k=10, max_fragment_length=400):
-        self.retriever = Retriever()
+    def __init__(self, llm, base_data_dir="data", top_k=10, max_fragment_length=400):
+        self.retriever = Retriever(base_data_dir=base_data_dir)
         self.llm = llm
         self.top_k = top_k
         self.max_fragment_length = max_fragment_length
+
 
     def answer(self, question):
         fragments = self.retriever.retrieve(question, k=self.top_k)
