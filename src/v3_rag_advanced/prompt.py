@@ -52,11 +52,18 @@ def format_answer_with_citations(respuesta, fragmentos):
     seen = set()
     
     for frag in fragmentos:
-        cita_key = (frag['doc_id'], frag.get('page', '?'), frag.get('section', 'unknown'))
+        pages = frag.get('pages', ['?'])
+        # asegurarnos que sea lista de enteros o strings
+        if not isinstance(pages, list):
+            pages = [pages]
+        pages_str = ", ".join(str(p) for p in pages)
+
+        cita_key = (frag['doc_id'], tuple(pages), frag.get('section', 'unknown'))
         if cita_key not in seen:
             seen.add(cita_key)
-            cita = f"[Doc: {frag['doc_id']}, P.{frag.get('page', '?')}, Sec: {frag.get('section', 'unknown')}]"
+            cita = f"[Doc: {frag['doc_id']}, Pages: {pages_str}, Sec: {frag.get('section', 'unknown')}]"
             citas.append(cita)
     
     citas_str = " ".join(citas)
     return f"{respuesta}\n\n📚 Evidence: {citas_str}"
+

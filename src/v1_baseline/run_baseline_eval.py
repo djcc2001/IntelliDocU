@@ -1,33 +1,41 @@
-import json
-from pathlib import Path
-from src.v1_baseline.run_baseline import run_baseline
+# run_baseline.py
+import random
+from src.common.llm.qwen_llm import QwenLLM
 
-QUESTIONS_PATH = Path("data/questions/questions.json")
-OUTPUT_PATH = Path("results/v1_baseline/baseline_answers.json")
+SEED = 42
 
-def main():
-    with open(QUESTIONS_PATH, "r", encoding="utf-8") as f:
-        questions = json.load(f)
+def build_prompt(question):
+    system_prompt = (
+        "You are an academic assistant.\n"
+        "You must answer based ONLY on your general knowledge.\n"
+        "If you are not certain that the information is correct, "
+        "explicitly say that you do not know.\n"
+        "Do NOT invent details.\n"
+        "Do NOT assume the contents of any specific document.\n"
+        "Be concise and factual."
+    )
 
-    results = []
+    user_prompt = (
+        f"Question:\n{question}\n\n"
+        "Answer (or state that the information is unknown):"
+    )
 
-    for q in questions:
-        answer = run_baseline(q["question"])
+    return system_prompt, user_prompt
 
-        results.append({
-            "question_id": q["id"],
-            "doc_id": q["doc_id"],
-            "question": q["question"],
-            "type": q["type"],
-            "answer": answer
-        })
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2, ensure_ascii=False)
+def run_baseline(question):
+    random.seed(SEED)
+    system_prompt, user_prompt = build_prompt(question)
 
-    print("Resultados del baseline guardados correctamente.")
+    llm = QwenLLM()
+    prompt = f"{system_prompt}\n\n{user_prompt}"
+
+    response = llm.generate(prompt).strip()
+    return response
 
 
 if __name__ == "__main__":
-    main()
+    question = "Does DuetSVG implement a reinforcement learning module for path optimization?"
+    answer = run_baseline(question)
+    print("\n=== BASELINE RESPONSE ===\n")
+    print(answer)
