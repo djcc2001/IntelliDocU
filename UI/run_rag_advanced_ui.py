@@ -15,29 +15,40 @@ from src.v3_rag_advanced.rag_pipeline import RAGAdvancedPipeline
 # =============================
 # Configuración global
 # =============================
-DATA_DIR = "UI/data"
+DATA_DIR = PROJECT_ROOT / "UI/data"  # ⚡ CAMBIO: path absoluto
 
 # 🔹 Inicializar modelo con offload para memoria limitada
-_llm = QwenLLM(device="auto")  # ya no da error de argumento
+_llm = QwenLLM()
+#_llm = QwenLLM(device="auto")
 
-# 🔹 Cargar FAISS y textos existentes
-index_path = Path(DATA_DIR) / "indices/faiss/index.faiss"
-texts_path = Path(DATA_DIR) / "indices/faiss/texts.pkl"
+# =============================
+# Función para inicializar retriever (⚡ CAMBIO)
+# =============================
+def init_retriever(base_data_dir: str = str(DATA_DIR)):
+    index_path = Path(base_data_dir) / "indices/faiss/index.faiss"
+    texts_path = Path(base_data_dir) / "indices/faiss/texts.pkl"
 
-if index_path.exists() and texts_path.exists():
-    index = faiss.read_index(str(index_path))
-    with open(texts_path, "rb") as f:
-        texts = pickle.load(f)
-else:
-    index, texts = None, []
+    if index_path.exists() and texts_path.exists():
+        index = faiss.read_index(str(index_path))
+        with open(texts_path, "rb") as f:
+            texts = pickle.load(f)
+    else:
+        index, texts = None, []
 
-# 🔹 Inicializar pipeline RAG Advanced
-_rag = RAGAdvancedPipeline(_llm, base_data_dir=DATA_DIR)
+    rag_pipeline = RAGAdvancedPipeline(_llm, base_data_dir=base_data_dir)
+    return rag_pipeline
 
-def run_rag_advanced_ui(question: str) -> str:
-    """
-    Ejecuta RAG v3 (advanced) usando índice FAISS existente.
-    Maneja GPU con memoria limitada.
-    """
-    result = _rag.answer(question)
+# 🔹 Inicializar pipeline RAG Advanced por defecto
+
+_rag = None  # ⚡ no inicializar al importar
+
+def run_rag_advanced_ui(question: str, retriever=None) -> str:
+    global _rag
+    if retriever is None:
+        if _rag is None:
+            # inicializa aquí, cuando se hace la primera pregunta
+            _rag = init_retriever()
+        retriever = _rag
+    result = retriever.answer(question)
     return result["answer"]
+
