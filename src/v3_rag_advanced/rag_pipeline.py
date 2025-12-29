@@ -42,15 +42,17 @@ class PipelineRAGAvanzado:
             return "none"
 
         puntuacion = fragmentos[0]["score"]
-        if puntuacion >= 0.30:
+        # Umbrales reducidos para ser menos estricto
+        if puntuacion >= 0.25:
             return "strong"
-        if puntuacion >= 0.18:
+        if puntuacion >= 0.10:  # Reducido de 0.18 a 0.10
             return "weak"
         return "none"
 
     def respuesta_usa_contexto(self, respuesta, fragmentos):
         """
         Verifica si la respuesta usa palabras clave del contexto.
+        Version mas flexible para ser menos estricto.
         
         Args:
             respuesta: Respuesta generada por el LLM
@@ -59,12 +61,28 @@ class PipelineRAGAvanzado:
         Returns:
             True si la respuesta parece usar el contexto, False en caso contrario
         """
+        if not fragmentos or not respuesta:
+            return False
+            
         respuesta_minusculas = respuesta.lower()
         texto_contexto = " ".join(fragmento["text"].lower() for fragmento in fragmentos)
 
-        # Extraer palabras clave (palabras de 5+ caracteres)
-        palabras_clave = set(re.findall(r"\b[a-zA-Z]{5,}\b", texto_contexto))
-        return any(palabra_clave in respuesta_minusculas for palabra_clave in palabras_clave)
+        # Extraer palabras clave (palabras de 4+ caracteres, mas flexible)
+        palabras_clave = set(re.findall(r"\b[a-zA-Z]{4,}\b", texto_contexto))
+        
+        # Verificar si hay al menos algunas palabras clave en la respuesta
+        palabras_encontradas = sum(1 for palabra in palabras_clave if palabra in respuesta_minusculas)
+        
+        # Si hay al menos 2 palabras clave o si la respuesta es suficientemente larga, considerar que usa el contexto
+        if palabras_encontradas >= 2:
+            return True
+        
+        # Si la respuesta es muy corta y no tiene palabras clave, probablemente no usa el contexto
+        if len(respuesta_minusculas.split()) < 5:
+            return palabras_encontradas >= 1
+        
+        # Para respuestas mas largas, ser mas permisivo
+        return palabras_encontradas >= 1 or len(respuesta_minusculas) > 50
 
     def debe_abstener_temprano(self, pregunta):
         """
@@ -101,15 +119,16 @@ class PipelineRAGAvanzado:
         if self.debe_abstener_temprano(pregunta):
             return self._abstenerse(pregunta)
 
-        # Recuperar fragmentos relevantes
+        # Recuperar fragmentos relevantes (umbral reducido para ser menos estricto)
         fragmentos = self.recuperador.recuperar(
             pregunta,
             k=self.top_k,
-            puntuacion_minima=0.18
+            puntuacion_minima=0.10  # Reducido de 0.18 a 0.10
         )
 
-        # Verificar fuerza de evidencia
-        if self.fuerza_evidencia(fragmentos) == "none":
+        # Verificar fuerza de evidencia - permitir respuestas con evidencia "weak"
+        fuerza = self.fuerza_evidencia(fragmentos)
+        if fuerza == "none":
             return self._abstenerse(pregunta)
 
         # Construir contexto limitado

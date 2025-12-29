@@ -30,7 +30,7 @@ def run_baseline(question):
     llm = QwenLLM()
     prompt = f"{system_prompt}\n\n{user_prompt}"
 
-    response = llm.generate(prompt).strip()
+    response = llm.generar(prompt).strip()
     return response
 
 

@@ -17,16 +17,15 @@ def construir_prompt(contexto, pregunta):
     Returns:
         String con el prompt completo formateado
     """
-    return f"""Eres un asistente academico cuidadoso.
+    return f"""Eres un asistente academico que responde preguntas sobre documentos academicos.
 
-Responde la pregunta usando SOLO el contexto proporcionado.
+Responde la pregunta usando el contexto proporcionado.
 
 Reglas:
-- La respuesta DEBE estar directamente respaldada por al menos una oracion en el contexto.
-- NO infieras, generalices o uses conocimiento externo.
-- Si la respuesta NO esta explicitamente indicada, responde EXACTAMENTE con:
-"{TEXTO_ABSTENCION}"
-- Se conciso y factual (max 2 oraciones).
+- Usa el contexto para responder la pregunta de manera precisa.
+- Si puedes inferir una respuesta razonable del contexto, proporcionala.
+- Solo responde EXACTAMENTE con "{TEXTO_ABSTENCION}" si el contexto NO contiene NINGUNA informacion relevante para responder la pregunta.
+- Se conciso y factual (2-3 oraciones).
 
 Contexto:
 {contexto}

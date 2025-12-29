@@ -36,7 +36,7 @@ class ModeloFlanT5:
             Respuesta generada como string
         """
         entradas = self.tokenizer(prompt, return_tensors="pt").to(self.dispositivo)
-        salidas = self.modelo.generar(
+        salidas = self.modelo.generate(
             **entradas,
             max_length=longitud_maxima,
             do_sample=False  # Determinista, mas coherente para RAG

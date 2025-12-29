@@ -20,7 +20,7 @@ def main():
     
     # Generar respuesta
     print(f"\nPregunta: {question}\n")
-    result = rag.answer(question)
+    result = rag.responder(question)
     
     # Mostrar resultado
     print("="*60)

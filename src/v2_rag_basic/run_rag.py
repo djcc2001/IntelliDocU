@@ -9,7 +9,7 @@ def main():
     llm = QwenLLM()
     rag = RAGPipeline(llm)
 
-    result = rag.answer(question)
+    result = rag.responder(question)
 
     print("\n=== RAG V2 RESPONSE ===\n")
     print(result["answer"])

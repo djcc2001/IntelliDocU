@@ -46,7 +46,7 @@ class ModeloQwen:
         print("Cargando modelo...")
         self.modelo = AutoModelForCausalLM.from_pretrained(
             nombre_modelo,
-            torch_dtype=tipo_datos,
+            dtype=tipo_datos,  # Usar dtype en lugar de torch_dtype (deprecated)
             device_map="auto" if self.dispositivo == "cuda" else None,
             trust_remote_code=True,
             low_cpu_mem_usage=True  # Importante para ahorrar memoria
@@ -96,9 +96,9 @@ class ModeloQwen:
             'eos_token_id': self.tokenizer.eos_token_id,
         }
 
-        # Generar respuesta
+        # Generar respuesta (usar generate() en lugar de generar())
         with torch.no_grad():
-            salidas = self.modelo.generar(**configuracion_generacion)
+            salidas = self.modelo.generate(**configuracion_generacion)
 
         # Decodificar solo los tokens nuevos (excluir el prompt)
         respuesta = self.tokenizer.decode(

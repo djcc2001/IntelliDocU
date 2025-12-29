@@ -43,18 +43,18 @@ if __name__ == "__main__":
     ]
 
     # 1️⃣ Baseline
-    #from UI.run_baseline_ui import run_baseline_ui
+    #from UI.run_baseline_ui import ejecutar_baseline_ui
     #for q in questions:
-        #run_test("Baseline UI", run_baseline_ui, q)
+    #    run_test("Baseline UI", ejecutar_baseline_ui, q)
 
     # 2️⃣ RAG Basic
-    #from UI.run_rag_basic_ui import run_rag_basic_ui
+    #from UI.run_rag_basic_ui import ejecutar_rag_basico_ui
     #for q in questions:
-       # run_test("RAG Basic UI", run_rag_basic_ui, q)
+    #    run_test("RAG Basic UI", ejecutar_rag_basico_ui, q)
 
     # 3️⃣ RAG Advanced
-    from UI.run_rag_advanced_ui import run_rag_advanced_ui
+    from UI.run_rag_advanced_ui import ejecutar_rag_avanzado_ui
     for q in questions:
-        run_test("RAG Advanced UI", run_rag_advanced_ui, q)
+        run_test("RAG Advanced UI", ejecutar_rag_avanzado_ui, q)
 
     print("\n🎯 Test completo")

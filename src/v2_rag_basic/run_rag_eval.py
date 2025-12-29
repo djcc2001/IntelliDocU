@@ -17,7 +17,7 @@ def main():
 
     results = []
     for q in questions:
-        out = rag.answer(q["question"])
+        out = rag.responder(q["question"])
         results.append({
             "question_id": q["id"],
             "doc_id": q["doc_id"],

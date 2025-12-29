@@ -35,7 +35,7 @@ def evaluate():
     posibles_hallucinations = 0
 
     for q in tqdm(questions, desc="Evaluando"):
-        result = rag.answer(q["question"])
+        result = rag.responder(q["question"])
 
         is_abstain = result["answer"] == ABSTENTION_TEXT
         if is_abstain:

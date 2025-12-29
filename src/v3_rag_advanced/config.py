@@ -10,7 +10,7 @@ MAX_FRAGMENTOS = 5         # Maximo de fragmentos a usar
 
 # Recuperacion
 TOP_K = 10                # Fragmentos a recuperar inicialmente
-PUNTUACION_MINIMA = 0.05       # Puntuacion minima para considerar relevante
+PUNTUACION_MINIMA = 0.10       # Puntuacion minima para considerar relevante (reducido para ser menos estricto)
 
 # Abstención
 MIN_FRAGMENTOS_RELEVANTES = 1  # Minimo de fragmentos relevantes (reducido)
@@ -18,7 +18,6 @@ MIN_PALABRAS_PREGUNTA = 2      # Palabras minimas en pregunta valida (reducido)
 
 # Texto de abstención
 TEXTO_ABSTENCION = "No se menciona en el documento."
-
 
 # Alias para mantener compatibilidad con codigo existente
 MAX_CONTEXT_CHARS = MAX_CARACTERES_CONTEXTO
