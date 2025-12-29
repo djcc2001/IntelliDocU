@@ -58,10 +58,25 @@ def construir_indice_faiss(directorio_base_datos="data"):
                     continue
 
                 textos_lote.append(texto)
+                
+                # Asegurar que pages siempre sea una lista valida
+                paginas = datos.get("pages")
+                if paginas is None:
+                    # Fallback: buscar 'page' (singular) si 'pages' no existe
+                    pagina_singular = datos.get("page")
+                    if pagina_singular is not None:
+                        paginas = [pagina_singular]
+                    else:
+                        paginas = []
+                
+                # Asegurar que sea lista
+                if not isinstance(paginas, list):
+                    paginas = [paginas] if paginas is not None else []
+                
                 metadatos_lote.append({
                     "doc_id": datos["doc_id"],
                     "section": datos.get("section"),
-                    "pages": datos.get("pages"),
+                    "pages": paginas,  # Siempre lista
                     "frag_id": datos.get("frag_id"),
                     "chunk_in_section": datos.get("chunk_in_section"),
                     "text": texto 

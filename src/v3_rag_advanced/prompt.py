@@ -80,10 +80,28 @@ def formatear_respuesta_con_citaciones(respuesta, fragmentos):
     vistos = set()
     
     for fragmento in fragmentos:
-        paginas = fragmento.get('pages', ['?'])
+        # Intentar obtener paginas de diferentes formas posibles
+        paginas = fragmento.get('pages')
+        if paginas is None:
+            # Fallback: buscar 'page' (singular) si 'pages' no existe
+            pagina_singular = fragmento.get('page')
+            if pagina_singular is not None:
+                paginas = [pagina_singular]
+            else:
+                paginas = ['?']
+        
         # Asegurarnos que sea lista de enteros o strings
         if not isinstance(paginas, list):
-            paginas = [paginas]
+            if paginas is None or paginas == '?':
+                paginas = ['?']
+            else:
+                paginas = [paginas]
+        
+        # Filtrar valores None o invalidos
+        paginas = [p for p in paginas if p is not None and p != '?']
+        if not paginas:
+            paginas = ['?']
+            
         paginas_str = ", ".join(str(p) for p in paginas)
 
         clave_cita = (fragmento['doc_id'], tuple(paginas), fragmento.get('section', 'unknown'))
