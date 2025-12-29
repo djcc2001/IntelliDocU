@@ -1,106 +1,138 @@
+"""
+Modulo para construir el indice vectorial FAISS a partir de fragmentos de texto.
+FAISS permite busqueda rapida de similitud semantica usando embeddings.
+"""
+
 import json
 import faiss
 import numpy as np
 from pathlib import Path
 from tqdm import tqdm
 
-from src.common.embeddings.embedder import Embedder
+from src.common.embeddings.embedder import GeneradorEmbeddings
 
-BATCH_SIZE = 32
+TAMANO_LOTE = 32  # Numero de textos a procesar por lote
 
-def build_faiss_index(base_data_dir="data"):
-    base = Path(base_data_dir)
 
-    fragments_dir = base / "fragments"
-    index_dir = base / "indices" / "faiss"
-    index_dir.mkdir(parents=True, exist_ok=True)
+def construir_indice_faiss(directorio_base_datos="data"):
+    """
+    Construye un indice FAISS a partir de todos los fragmentos de texto.
+    
+    Args:
+        directorio_base_datos: Directorio base donde estan los datos
+    
+    Genera:
+    - indices/faiss/index.faiss: Indice FAISS para busqueda rapida
+    - indices/faiss/mapping.json: Mapeo de indices a metadatos de fragmentos
+    - indices/faiss/index_meta.json: Metadatos del indice (modelo, dimension, etc.)
+    """
+    base = Path(directorio_base_datos)
 
-    embedder = Embedder()
+    directorio_fragmentos = base / "fragments"
+    directorio_indices = base / "indices" / "faiss"
+    directorio_indices.mkdir(parents=True, exist_ok=True)
 
-    all_embeddings = []
-    mapping = []
+    generador_embeddings = GeneradorEmbeddings()
 
-    fragment_files = list(fragments_dir.glob("*.jsonl"))
-    if not fragment_files:
-        raise RuntimeError("❌ No se encontraron fragments")
+    todos_los_embeddings = []
+    mapeo = []
 
-    for frag_file in tqdm(fragment_files, desc="FAISS indexing"):
-        batch_texts = []
-        batch_meta = []
+    archivos_fragmentos = list(directorio_fragmentos.glob("*.jsonl"))
+    if not archivos_fragmentos:
+        raise RuntimeError("❌ No se encontraron fragmentos")
 
-        with open(frag_file, "r", encoding="utf-8") as f:
-            for line in f:
-                data = json.loads(line)
+    for archivo_fragmento in tqdm(archivos_fragmentos, desc="Indexando FAISS"):
+        textos_lote = []
+        metadatos_lote = []
 
-                # Filtrar referencias
-                if data.get("section") == "references":
+        with open(archivo_fragmento, "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                datos = json.loads(linea)
+
+                # Filtrar referencias bibliograficas (no utiles para busqueda)
+                if datos.get("section") == "references":
                     continue
 
-                text = data.get("text", "").strip()
-                if not text:
+                texto = datos.get("text", "").strip()
+                if not texto:
                     continue
 
-                batch_texts.append(text)
-                batch_meta.append({
-                    "doc_id": data["doc_id"],
-                    "section": data.get("section"),
-                    "pages": data.get("pages"),
-                    "frag_id": data.get("frag_id"),
-                    "chunk_in_section": data.get("chunk_in_section"),
-                    "text": text 
+                textos_lote.append(texto)
+                metadatos_lote.append({
+                    "doc_id": datos["doc_id"],
+                    "section": datos.get("section"),
+                    "pages": datos.get("pages"),
+                    "frag_id": datos.get("frag_id"),
+                    "chunk_in_section": datos.get("chunk_in_section"),
+                    "text": texto 
                 })
 
-                if len(batch_texts) == BATCH_SIZE:
-                    _process_batch(embedder, batch_texts, batch_meta, all_embeddings, mapping)
-                    batch_texts, batch_meta = [], []
+                # Procesar cuando el lote esta lleno
+                if len(textos_lote) == TAMANO_LOTE:
+                    _procesar_lote(generador_embeddings, textos_lote, metadatos_lote, todos_los_embeddings, mapeo)
+                    textos_lote, metadatos_lote = [], []
 
-        if batch_texts:
-            _process_batch(embedder, batch_texts, batch_meta, all_embeddings, mapping)
+        # Procesar lote restante
+        if textos_lote:
+            _procesar_lote(generador_embeddings, textos_lote, metadatos_lote, todos_los_embeddings, mapeo)
 
-    if not all_embeddings:
+    if not todos_los_embeddings:
         raise RuntimeError("❌ No se generaron embeddings")
 
-    embeddings = np.vstack(all_embeddings).astype("float32")
+    # Convertir lista de arrays a una matriz numpy
+    embeddings = np.vstack(todos_los_embeddings).astype("float32")
 
-    # Validación de dimensión
-    assert embeddings.shape[1] == embedder.dim, "Dimensión incorrecta de embeddings"
+    # Validar dimension
+    assert embeddings.shape[1] == generador_embeddings.dimension, "Dimension incorrecta de embeddings"
 
-    index = faiss.IndexFlatIP(embedder.dim)
-    index.add(embeddings)
+    # Crear indice FAISS con producto interno (para embeddings normalizados = similitud coseno)
+    indice = faiss.IndexFlatIP(generador_embeddings.dimension)
+    indice.add(embeddings)
 
-    # Guardar índice
-    faiss.write_index(index, str(index_dir / "index.faiss"))
+    # Guardar indice
+    faiss.write_index(indice, str(directorio_indices / "index.faiss"))
 
-    # Guardar mapping (ligero)
-    with open(index_dir / "mapping.json", "w", encoding="utf-8") as f:
-        json.dump(mapping, f, ensure_ascii=False, indent=2)
+    # Guardar mapeo (ligero, solo metadatos)
+    with open(directorio_indices / "mapping.json", "w", encoding="utf-8") as archivo:
+        json.dump(mapeo, archivo, ensure_ascii=False, indent=2)
 
-    # Guardar metadata del índice
-    with open(index_dir / "index_meta.json", "w", encoding="utf-8") as f:
+    # Guardar metadatos del indice
+    with open(directorio_indices / "index_meta.json", "w", encoding="utf-8") as archivo:
         json.dump({
-            "embedding_model": embedder.model_name,
-            "dimension": embedder.dim,
+            "embedding_model": generador_embeddings.nombre_modelo,
+            "dimension": generador_embeddings.dimension,
             "normalized": True,
             "similarity": "cosine",
-            "num_vectors": index.ntotal
-        }, f, indent=2)
+            "num_vectors": indice.ntotal
+        }, archivo, indent=2)
 
-    print(f"✓ FAISS listo — vectores: {index.ntotal}")
+    print(f"✓ FAISS listo — vectores: {indice.ntotal}")
 
 
-def _process_batch(embedder, texts, metas, all_embeddings, mapping):
-    embeddings = embedder.encode(texts)
+def _procesar_lote(generador_embeddings, textos, metadatos, todos_los_embeddings, mapeo):
+    """
+    Procesa un lote de textos generando embeddings y agregandolos a las listas.
+    
+    Args:
+        generador_embeddings: Instancia de GeneradorEmbeddings
+        textos: Lista de textos a procesar
+        metadatos: Lista de metadatos correspondientes a cada texto
+        todos_los_embeddings: Lista donde se agregaran los embeddings
+        mapeo: Lista donde se agregaran los metadatos
+    """
+    embeddings = generador_embeddings.codificar(textos)
 
-    for emb, meta in zip(embeddings, metas):
-        all_embeddings.append(emb)
-        mapping.append(meta)
+    for embedding, metadato in zip(embeddings, metadatos):
+        todos_los_embeddings.append(embedding)
+        mapeo.append(metadato)
 
 
 def main():
+    """Funcion principal para ejecutar la construccion del indice."""
     try:
-        build_faiss_index(base_data_dir="data")
-    except Exception as e:
-        print(f"[ERROR] FAISS falló: {e}")
+        construir_indice_faiss(directorio_base_datos="data")
+    except Exception as error:
+        print(f"[ERROR] FAISS fallo: {error}")
 
 
 if __name__ == "__main__":

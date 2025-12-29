@@ -1,54 +1,82 @@
-# UI/run_rag_advanced_ui.py
+"""
+Modulo UI para ejecutar la version RAG Avanzado (V3).
+Version con recuperacion avanzada, verificacion de evidencia y citaciones.
+"""
+
 from pathlib import Path
 import sys
 import pickle
 import faiss
 
-# Agregar raíz del proyecto
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+# Agregar raiz del proyecto
+RAIZ_PROYECTO = Path(__file__).resolve().parents[1]
+if str(RAIZ_PROYECTO) not in sys.path:
+    sys.path.insert(0, str(RAIZ_PROYECTO))
 
-from src.common.llm.qwen_llm import QwenLLM
-from src.v3_rag_advanced.rag_pipeline import RAGAdvancedPipeline
-
-# =============================
-# Configuración global
-# =============================
-DATA_DIR = PROJECT_ROOT / "UI/data"  # ⚡ CAMBIO: path absoluto
-
-# 🔹 Inicializar modelo con offload para memoria limitada
-_llm = QwenLLM()
-#_llm = QwenLLM(device="auto")
+from src.common.llm.qwen_llm import ModeloQwen
+from src.v3_rag_advanced.rag_pipeline import PipelineRAGAvanzado
 
 # =============================
-# Función para inicializar retriever (⚡ CAMBIO)
+# Configuracion global
 # =============================
-def init_retriever(base_data_dir: str = str(DATA_DIR)):
-    index_path = Path(base_data_dir) / "indices/faiss/index.faiss"
-    texts_path = Path(base_data_dir) / "indices/faiss/texts.pkl"
+DIRECTORIO_DATOS = RAIZ_PROYECTO / "UI/data"  # Path absoluto
 
-    if index_path.exists() and texts_path.exists():
-        index = faiss.read_index(str(index_path))
-        with open(texts_path, "rb") as f:
-            texts = pickle.load(f)
+# Inicializar modelo con offload para memoria limitada
+_modelo_llm = ModeloQwen()
+
+
+# =============================
+# Funcion para inicializar recuperador
+# =============================
+def inicializar_recuperador(directorio_base_datos: str = str(DIRECTORIO_DATOS)):
+    """
+    Inicializa el pipeline RAG avanzado con el recuperador.
+    
+    Args:
+        directorio_base_datos: Directorio base donde estan los datos
+    
+    Returns:
+        Instancia de PipelineRAGAvanzado
+    """
+    ruta_indice = Path(directorio_base_datos) / "indices/faiss/index.faiss"
+    ruta_textos = Path(directorio_base_datos) / "indices/faiss/texts.pkl"
+
+    if ruta_indice.exists() and ruta_textos.exists():
+        indice = faiss.read_index(str(ruta_indice))
+        with open(ruta_textos, "rb") as archivo:
+            textos = pickle.load(archivo)
     else:
-        index, texts = None, []
+        indice, textos = None, []
 
-    rag_pipeline = RAGAdvancedPipeline(_llm, base_data_dir=base_data_dir)
-    return rag_pipeline
+    pipeline_rag = PipelineRAGAvanzado(_modelo_llm, directorio_base_datos=directorio_base_datos)
+    return pipeline_rag
 
-# 🔹 Inicializar pipeline RAG Advanced por defecto
 
-_rag = None  # ⚡ no inicializar al importar
+# Pipeline RAG avanzado por defecto (inicializado bajo demanda)
+_pipeline_rag = None  # No inicializar al importar
 
-def run_rag_advanced_ui(question: str, retriever=None) -> str:
-    global _rag
-    if retriever is None:
-        if _rag is None:
-            # inicializa aquí, cuando se hace la primera pregunta
-            _rag = init_retriever()
-        retriever = _rag
-    result = retriever.answer(question)
-    return result["answer"]
 
+def ejecutar_rag_avanzado_ui(pregunta: str, recuperador=None) -> str:
+    """
+    Ejecuta RAG v3 (avanzado) con verificacion de evidencia y citaciones.
+    
+    Args:
+        pregunta: Pregunta del usuario
+        recuperador: Instancia de PipelineRAGAvanzado (opcional, se crea si no se proporciona)
+    
+    Returns:
+        Respuesta generada por el modelo con contexto y citaciones
+    """
+    global _pipeline_rag
+    if recuperador is None:
+        if _pipeline_rag is None:
+            # Inicializar aqui, cuando se hace la primera pregunta
+            _pipeline_rag = inicializar_recuperador()
+        recuperador = _pipeline_rag
+    resultado = recuperador.responder(pregunta)
+    return resultado["answer"]
+
+
+# Alias para mantener compatibilidad
+init_retriever = inicializar_recuperador
+run_rag_advanced_ui = ejecutar_rag_avanzado_ui

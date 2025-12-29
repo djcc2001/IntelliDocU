@@ -1,87 +1,113 @@
-# src/v2_rag_basic/rag_pipeline.py
+"""
+Pipeline de RAG Basico (Version 2).
+Recupera fragmentos relevantes y genera respuestas usando el LLM con contexto.
+"""
 
 import faiss
 import pickle
 from pathlib import Path
-from src.common.retriever.retriever import Retriever
+from src.common.retriever.retriever import Recuperador
 from src.v2_rag_basic.prompt import (
-    build_literal_context,
-    build_partial_summary_prompt,
-    MAX_CONTEXT_CHARS
+    construir_contexto_literal,
+    construir_prompt_resumen_parcial,
+    MAX_CARACTERES_CONTEXTO
 )
 
 
-class RAGPipeline:
-    def __init__(self, llm, base_data_dir="data", top_k=10, max_fragment_length=400, faiss_index=None, texts=None):
+class PipelineRAGBasico:
+    """
+    Pipeline de RAG basico que recupera fragmentos y genera respuestas.
+    """
+    
+    def __init__(self, modelo_llm, directorio_base_datos="data", top_k=10, longitud_maxima_fragmento=400, indice_faiss=None, textos=None):
         """
-        llm: instancia del modelo LLM
-        base_data_dir: carpeta donde están los índices y textos
-        top_k: cuántos fragmentos recuperar
-        max_fragment_length: límite de caracteres por fragmento
-        faiss_index: índice FAISS precargado (opcional)
-        texts: lista de textos correspondiente al índice (opcional)
+        Inicializa el pipeline RAG basico.
+        
+        Args:
+            modelo_llm: Instancia del modelo LLM
+            directorio_base_datos: Carpeta donde estan los indices y textos
+            top_k: Cuantos fragmentos recuperar
+            longitud_maxima_fragmento: Limite de caracteres por fragmento
+            indice_faiss: Indice FAISS precargado (opcional)
+            textos: Lista de textos correspondiente al indice (opcional)
         """
-        self.llm = llm
+        self.modelo_llm = modelo_llm
         self.top_k = top_k
-        self.max_fragment_length = max_fragment_length
-        self.base_data_dir = Path(base_data_dir)
+        self.longitud_maxima_fragmento = longitud_maxima_fragmento
+        self.directorio_base_datos = Path(directorio_base_datos)
 
-        # 🔹 Cargar FAISS y textos
-        self.index = faiss_index
-        self.texts = texts or []
-        if self.index is None or not self.texts:
-            self.index, self.texts = self._load_or_create_index()
+        # Cargar FAISS y textos
+        self.indice = indice_faiss
+        self.textos = textos or []
+        if self.indice is None or not self.textos:
+            self.indice, self.textos = self._cargar_o_crear_indice()
 
-        # 🔹 Inicializar retriever
-        self.retriever = Retriever(base_data_dir=self.base_data_dir)
+        # Inicializar recuperador
+        self.recuperador = Recuperador(directorio_base_datos=self.directorio_base_datos)
 
-    def _load_or_create_index(self):
+    def _cargar_o_crear_indice(self):
         """
-        Carga índice FAISS y textos desde disco si existen,
-        o devuelve un índice vacío y lista vacía.
+        Carga indice FAISS y textos desde disco si existen,
+        o devuelve un indice vacio y lista vacia.
+        
+        Returns:
+            Tupla (indice_faiss, lista_textos)
         """
-        index_path = self.base_data_dir / "indices/faiss/index.faiss"
-        texts_path = self.base_data_dir / "indices/faiss/texts.pkl"
+        ruta_indice = self.directorio_base_datos / "indices/faiss/index.faiss"
+        ruta_textos = self.directorio_base_datos / "indices/faiss/texts.pkl"
 
-        if index_path.exists() and texts_path.exists():
-            index = faiss.read_index(str(index_path))
-            with open(texts_path, "rb") as f:
-                texts = pickle.load(f)
-            print(f"✅ FAISS index and texts loaded: {len(texts)} entries")
+        if ruta_indice.exists() and ruta_textos.exists():
+            indice = faiss.read_index(str(ruta_indice))
+            with open(ruta_textos, "rb") as archivo:
+                textos = pickle.load(archivo)
+            print(f"✅ Indice FAISS y textos cargados: {len(textos)} entradas")
         else:
-            index = None
-            texts = []
-            print("⚠️ FAISS index or texts not found, starting empty")
+            indice = None
+            textos = []
+            print("⚠️ Indice FAISS o textos no encontrados, iniciando vacio")
 
-        return index, texts
+        return indice, textos
 
-    def answer(self, question: str) -> dict:
+    def responder(self, pregunta: str) -> dict:
         """
         Recupera fragmentos relevantes y genera respuesta usando LLM.
+        
+        Args:
+            pregunta: Pregunta del usuario
+        
+        Returns:
+            Diccionario con:
+            - question: Pregunta original
+            - answer: Respuesta generada
+            - fragments: Lista de fragmentos usados
         """
-        fragments = self.retriever.retrieve(question, k=self.top_k)
+        fragmentos = self.recuperador.recuperar(pregunta, k=self.top_k)
 
-        if not fragments:
+        if not fragmentos:
             return {
-                "question": question,
-                "answer": "The provided context does not contain enough information to answer the question.",
+                "question": pregunta,
+                "answer": "El contexto proporcionado no contiene suficiente informacion para responder la pregunta.",
                 "fragments": []
             }
 
-        # Truncado defensivo de fragmentos
-        for f in fragments:
-            f["text"] = f["text"][:self.max_fragment_length]
+        # Truncar fragmentos si son muy largos
+        for fragmento in fragmentos:
+            fragmento["text"] = fragmento["text"][:self.longitud_maxima_fragmento]
 
         # Construir contexto literal y limitar longitud total
-        context = build_literal_context(fragments)
-        context = context[:MAX_CONTEXT_CHARS]
+        contexto = construir_contexto_literal(fragmentos)
+        contexto = contexto[:MAX_CARACTERES_CONTEXTO]
 
         # Generar prompt y obtener respuesta
-        prompt = build_partial_summary_prompt(context, question)
-        answer = self.llm.generate(prompt).strip()
+        prompt = construir_prompt_resumen_parcial(contexto, pregunta)
+        respuesta = self.modelo_llm.generar(prompt).strip()
 
         return {
-            "question": question,
-            "answer": answer,
-            "fragments": fragments
+            "question": pregunta,
+            "answer": respuesta,
+            "fragments": fragmentos
         }
+
+
+# Alias para mantener compatibilidad con codigo existente
+RAGPipeline = PipelineRAGBasico

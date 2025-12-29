@@ -1,47 +1,72 @@
-# UI/run_baseline_ui.py
+"""
+Modulo UI para ejecutar la version Baseline (V1).
+Version sin recuperacion de informacion, solo usa conocimiento interno del LLM.
+"""
+
 from pathlib import Path
 import sys
 
-# Agregar raíz del proyecto
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+# Agregar raiz del proyecto al path
+RAIZ_PROYECTO = Path(__file__).resolve().parents[1]
+if str(RAIZ_PROYECTO) not in sys.path:
+    sys.path.insert(0, str(RAIZ_PROYECTO))
 
-from src.common.llm.qwen_llm import QwenLLM
-#from src.common.llm.flan_t5_llm import FlanT5LLM
+from src.common.llm.qwen_llm import ModeloQwen
 import random
 
-# =============================
-# Configuración baseline
-# =============================
-SEED = 42
 
-def build_prompt(question):
-    system_prompt = (
-        "You are an academic assistant.\n"
-        "You must answer based ONLY on your general knowledge.\n"
-        "If you are not certain that the information is correct, "
-        "explicitly say that you do not know.\n"
-        "Do NOT invent details.\n"
-        "Do NOT assume the contents of any specific document.\n"
-        "Be concise and factual."
+# =============================
+# Configuracion baseline
+# =============================
+SEMILLA = 42
+
+
+def construir_prompt(pregunta):
+    """
+    Construye el prompt para el modelo baseline.
+    
+    Args:
+        pregunta: Pregunta del usuario
+    
+    Returns:
+        Tupla (prompt_sistema, prompt_usuario)
+    """
+    prompt_sistema = (
+        "Eres un asistente academico.\n"
+        "Debes responder basandote SOLO en tu conocimiento general.\n"
+        "Si no estas seguro de que la informacion sea correcta, "
+        "di explicitamente que no lo sabes.\n"
+        "NO inventes detalles.\n"
+        "NO asumas el contenido de ningun documento especifico.\n"
+        "Se conciso y factual."
     )
 
-    user_prompt = (
-        f"Question:\n{question}\n\n"
-        "Answer (or state that the information is unknown):"
+    prompt_usuario = (
+        f"Pregunta:\n{pregunta}\n\n"
+        "Respuesta (o indica que la informacion es desconocida):"
     )
 
-    return system_prompt, user_prompt
+    return prompt_sistema, prompt_usuario
 
-def run_baseline_ui(question: str) -> str:
+
+def ejecutar_baseline_ui(pregunta: str) -> str:
     """
     Ejecuta baseline v1 sin RAG.
+    
+    Args:
+        pregunta: Pregunta del usuario
+    
+    Returns:
+        Respuesta generada por el modelo
     """
-    random.seed(SEED)
+    random.seed(SEMILLA)
 
-    llm = QwenLLM()
-    prompt = build_prompt(question)
-    response = llm.generate(prompt).strip()
+    modelo_llm = ModeloQwen()
+    prompt = construir_prompt(pregunta)
+    respuesta = modelo_llm.generar(prompt).strip()
 
-    return response
+    return respuesta
+
+
+# Alias para mantener compatibilidad
+run_baseline_ui = ejecutar_baseline_ui

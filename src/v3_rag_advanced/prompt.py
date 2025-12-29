@@ -1,69 +1,103 @@
-"""Templates de prompts para RAG Advanced."""
+"""
+Plantillas de prompts para RAG Avanzado.
+Define los prompts para generar respuestas y formatear con citaciones.
+"""
 
-from src.v3_rag_advanced.config import ABSTENTION_TEXT
+from src.v3_rag_advanced.config import TEXTO_ABSTENCION
 
 
-def build_prompt(context, question):
-    return f"""You are a careful academic assistant.
+def construir_prompt(contexto, pregunta):
+    """
+    Construye el prompt principal para el LLM con contexto y pregunta.
+    
+    Args:
+        contexto: Contexto extraido de los fragmentos recuperados
+        pregunta: Pregunta del usuario
+    
+    Returns:
+        String con el prompt completo formateado
+    """
+    return f"""Eres un asistente academico cuidadoso.
 
-Answer the question using ONLY the provided context.
+Responde la pregunta usando SOLO el contexto proporcionado.
 
-Rules:
-- The answer MUST be directly supported by at least one sentence in the context.
-- Do NOT infer, generalize, or use external knowledge.
-- If the answer is NOT explicitly stated, respond EXACTLY with:
-"{ABSTENTION_TEXT}"
-- Be concise and factual (max 2 sentences).
+Reglas:
+- La respuesta DEBE estar directamente respaldada por al menos una oracion en el contexto.
+- NO infieras, generalices o uses conocimiento externo.
+- Si la respuesta NO esta explicitamente indicada, responde EXACTAMENTE con:
+"{TEXTO_ABSTENCION}"
+- Se conciso y factual (max 2 oraciones).
 
-Context:
-{context}
+Contexto:
+{contexto}
 
-Question: {question}
+Pregunta: {pregunta}
 
-Answer:
+Respuesta:
 """
 
 
+def construir_prompt_sin_contexto(pregunta):
+    """
+    Construye un prompt cuando no hay contexto disponible.
+    
+    Args:
+        pregunta: Pregunta del usuario
+    
+    Returns:
+        String con el prompt de abstención
+    """
+    return f"""Eres un asistente academico.
 
-def build_prompt_without_context(question):
-    return f"""You are an academic assistant.
+NO hay contexto de documento disponible.
 
-There is NO document context available.
+Responde EXACTAMENTE con:
+"{TEXTO_ABSTENCION}"
 
-Respond EXACTLY with:
-"{ABSTENTION_TEXT}"
-
-Question: {question}
+Pregunta: {pregunta}
 """
 
 
-
-def format_answer_with_citations(respuesta, fragmentos):
-    """Añade citaciones o disclaimer."""
-    if respuesta.strip() == ABSTENTION_TEXT:
+def formatear_respuesta_con_citaciones(respuesta, fragmentos):
+    """
+    Añade citaciones o disclaimer a la respuesta.
+    
+    Args:
+        respuesta: Respuesta generada por el LLM
+        fragmentos: Lista de fragmentos usados como evidencia
+    
+    Returns:
+        Respuesta formateada con citaciones o disclaimer
+    """
+    if respuesta.strip() == TEXTO_ABSTENCION:
         return respuesta
     
     # Sin fragmentos: añadir disclaimer
     if not fragmentos:
-        return f"{respuesta}\n\n Nota: Respuesta basada en conocimiento general, sin fuentes específicas del documento."
+        return f"{respuesta}\n\n Nota: Respuesta basada en conocimiento general, sin fuentes especificas del documento."
     
     # Con fragmentos: añadir citaciones
     citas = []
-    seen = set()
+    vistos = set()
     
-    for frag in fragmentos:
-        pages = frag.get('pages', ['?'])
-        # asegurarnos que sea lista de enteros o strings
-        if not isinstance(pages, list):
-            pages = [pages]
-        pages_str = ", ".join(str(p) for p in pages)
+    for fragmento in fragmentos:
+        paginas = fragmento.get('pages', ['?'])
+        # Asegurarnos que sea lista de enteros o strings
+        if not isinstance(paginas, list):
+            paginas = [paginas]
+        paginas_str = ", ".join(str(p) for p in paginas)
 
-        cita_key = (frag['doc_id'], tuple(pages), frag.get('section', 'unknown'))
-        if cita_key not in seen:
-            seen.add(cita_key)
-            cita = f"[Doc: {frag['doc_id']}, Pages: {pages_str}, Sec: {frag.get('section', 'unknown')}]"
+        clave_cita = (fragmento['doc_id'], tuple(paginas), fragmento.get('section', 'unknown'))
+        if clave_cita not in vistos:
+            vistos.add(clave_cita)
+            cita = f"[Doc: {fragmento['doc_id']}, Paginas: {paginas_str}, Sec: {fragmento.get('section', 'unknown')}]"
             citas.append(cita)
     
     citas_str = " ".join(citas)
-    return f"{respuesta}\n\n📚 Evidence: {citas_str}"
+    return f"{respuesta}\n\n📚 Evidencia: {citas_str}"
 
+
+# Alias para mantener compatibilidad
+build_prompt = construir_prompt
+build_prompt_without_context = construir_prompt_sin_contexto
+format_answer_with_citations = formatear_respuesta_con_citaciones

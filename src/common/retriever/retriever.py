@@ -1,105 +1,148 @@
+"""
+Modulo de recuperacion semantica usando FAISS.
+Permite buscar fragmentos de texto relevantes para una pregunta usando similitud de embeddings.
+"""
+
 import numpy as np
-from src.common.embeddings.embedder import Embedder
+from src.common.embeddings.embedder import GeneradorEmbeddings
 from src.common.retriever.load_index import (
-    load_faiss_index,
-    load_mapping,
-    load_index_meta
+    cargar_indice_faiss,
+    cargar_mapeo,
+    cargar_metadatos_indice
 )
 
 
-class Retriever:
+class Recuperador:
     """
-    FAISS-based retriever (cosine similarity).
-    Funciona incluso cuando aún no hay documentos indexados.
+    Recuperador basado en FAISS (similitud coseno).
+    Funciona incluso cuando aun no hay documentos indexados.
     """
 
     def __init__(
         self,
-        base_data_dir="data",
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
+        directorio_base_datos="data",
+        nombre_modelo="sentence-transformers/all-MiniLM-L6-v2"
     ):
-        self.base_data_dir = base_data_dir
-        self.embedder = Embedder(model_name)
+        """
+        Inicializa el recuperador.
+        
+        Args:
+            directorio_base_datos: Directorio base donde estan los indices y datos
+            nombre_modelo: Nombre del modelo de embeddings a utilizar
+        """
+        self.directorio_base_datos = directorio_base_datos
+        self.generador_embeddings = GeneradorEmbeddings(nombre_modelo)
 
-        # 🔹 Carga segura de artefactos
-        self.index = load_faiss_index(base_data_dir)
-        self.mapping = load_mapping(base_data_dir)
-        self.index_meta = load_index_meta(base_data_dir)
+        # Carga segura de artefactos
+        self.indice = cargar_indice_faiss(directorio_base_datos)
+        self.mapeo = cargar_mapeo(directorio_base_datos)
+        self.metadatos_indice = cargar_metadatos_indice(directorio_base_datos)
 
-        # 🔹 Normalizar mapping → siempre lista
-        if not isinstance(self.mapping, list):
-            self.mapping = []
+        # Normalizar mapeo → siempre lista
+        if not isinstance(self.mapeo, list):
+            self.mapeo = []
 
-        # 🔹 Estado del índice
-        if self.index is None:
-            self.similarity = None
-            self.index_type = "none"
-            print("ℹ️ Retriever inicializado SIN índice FAISS (no hay documentos)")
+        # Estado del indice
+        if self.indice is None:
+            self.similitud = None
+            self.tipo_indice = "none"
+            print("ℹ️ Recuperador inicializado SIN indice FAISS (no hay documentos)")
         else:
-            self.similarity = self.index_meta.get("similarity", "cosine")
-            self.index_type = self._detect_index_type()
-            print(f"🔍 Retriever listo — índice: {self.index_type}, sim: {self.similarity}")
+            self.similitud = self.metadatos_indice.get("similarity", "cosine")
+            self.tipo_indice = self._detectar_tipo_indice()
+            print(f"🔍 Recuperador listo — indice: {self.tipo_indice}, sim: {self.similitud}")
 
-        print(f"📂 Retriever usando base_data_dir = {self.base_data_dir}")
+        print(f"📂 Recuperador usando directorio_base_datos = {self.directorio_base_datos}")
 
-    def _detect_index_type(self):
-        if self.index is None:
+    def _detectar_tipo_indice(self):
+        """
+        Detecta el tipo de indice FAISS usado.
+        
+        Returns:
+            String con el tipo de indice detectado
+        """
+        if self.indice is None:
             return "none"
 
-        name = self.index.__class__.__name__
-        if "IP" in name:
-            return "IP"
-        if "L2" in name:
-            return "L2"
-        return name
+        nombre = self.indice.__class__.__name__
+        if "IP" in nombre:
+            return "IP"  # Producto Interno (Inner Product)
+        if "L2" in nombre:
+            return "L2"  # Distancia Euclidiana
+        return nombre
 
-    def has_index(self) -> bool:
-        """Indica si el retriever está listo para buscar."""
-        return self.index is not None and len(self.mapping) > 0
+    def tiene_indice(self) -> bool:
+        """
+        Indica si el recuperador esta listo para buscar.
+        
+        Returns:
+            True si hay indice y mapeo disponibles, False en caso contrario
+        """
+        return self.indice is not None and len(self.mapeo) > 0
 
-    def retrieve(
+    def recuperar(
         self,
-        query: str,
+        consulta: str,
         k: int = 5,
-        allowed_sections=None,
-        min_score: float = 0.0
+        secciones_permitidas=None,
+        puntuacion_minima: float = 0.0
     ):
-        # 🚫 No hay índice → no buscar
-        if not self.has_index():
+        """
+        Recupera los k fragmentos mas relevantes para una consulta.
+        
+        Args:
+            consulta: Texto de la pregunta o consulta
+            k: Numero de fragmentos a recuperar
+            secciones_permitidas: Lista de secciones permitidas (None = todas)
+            puntuacion_minima: Puntuacion minima de similitud para considerar un fragmento
+        
+        Returns:
+            Lista de fragmentos ordenados por relevancia (mayor a menor)
+        """
+        # No hay indice → no buscar
+        if not self.tiene_indice():
             return []
 
-        # 🔹 Embedding del query
-        query_vec = self.embedder.encode([query]).astype("float32")
+        # Generar embedding de la consulta
+        vector_consulta = self.generador_embeddings.codificar([consulta]).astype("float32")
 
-        search_k = max(k * 5, k)
-        scores, indices = self.index.search(query_vec, search_k)
+        # Buscar mas resultados de los necesarios para filtrar por seccion
+        buscar_k = max(k * 5, k)
+        puntuaciones, indices = self.indice.search(vector_consulta, buscar_k)
 
-        results = []
-        fallback = []
+        resultados = []
+        resultados_respaldo = []
 
-        for score, idx in zip(scores[0], indices[0]):
-            if idx < 0 or idx >= len(self.mapping):
+        for puntuacion, indice in zip(puntuaciones[0], indices[0]):
+            # Validar indice
+            if indice < 0 or indice >= len(self.mapeo):
                 continue
 
-            frag = dict(self.mapping[idx])
-            frag["score"] = float(score)
+            fragmento = dict(self.mapeo[indice])
+            fragmento["score"] = float(puntuacion)
 
-            if score < min_score:
+            # Filtrar por puntuacion minima
+            if puntuacion < puntuacion_minima:
                 continue
 
-            section = frag.get("section", "unknown")
+            seccion = fragmento.get("section", "unknown")
 
-            if allowed_sections is None or section in allowed_sections:
-                results.append(frag)
+            # Filtrar por secciones permitidas
+            if secciones_permitidas is None or seccion in secciones_permitidas:
+                resultados.append(fragmento)
             else:
-                fallback.append(frag)
+                resultados_respaldo.append(fragmento)
 
-        # 🔹 Ordenar por score (mayor = mejor)
-        results.sort(key=lambda x: x["score"], reverse=True)
-        fallback.sort(key=lambda x: x["score"], reverse=True)
+        # Ordenar por puntuacion (mayor = mejor)
+        resultados.sort(key=lambda x: x["score"], reverse=True)
+        resultados_respaldo.sort(key=lambda x: x["score"], reverse=True)
 
-        # 🔹 Completar con fallback si falta
-        if len(results) < k:
-            results.extend(fallback[: k - len(results)])
+        # Completar con resultados de respaldo si faltan
+        if len(resultados) < k:
+            resultados.extend(resultados_respaldo[: k - len(resultados)])
 
-        return results[:k]
+        return resultados[:k]
+
+
+# Alias para mantener compatibilidad con codigo existente
+Retriever = Recuperador

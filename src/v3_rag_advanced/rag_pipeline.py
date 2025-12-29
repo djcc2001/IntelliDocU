@@ -1,83 +1,163 @@
+"""
+Pipeline de RAG Avanzado (Version 3).
+Incluye verificacion de evidencia, abstención y citaciones de fuentes.
+"""
+
 import re
-from src.common.retriever.retriever import Retriever
-from src.v3_rag_advanced.config import TOP_K, MAX_FRAGMENTS, ABSTENTION_TEXT
-from src.v3_rag_advanced.context_builder import build_limited_context
-from src.v3_rag_advanced.prompt import build_prompt, format_answer_with_citations
+from src.common.retriever.retriever import Recuperador
+from src.v3_rag_advanced.config import TOP_K, MAX_FRAGMENTOS, TEXTO_ABSTENCION
+from src.v3_rag_advanced.context_builder import construir_contexto_limitatado
+from src.v3_rag_advanced.prompt import construir_prompt, formatear_respuesta_con_citaciones
 
 
-class RAGAdvancedPipeline:
-    def __init__(self, llm, base_data_dir="data"):
-        self.retriever = Retriever(base_data_dir=base_data_dir)
-        self.llm = llm
+class PipelineRAGAvanzado:
+    """
+    Pipeline de RAG avanzado con verificacion de evidencia y abstención.
+    """
+    
+    def __init__(self, modelo_llm, directorio_base_datos="data"):
+        """
+        Inicializa el pipeline RAG avanzado.
+        
+        Args:
+            modelo_llm: Instancia del modelo LLM
+            directorio_base_datos: Directorio base donde estan los datos
+        """
+        self.recuperador = Recuperador(directorio_base_datos=directorio_base_datos)
+        self.modelo_llm = modelo_llm
         self.top_k = TOP_K
-        self.max_fragments = MAX_FRAGMENTS
+        self.max_fragmentos = MAX_FRAGMENTOS
 
-    def evidence_strength(self, fragments):
-        if not fragments:
+    def fuerza_evidencia(self, fragmentos):
+        """
+        Evalua la fuerza de la evidencia basandose en la puntuacion del mejor fragmento.
+        
+        Args:
+            fragmentos: Lista de fragmentos recuperados
+        
+        Returns:
+            "strong", "weak", o "none" segun la fuerza de la evidencia
+        """
+        if not fragmentos:
             return "none"
 
-        s = fragments[0]["score"]
-        if s >= 0.30:
+        puntuacion = fragmentos[0]["score"]
+        if puntuacion >= 0.30:
             return "strong"
-        if s >= 0.18:
+        if puntuacion >= 0.18:
             return "weak"
         return "none"
 
-    def answer_uses_context(self, answer, fragments):
-        answer = answer.lower()
-        context_text = " ".join(f["text"].lower() for f in fragments)
+    def respuesta_usa_contexto(self, respuesta, fragmentos):
+        """
+        Verifica si la respuesta usa palabras clave del contexto.
+        
+        Args:
+            respuesta: Respuesta generada por el LLM
+            fragmentos: Fragmentos usados como contexto
+        
+        Returns:
+            True si la respuesta parece usar el contexto, False en caso contrario
+        """
+        respuesta_minusculas = respuesta.lower()
+        texto_contexto = " ".join(fragmento["text"].lower() for fragmento in fragmentos)
 
-        keywords = set(re.findall(r"\b[a-zA-Z]{5,}\b", context_text))
-        return any(k in answer for k in keywords)
+        # Extraer palabras clave (palabras de 5+ caracteres)
+        palabras_clave = set(re.findall(r"\b[a-zA-Z]{5,}\b", texto_contexto))
+        return any(palabra_clave in respuesta_minusculas for palabra_clave in palabras_clave)
 
-    def should_abstain_early(self, question):
-        q = question.lower().strip()
-        if len(q.split()) < 2:
+    def debe_abstener_temprano(self, pregunta):
+        """
+        Verifica si se debe abstenerse antes de procesar (preguntas muy cortas o saludos).
+        
+        Args:
+            pregunta: Pregunta del usuario
+        
+        Returns:
+            True si se debe abstenerse, False en caso contrario
+        """
+        pregunta_minusculas = pregunta.lower().strip()
+        if len(pregunta_minusculas.split()) < 2:
             return True
-        if q in {"hi", "hello", "hola", "thanks", "gracias"}:
+        if pregunta_minusculas in {"hi", "hello", "hola", "thanks", "gracias"}:
             return True
         return False
 
-    def answer(self, question):
-        if self.should_abstain_early(question):
-            return self._abstain(question)
+    def responder(self, pregunta):
+        """
+        Genera respuesta usando RAG avanzado con verificacion de evidencia.
+        
+        Args:
+            pregunta: Pregunta del usuario
+        
+        Returns:
+            Diccionario con:
+            - question: Pregunta original
+            - answer: Respuesta generada o texto de abstención
+            - fragments: Fragmentos usados
+            - abstained: True si se abstuvo, False en caso contrario
+        """
+        # Abstención temprana para preguntas invalidas
+        if self.debe_abstener_temprano(pregunta):
+            return self._abstenerse(pregunta)
 
-        fragments = self.retriever.retrieve(
-            question,
+        # Recuperar fragmentos relevantes
+        fragmentos = self.recuperador.recuperar(
+            pregunta,
             k=self.top_k,
-            min_score=0.18
+            puntuacion_minima=0.18
         )
 
-        if self.evidence_strength(fragments) == "none":
-            return self._abstain(question)
+        # Verificar fuerza de evidencia
+        if self.fuerza_evidencia(fragmentos) == "none":
+            return self._abstenerse(pregunta)
 
-        context, usados = build_limited_context(
-            fragments,
-            max_fragments=self.max_fragments
+        # Construir contexto limitado
+        contexto, fragmentos_usados = construir_contexto_limitatado(
+            fragmentos,
+            max_fragmentos=self.max_fragmentos
         )
 
-        prompt = build_prompt(context, question)
-        raw_answer = (self.llm.generate(prompt) or "").strip()
+        # Generar respuesta
+        prompt = construir_prompt(contexto, pregunta)
+        respuesta_cruda = (self.modelo_llm.generar(prompt) or "").strip()
 
-        if not raw_answer or raw_answer == ABSTENTION_TEXT:
-            return self._abstain(question, usados)
+        # Verificar si la respuesta es valida
+        if not respuesta_cruda or respuesta_cruda == TEXTO_ABSTENCION:
+            return self._abstenerse(pregunta, fragmentos_usados)
 
-        if not self.answer_uses_context(raw_answer, usados):
-            return self._abstain(question, usados)
+        # Verificar si la respuesta usa el contexto
+        if not self.respuesta_usa_contexto(respuesta_cruda, fragmentos_usados):
+            return self._abstenerse(pregunta, fragmentos_usados)
 
-        final = format_answer_with_citations(raw_answer, usados)
+        # Formatear respuesta final con citaciones
+        respuesta_final = formatear_respuesta_con_citaciones(respuesta_cruda, fragmentos_usados)
 
         return {
-            "question": question,
-            "answer": final,
-            "fragments": usados,
+            "question": pregunta,
+            "answer": respuesta_final,
+            "fragments": fragmentos_usados,
             "abstained": False
         }
 
-    def _abstain(self, question, fragments=None):
+    def _abstenerse(self, pregunta, fragmentos=None):
+        """
+        Genera respuesta de abstención.
+        
+        Args:
+            pregunta: Pregunta original
+            fragmentos: Fragmentos recuperados (opcional)
+        
+        Returns:
+            Diccionario con respuesta de abstención
+        """
         return {
-            "question": question,
-            "answer": ABSTENTION_TEXT,
-            "fragments": fragments or [],
+            "question": pregunta,
+            "answer": TEXTO_ABSTENCION,
+            "fragments": fragmentos or [],
             "abstained": True
         }
+
+
+# Alias para mantener compatibilidad
+RAGAdvancedPipeline = PipelineRAGAvanzado

@@ -1,69 +1,73 @@
-# UI/app.py
+"""
+Aplicacion principal de Streamlit para IntelliDocU.
+Interfaz de usuario para hacer preguntas sobre documentos PDF usando tres versiones del sistema RAG.
+"""
+
 import streamlit as st
 from pathlib import Path
 import sys
 import time
 import html
 
-# Agregar raíz del proyecto
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+# Agregar raiz del proyecto al path
+RAIZ_PROYECTO = Path(__file__).resolve().parents[1]
+if str(RAIZ_PROYECTO) not in sys.path:
+    sys.path.insert(0, str(RAIZ_PROYECTO))
 
 # Importar las tres versiones del sistema
-from UI.run_baseline_ui import run_baseline_ui
-from UI.run_rag_basic_ui import run_rag_basic_ui
-from UI.run_rag_advanced_ui import run_rag_advanced_ui, init_retriever
+from UI.run_baseline_ui import ejecutar_baseline_ui
+from UI.run_rag_basic_ui import ejecutar_rag_basico_ui
+from UI.run_rag_advanced_ui import ejecutar_rag_avanzado_ui, inicializar_recuperador
 from UI.metadata_init import inicializar_metadata_pdf
 from UI.extraccion import preprocesar
 
 # =============================
 # Rutas base
 # =============================
-BASE_DATA = PROJECT_ROOT / "UI/data"
-PDF_DIR = BASE_DATA / "pdfs"
-METADATA_CSV = BASE_DATA / "pdf_metadata.csv"
-PDF_DIR.mkdir(parents=True, exist_ok=True)
+DIRECTORIO_DATOS_BASE = RAIZ_PROYECTO / "UI/data"
+DIRECTORIO_PDFS = DIRECTORIO_DATOS_BASE / "pdfs"
+ARCHIVO_CSV_METADATOS = DIRECTORIO_DATOS_BASE / "pdf_metadata.csv"
+DIRECTORIO_PDFS.mkdir(parents=True, exist_ok=True)
 
 # =============================
 # Configuración de versiones
 # =============================
-VERSIONS = {
+VERSIONES = {
     "v1_baseline": {
         "name": "V1 - Baseline",
-        "description": "Sin recuperación de información",
-        "model": "Flan-T5 Base",
+        "description": "Sin recuperacion de informacion",
+        "model": "Qwen 2.5 Base",
         "features": [
             "✓ Respuestas basadas en conocimiento interno",
             "✗ Sin acceso a documentos",
-            "✗ Sin citación de fuentes"
+            "✗ Sin citacion de fuentes"
         ],
-        "function": run_baseline_ui,
+        "function": ejecutar_baseline_ui,
         "icon": "🔵"
     },
     "v2_rag_basic": {
-        "name": "V2 - RAG Básico",
-        "description": "Recuperación simple con FAISS",
-        "model": "Flan-T5 Base + FAISS",
+        "name": "V2 - RAG Basico",
+        "description": "Recuperacion simple con FAISS",
+        "model": "Qwen 2.5 + FAISS",
         "features": [
-            "✓ Recuperación de fragmentos relevantes",
+            "✓ Recuperacion de fragmentos relevantes",
             "✓ Acceso al contenido del documento",
             "✓ Respuestas contextualizadas"
         ],
-        "function": run_rag_basic_ui,
+        "function": ejecutar_rag_basico_ui,
         "icon": "🟢"
     },
     "v3_rag_advanced": {
         "name": "V3 - RAG Avanzado",
-        "description": "Recuperación con citación y verificación",
-        "model": "Flan-T5 Base + FAISS + Citations",
+        "description": "Recuperacion con citacion y verificacion",
+        "model": "Qwen 2.5 + FAISS + Citaciones",
         "features": [
-            "✓ Recuperación avanzada",
-            "✓ Citación de fuentes (página + sección)",
-            "✓ Verificación de evidencia",
-            "✓ Abstención ante preguntas imposibles"
+            "✓ Recuperacion avanzada",
+            "✓ Citacion de fuentes (pagina + seccion)",
+            "✓ Verificacion de evidencia",
+            "✓ Abstencion ante preguntas imposibles"
         ],
-        "function": run_rag_advanced_ui,
+        "function": ejecutar_rag_avanzado_ui,
         "icon": "🟣"
     }
 }
@@ -115,8 +119,8 @@ if 'selected_version' not in st.session_state:
     st.session_state.selected_version = "v1_baseline"
 if 'is_loading' not in st.session_state:
     st.session_state.is_loading = False
-if 'rag_advanced_retriever' not in st.session_state:
-    st.session_state.rag_advanced_retriever = init_retriever(base_data_dir=str(BASE_DATA))
+if 'recuperador_rag_avanzado' not in st.session_state:
+    st.session_state.recuperador_rag_avanzado = inicializar_recuperador(directorio_base_datos=str(DIRECTORIO_DATOS_BASE))
 
 # =============================
 # Funciones auxiliares
@@ -138,29 +142,38 @@ def display_conversation():
         conversation_html += '</div>'
         st.markdown(conversation_html, unsafe_allow_html=True)
 
-def process_pdf(uploaded_file):
-    pdf_path = PDF_DIR / uploaded_file.name
-    with open(pdf_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
-    inicializar_metadata_pdf(pdf_path, METADATA_CSV)
-    preprocesar(pdf_path)
-    return pdf_path
+def procesar_pdf(archivo_subido):
+    """
+    Procesa un archivo PDF subido: guarda, inicializa metadatos y ejecuta preprocesamiento.
+    
+    Args:
+        archivo_subido: Archivo subido desde Streamlit
+    
+    Returns:
+        Ruta al archivo PDF guardado
+    """
+    ruta_pdf = DIRECTORIO_PDFS / archivo_subido.name
+    with open(ruta_pdf, "wb") as archivo:
+        archivo.write(archivo_subido.getbuffer())
+    inicializar_metadata_pdf(ruta_pdf, ARCHIVO_CSV_METADATOS)
+    preprocesar(ruta_pdf)
+    return ruta_pdf
 
 # =============================
 # Sidebar
 # =============================
 with st.sidebar:
     st.header("🔧 Configuración")
-    selected_version = st.selectbox(
+    version_seleccionada = st.selectbox(
         "modelo",
-        options=list(VERSIONS.keys()),
-        format_func=lambda x: f"{VERSIONS[x]['icon']} {VERSIONS[x]['name']}",
-        index=list(VERSIONS.keys()).index(st.session_state.selected_version),
+        options=list(VERSIONES.keys()),
+        format_func=lambda x: f"{VERSIONES[x]['icon']} {VERSIONES[x]['name']}",
+        index=list(VERSIONES.keys()).index(st.session_state.selected_version),
         label_visibility="collapsed",
-        help="Selecciona el modelo de IA a utilizar. Pasa el cursor sobre cada opción para ver sus características."
+        help="Selecciona el modelo de IA a utilizar. Pasa el cursor sobre cada opcion para ver sus caracteristicas."
     )
-    if selected_version != st.session_state.selected_version:
-        st.session_state.selected_version = selected_version
+    if version_seleccionada != st.session_state.selected_version:
+        st.session_state.selected_version = version_seleccionada
         st.session_state.chat_history = []
         st.session_state.is_loading = False
         st.rerun()
@@ -177,12 +190,12 @@ with st.sidebar:
         if not st.session_state.pdf_processed:
             with st.spinner("🔄 Procesando documento..."):
                 try:
-                    process_pdf(uploaded_file)
+                    procesar_pdf(uploaded_file)
                     st.session_state.pdf_processed = True
                     st.success("✅ Documento procesado")
                     st.info(f"📁 {uploaded_file.name}")
-                except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
+                except Exception as error:
+                    st.error(f"❌ Error: {str(error)}")
         else:
             st.success("✅ Documento listo")
             st.info(f"📁 {uploaded_file.name}")
@@ -195,9 +208,9 @@ with st.sidebar:
             st.rerun()
 
 # =============================
-# Área principal
+# Area principal
 # =============================
-current_version = VERSIONS[st.session_state.selected_version]
+version_actual = VERSIONES[st.session_state.selected_version]
 
 if not st.session_state.pdf_processed:
     st.markdown("""
@@ -235,15 +248,15 @@ else:
     if st.session_state.is_loading:
         try:
             if st.session_state.selected_version == "v3_rag_advanced":
-                answer = current_version['function'](
+                respuesta = version_actual['function'](
                     st.session_state.chat_history[-1][0],
-                    retriever=st.session_state.rag_advanced_retriever
+                    recuperador=st.session_state.recuperador_rag_avanzado
                 )
             else:
-                answer = current_version['function'](st.session_state.chat_history[-1][0])
-            st.session_state.chat_history[-1] = (st.session_state.chat_history[-1][0], answer)
-        except Exception as e:
-            st.session_state.chat_history[-1] = (st.session_state.chat_history[-1][0], f"❌ Error: {str(e)}")
+                respuesta = version_actual['function'](st.session_state.chat_history[-1][0])
+            st.session_state.chat_history[-1] = (st.session_state.chat_history[-1][0], respuesta)
+        except Exception as error:
+            st.session_state.chat_history[-1] = (st.session_state.chat_history[-1][0], f"❌ Error: {str(error)}")
         st.session_state.is_loading = False
         st.rerun()
 

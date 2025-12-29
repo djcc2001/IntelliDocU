@@ -1,18 +1,29 @@
-#config.py:
-"""Configuración para RAG Advanced."""
+"""
+Configuracion para RAG Avanzado (Version 3).
+Define limites y parametros para recuperacion, contexto y abstención.
+"""
 
-# Límites de contexto
-MAX_CONTEXT_CHARS = 2000  # Aumentado para mejor contexto
-MAX_FRAGMENT_TEXT = 500   # Fragmentos más largos
-MAX_FRAGMENTS = 5         # Máximo de fragmentos a usar
+# Limites de contexto
+MAX_CARACTERES_CONTEXTO = 2000  # Aumentado para mejor contexto
+MAX_TEXTO_FRAGMENTO = 500   # Fragmentos mas largos
+MAX_FRAGMENTOS = 5         # Maximo de fragmentos a usar
 
-# Recuperación
+# Recuperacion
 TOP_K = 10                # Fragmentos a recuperar inicialmente
-SCORE_MINIMO = 0.05       # Score mínimo para considerar relevante
+PUNTUACION_MINIMA = 0.05       # Puntuacion minima para considerar relevante
 
 # Abstención
-MIN_RELEVANT_FRAGMENTS = 1  # Mínimo de fragmentos relevantes (reducido)
-MIN_QUESTION_WORDS = 2      # Palabras mínimas en pregunta válida (reducido)
+MIN_FRAGMENTOS_RELEVANTES = 1  # Minimo de fragmentos relevantes (reducido)
+MIN_PALABRAS_PREGUNTA = 2      # Palabras minimas en pregunta valida (reducido)
 
 # Texto de abstención
-ABSTENTION_TEXT = "It is not mentioned in the document."
+TEXTO_ABSTENCION = "No se menciona en el documento."
+
+
+# Alias para mantener compatibilidad con codigo existente
+MAX_CONTEXT_CHARS = MAX_CARACTERES_CONTEXTO
+MAX_FRAGMENT_TEXT = MAX_TEXTO_FRAGMENTO
+SCORE_MINIMO = PUNTUACION_MINIMA
+MIN_RELEVANT_FRAGMENTS = MIN_FRAGMENTOS_RELEVANTES
+MIN_QUESTION_WORDS = MIN_PALABRAS_PREGUNTA
+ABSTENTION_TEXT = TEXTO_ABSTENCION

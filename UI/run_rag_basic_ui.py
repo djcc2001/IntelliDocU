@@ -1,43 +1,57 @@
-# UI/run_rag_basic_ui.py
+"""
+Modulo UI para ejecutar la version RAG Basico (V2).
+Version con recuperacion simple de fragmentos usando FAISS.
+"""
+
 from pathlib import Path
 import sys
 import pickle
 import faiss
-import numpy as np
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+RAIZ_PROYECTO = Path(__file__).resolve().parents[1]
+if str(RAIZ_PROYECTO) not in sys.path:
+    sys.path.insert(0, str(RAIZ_PROYECTO))
 
-from src.common.llm.qwen_llm import QwenLLM
-from src.v2_rag_basic.rag_pipeline import RAGPipeline
+from src.common.llm.qwen_llm import ModeloQwen
+from src.v2_rag_basic.rag_pipeline import PipelineRAGBasico
 
-DATA_DIR = "UI/data"
+DIRECTORIO_DATOS = "UI/data"
 
 # =============================
-# Inicialización global
+# Inicializacion global
 # =============================
 
-_llm = QwenLLM()
+_modelo_llm = ModeloQwen()
 
 
-# 🔹 Cargar FAISS y textos existentes
-index_path = Path(DATA_DIR) / "indices/faiss/index.faiss"
-texts_path = Path(DATA_DIR) / "indices/faiss/texts.pkl"
+# Cargar FAISS y textos existentes
+ruta_indice = Path(DIRECTORIO_DATOS) / "indices/faiss/index.faiss"
+ruta_textos = Path(DIRECTORIO_DATOS) / "indices/faiss/texts.pkl"
 
-if index_path.exists() and texts_path.exists():
-    index = faiss.read_index(str(index_path))
-    with open(texts_path, "rb") as f:
-        texts = pickle.load(f)
+if ruta_indice.exists() and ruta_textos.exists():
+    indice = faiss.read_index(str(ruta_indice))
+    with open(ruta_textos, "rb") as archivo:
+        textos = pickle.load(archivo)
 else:
-    index, texts = None, []
+    indice, textos = None, []
 
-_rag = RAGPipeline(_llm, base_data_dir=DATA_DIR)
+_pipeline_rag = PipelineRAGBasico(_modelo_llm, directorio_base_datos=DIRECTORIO_DATOS)
 
-def run_rag_basic_ui(question: str) -> str:
+
+def ejecutar_rag_basico_ui(pregunta: str) -> str:
     """
-    Ejecuta RAG v2 (basic) usando índice FAISS existente.
+    Ejecuta RAG v2 (basico) usando indice FAISS existente.
     Devuelve solo la respuesta para la UI.
+    
+    Args:
+        pregunta: Pregunta del usuario
+    
+    Returns:
+        Respuesta generada por el modelo con contexto
     """
-    result = _rag.answer(question)
-    return result["answer"]
+    resultado = _pipeline_rag.responder(pregunta)
+    return resultado["answer"]
+
+
+# Alias para mantener compatibilidad
+run_rag_basic_ui = ejecutar_rag_basico_ui

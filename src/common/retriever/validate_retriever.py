@@ -1,23 +1,28 @@
-from src.common.retriever.retriever import Retriever
+"""
+Script de validacion del recuperador.
+Permite probar la recuperacion de fragmentos con consultas de ejemplo.
+"""
+
+from src.common.retriever.retriever import Recuperador
 
 if __name__ == "__main__":
-    retriever = Retriever()
+    recuperador = Recuperador()
 
     pregunta = "What is SparseSwaps?"
 
-    resultados = retriever.retrieve(
+    resultados = recuperador.recuperar(
         pregunta,
         k=5,
-        allowed_sections=["abstract", "unknown"]
+        secciones_permitidas=["abstract", "unknown"]
     )
 
-    print("\n=== RESULTADOS DEL RETRIEVER ===\n")
+    print("\n=== RESULTADOS DEL RECUPERADOR ===\n")
 
-    for i, r in enumerate(resultados, 1):
-        print(f"[{i}] Score: {r['score']:.4f}")
-        print(f"Documento: {r['doc_id']}")
-        print(f"Sección : {r.get('section')}")
-        print(f"Página  : {r['page']}")
-        print(f"Frag ID : {r['frag_id']}")
-        print(r["text"][:300])
+    for indice, resultado in enumerate(resultados, 1):
+        print(f"[{indice}] Puntuacion: {resultado['score']:.4f}")
+        print(f"Documento: {resultado['doc_id']}")
+        print(f"Seccion : {resultado.get('section')}")
+        print(f"Paginas  : {resultado.get('pages', resultado.get('page', '?'))}")
+        print(f"Frag ID : {resultado['frag_id']}")
+        print(resultado["text"][:300])
         print("-" * 50)

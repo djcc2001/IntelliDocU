@@ -1,49 +1,54 @@
+"""
+Script de validacion del indice FAISS.
+Permite probar la busqueda en el indice con consultas de ejemplo.
+"""
+
 import json
 import faiss
 import numpy as np
-from embedder import Embedder
+from src.common.embeddings.embedder import GeneradorEmbeddings
 
 # ===============================
-# Configuración
+# Configuracion
 # ===============================
-INDEX_DIR = "data/indices/faiss"
-QUERY = "SparseSwaps pruning mask refinement algorithm"
-K = 5  # Número de resultados a devolver
+DIRECTORIO_INDICES = "data/indices/faiss"
+CONSULTA = "SparseSwaps pruning mask refinement algorithm"
+K = 5  # Numero de resultados a devolver
 
 # ===============================
-# Cargar índice FAISS
+# Cargar indice FAISS
 # ===============================
-index = faiss.read_index(f"{INDEX_DIR}/index.faiss")
+indice = faiss.read_index(f"{DIRECTORIO_INDICES}/index.faiss")
 
-# Cargar mapping
-with open(f"{INDEX_DIR}/mapping.json", "r", encoding="utf-8") as f:
-    mapping = json.load(f)
+# Cargar mapeo
+with open(f"{DIRECTORIO_INDICES}/mapping.json", "r", encoding="utf-8") as archivo:
+    mapeo = json.load(archivo)
 
 # ===============================
-# Inicializar embedder
+# Inicializar generador de embeddings
 # ===============================
-embedder = Embedder()
+generador_embeddings = GeneradorEmbeddings()
 
 # ===============================
 # Generar embedding de la consulta
 # ===============================
-query_embedding = embedder.encode([QUERY])[0].astype("float32")  # embedding normalizado
+embedding_consulta = generador_embeddings.codificar([CONSULTA])[0].astype("float32")  # embedding normalizado
 
 # ===============================
-# Búsqueda en FAISS
+# Busqueda en FAISS
 # ===============================
-distances, indices = index.search(query_embedding.reshape(1, -1), K)
+distancias, indices_resultados = indice.search(embedding_consulta.reshape(1, -1), K)
 
 # ===============================
 # Mostrar resultados
 # ===============================
-print(f"\nResultados para la consulta: '{QUERY}'\n")
+print(f"\nResultados para la consulta: '{CONSULTA}'\n")
 
-for rank, idx in enumerate(indices[0]):
-    result = mapping[idx]
-    print(f"{rank + 1}. Doc: {result['doc_id']}")
-    print(f"   Page: {result['page']}")
-    print(f"   Section: {result.get('section')}")
-    print(f"   FragID: {result['frag_id']}")
-    print(f"   Similitud: {distances[0][rank]:.4f}")
-    print(f"   Texto: {result['text'][:200]}...\n")
+for rango, indice_resultado in enumerate(indices_resultados[0]):
+    resultado = mapeo[indice_resultado]
+    print(f"{rango + 1}. Doc: {resultado['doc_id']}")
+    print(f"   Pagina: {resultado.get('pages', resultado.get('page', '?'))}")
+    print(f"   Seccion: {resultado.get('section')}")
+    print(f"   FragID: {resultado['frag_id']}")
+    print(f"   Similitud: {distancias[0][rango]:.4f}")
+    print(f"   Texto: {resultado['text'][:200]}...\n")

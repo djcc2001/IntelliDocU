@@ -1,30 +1,59 @@
-# src/v2_rag_basic/prompt.py
+"""
+Modulo de construccion de prompts para RAG Basico.
+Define las plantillas y limites para construir el contexto y prompt final.
+"""
 
-MAX_CONTEXT_CHARS = 1200
-MAX_FRAGMENTS = 5
+# Limites de contexto
+MAX_CARACTERES_CONTEXTO = 1200
+MAX_FRAGMENTOS = 5
 
 
-def build_literal_context(fragments):
+def construir_contexto_literal(fragmentos):
+    """
+    Construye un contexto literal a partir de fragmentos recuperados.
+    
+    Args:
+        fragmentos: Lista de fragmentos recuperados con metadatos
+    
+    Returns:
+        String con el contexto formateado
+    """
     textos = []
-    for f in fragments[:MAX_FRAGMENTS]:
+    for fragmento in fragmentos[:MAX_FRAGMENTOS]:
         textos.append(
-            f"[doc={f['doc_id']}, p={f.get('page','?')}, frag={f['frag_id']}]\n"
-            f"{f['text']}"
+            f"[doc={fragmento['doc_id']}, p={fragmento.get('page','?')}, frag={fragmento['frag_id']}]\n"
+            f"{fragmento['text']}"
         )
     return "\n\n".join(textos)
 
 
-def build_partial_summary_prompt(context, question):
+def construir_prompt_resumen_parcial(contexto, pregunta):
+    """
+    Construye el prompt final para el LLM con contexto y pregunta.
+    
+    Args:
+        contexto: Contexto extraido de los fragmentos
+        pregunta: Pregunta del usuario
+    
+    Returns:
+        String con el prompt completo formateado
+    """
     return (
-        "You are an academic assistant answering questions about research papers.\n"
-        "Instructions:\n"
-        "1. Answer the question using ONLY the provided context.\n"
-        "2. If the context does NOT contain enough information to answer, say:\n"
-        "   \"The provided context does not contain enough information to answer the question.\"\n"
-        "3. Do NOT use prior knowledge.\n"
-        "4. Do NOT invent methods, results, or claims.\n"
-        "5. Keep the answer short (2–3 sentences).\n\n"
-        f"Context:\n{context}\n\n"
-        f"Question:\n{question}\n\n"
-        "Answer:\n"
+        "Eres un asistente academico que responde preguntas sobre articulos de investigacion.\n"
+        "Instrucciones:\n"
+        "1. Responde la pregunta usando SOLO el contexto proporcionado.\n"
+        "2. Si el contexto NO contiene suficiente informacion para responder, di:\n"
+        "   \"El contexto proporcionado no contiene suficiente informacion para responder la pregunta.\"\n"
+        "3. NO uses conocimiento previo.\n"
+        "4. NO inventes metodos, resultados o afirmaciones.\n"
+        "5. Manten la respuesta corta (2–3 oraciones).\n\n"
+        f"Contexto:\n{contexto}\n\n"
+        f"Pregunta:\n{pregunta}\n\n"
+        "Respuesta:\n"
     )
+
+
+# Alias para mantener compatibilidad
+MAX_CONTEXT_CHARS = MAX_CARACTERES_CONTEXTO
+build_literal_context = construir_contexto_literal
+build_partial_summary_prompt = construir_prompt_resumen_parcial
