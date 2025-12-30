@@ -60,11 +60,11 @@ class PipelineRAGBasico:
             indice = faiss.read_index(str(ruta_indice))
             with open(ruta_textos, "rb") as archivo:
                 textos = pickle.load(archivo)
-            print(f"✅ Indice FAISS y textos cargados: {len(textos)} entradas")
+            print(f"Indice FAISS y textos cargados: {len(textos)} entradas")
         else:
             indice = None
             textos = []
-            print("⚠️ Indice FAISS o textos no encontrados, iniciando vacio")
+            print("Indice FAISS o textos no encontrados, iniciando vacio")
 
         return indice, textos
 

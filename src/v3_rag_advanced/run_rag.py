@@ -30,7 +30,7 @@ def main():
     print("\n" + "="*60)
     
     if result["abstained"]:
-        print("⚠️  El sistema se abstuvo de responder")
+        print("El sistema se abstuvo de responder")
     else:
         print(f"✓ Usado {len(result['fragments'])} fragmento(s)")
 

@@ -42,20 +42,20 @@ def preprocesar(ruta_pdf, directorio_datos_ui="UI/data"):
     ruta_pdf = Path(ruta_pdf)
     identificador_pdf = ruta_pdf.stem
 
-    # 1️⃣ Extraer texto
+    # Extraer texto
     extraer_texto_pdf(ruta_pdf, carpeta_extraidos)
 
-    # 2️⃣ Limpiar texto
+    # Limpiar texto
     archivo_jsonl = carpeta_extraidos / f"{identificador_pdf}.jsonl"
     limpiar_archivo(archivo_jsonl, carpeta_preprocesados)
 
-    # 3️⃣ Actualizar metadatos (cleaned_length, extraction_method, ocr_applied)
+    # Actualizar metadatos (cleaned_length, extraction_method, ocr_applied)
     actualizar_metadata(directorio_base_datos=directorio_datos_ui)
 
-    # 4️⃣ Generar fragmentos
+    # Generar fragmentos
     generar_chunks(directorio_base_datos=directorio_datos_ui)
 
-    # 5️⃣ Construir indice FAISS
+    # Construir indice FAISS
     construir_indice_faiss(directorio_base_datos=directorio_datos_ui)
 
     print(f"Fase 4 completada para {identificador_pdf}")

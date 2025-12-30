@@ -155,7 +155,7 @@ def generar_chunks(directorio_base_datos="data"):
 
     archivos = list(directorio_entrada.glob("*.jsonl"))
     if not archivos:
-        print("❌ No hay archivos preprocessed")
+        print("NO hay archivos preprocessed")
         return
 
     print("\nIniciando Fase 3: Fragmentacion (RAG-aware)")

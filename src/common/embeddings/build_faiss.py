@@ -39,7 +39,7 @@ def construir_indice_faiss(directorio_base_datos="data"):
 
     archivos_fragmentos = list(directorio_fragmentos.glob("*.jsonl"))
     if not archivos_fragmentos:
-        raise RuntimeError("❌ No se encontraron fragmentos")
+        raise RuntimeError("NO se encontraron fragmentos")
 
     for archivo_fragmento in tqdm(archivos_fragmentos, desc="Indexando FAISS"):
         textos_lote = []
@@ -92,7 +92,7 @@ def construir_indice_faiss(directorio_base_datos="data"):
             _procesar_lote(generador_embeddings, textos_lote, metadatos_lote, todos_los_embeddings, mapeo)
 
     if not todos_los_embeddings:
-        raise RuntimeError("❌ No se generaron embeddings")
+        raise RuntimeError("NO se generaron embeddings")
 
     # Convertir lista de arrays a una matriz numpy
     embeddings = np.vstack(todos_los_embeddings).astype("float32")

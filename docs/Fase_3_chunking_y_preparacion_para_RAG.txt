@@ -37,9 +37,9 @@ Los archivos de entrada se ubicaron en:
 Se adoptó una estrategia de chunking basada en tokens, utilizando un tokenizer compatible con modelos de lenguaje modernos.
 
 Parámetros definidos:
-    - tokenizer: google/flan-t5-base y Qwen/Qwen2.5-1.5B-Instruct
-    - tamaño máximo de fragmento: 512 tokens
-    - solapamiento entre fragmentos: 100 tokens
+    - tokenizer: Qwen/Qwen2.5-1.5B-Instruct (modelo principal utilizado)
+    - tamaño máximo de fragmento: 384 tokens (ajustado para embeddings)
+    - solapamiento entre fragmentos: 64 tokens
     - tamaño mínimo de fragmento: 50 tokens
     - unidad base de procesamiento: página del documento
 

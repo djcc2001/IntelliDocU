@@ -4,41 +4,1439 @@
     "doc_id": "arxiv_251210894_duetsvg",
     "question": "What is the name of the proposed unified multimodal model for SVG generation?",
     "type": "fact",
-    "answer": "a sys model"
+    "answer": "The name of the proposed unified multimodal model for SVG generation is \"SVG2\".",
+    "abstained": false
   },
   {
     "question_id": "q2",
     "doc_id": "arxiv_251210894_duetsvg",
     "question": "What are the two main stages of training for DuetSVG?",
     "type": "fact",
-    "answer": "a music teacher and a music teacher"
+    "answer": "I do not have accurate information about the exact two main stages of training for DuetSVG.",
+    "abstained": false
   },
   {
     "question_id": "q3",
     "doc_id": "arxiv_251210894_duetsvg",
     "question": "Which base model is DuetSVG initialized from?",
     "type": "fact",
-    "answer": "a sys.stdin.readline()"
+    "answer": "The base model for DuetSVG is the SVG 1.1 specification.",
+    "abstained": false
   },
   {
     "question_id": "q4",
     "doc_id": "arxiv_251210894_duetsvg",
     "question": "In which section does the paper describe the \"Image-Guided SVG Resampling\" strategy?",
     "type": "loc",
-    "answer": "a."
+    "answer": "I do not have enough context to determine in which section a paper describes the \"Image-Guided SVG Resampling\" strategy. Without more specific information about the paper or its structure, I cannot provide a definitive answer.",
+    "abstained": false
   },
   {
     "question_id": "q5",
     "doc_id": "arxiv_251210894_duetsvg",
     "question": "Which figure illustrates the model architecture of DuetSVG?",
     "type": "loc",
-    "answer": "a spherical cylinder"
+    "answer": "I do not have enough context to determine which specific figure illustrates the model architecture of DuetSVG. Without more information about the project or its documentation, I cannot provide a definitive answer.",
+    "abstained": false
   },
   {
     "question_id": "q6",
     "doc_id": "arxiv_251210894_duetsvg",
-    "question": "How are you?",
+    "question": "Does DuetSVG implement a reinforcement learning module for path optimization?",
     "type": "impossible",
-    "answer": "I'm fine."
+    "answer": "I don't have enough reliable information to determine if DuetSVG implements a reinforcement learning module specifically for path optimization. The term \"reinforcement learning\" typically refers to algorithms used in artificial intelligence where an agent learns to make decisions by performing actions in an environment and receiving rewards or penalties based on those actions. Without direct confirmation from the developers or official documentation about this feature, I cannot confirm whether DuetSVG includes such functionality.",
+    "abstained": false
+  },
+  {
+    "question_id": "q7",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What is the full name of the proposed pruning refinement algorithm?",
+    "type": "fact",
+    "answer": "The full name of the proposed pruning refinement algorithm is \"Pruning Refinement Algorithm\" or simply \"PRA\".",
+    "abstained": false
+  },
+  {
+    "question_id": "q8",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What mathematical matrix (G) is central to the efficient 1-swap evaluation?",
+    "type": "fact",
+    "answer": "The G matrix in the context of efficient 1-swap evaluation is known as the \"swap graph\" or \"graph of swaps.\" This matrix represents a directed graph where each row corresponds to a vertex and each column corresponds to another vertex. An entry of 1 at position (i, j) indicates there is a swap between vertices i and j, while an entry of 0 means no such swap exists. The G matrix helps in determining whether two permutations can be transformed into one another by a series of adjacent transpositions (swaps).",
+    "abstained": false
+  },
+  {
+    "question_id": "q9",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "What is the primary constraint enforced by SparseSwaps to make the problem row-separable?",
+    "type": "fact",
+    "answer": "The primary constraint enforced by SparseSwaps to make the problem row-separable is that each swap operation involves exactly two elements from different rows. This ensures that after each swap, the matrix remains sparse, meaning it has a low density of non-zero entries. The goal is to transform the original matrix into a permutation of its identity form through these swaps while maintaining sparsity.",
+    "abstained": false
+  },
+  {
+    "question_id": "q10",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "In which section (number and title) does the paper describe the \"Efficient 1-swap evaluation through cost lookups\"?",
+    "type": "loc",
+    "answer": "The paper does not specify a particular section number or title for describing \"Efficient 1-swap evaluation through cost lookups\". Therefore, I cannot provide the exact location within the text without additional context.",
+    "abstained": false
+  },
+  {
+    "question_id": "q11",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "According to Table 2, which model shows the largest perplexity improvement when refining Wanda with SparseSwaps at 60% sparsity?",
+    "type": "loc",
+    "answer": "The table does not provide specific information about the perplexity improvements for different models when refining Wanda with SparseSwaps at 60% sparsity. Therefore, I cannot determine which model shows the largest improvement from this data alone.",
+    "abstained": false
+  },
+  {
+    "question_id": "q12",
+    "doc_id": "arxiv_251210922_sparseswaps",
+    "question": "Does the SparseSwaps algorithm require training a new neural network from scratch?",
+    "type": "impossible",
+    "answer": "The SparseSwaps algorithm does not typically require training a new neural network from scratch. Instead, it often leverages existing pre-trained models or uses techniques such as transfer learning to adapt existing networks for sparse matrix operations efficiently without needing to retrain them from scratch.",
+    "abstained": false
+  },
+  {
+    "question_id": "q13",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "What is the name of the proposed training-free method for asynchronous LLM reasoning?",
+    "type": "fact",
+    "answer": "The name of the proposed training-free method for asynchronous LLM reasoning is \"Async2Vec\".",
+    "abstained": false
+  },
+  {
+    "question_id": "q14",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "What is the key mathematical property of Rotary Positional Embeddings (RoPE) exploited by AsyncReasoning?",
+    "type": "fact",
+    "answer": "The key mathematical property of Rotary Positional Embeddings (RoPE) exploited by AsyncReasoning is rotation symmetry. RoPE uses a sinusoidal function to embed positional information in a way that respects rotational symmetry around zero. This means that shifting the embedding vector by multiples of 2π radians results in the same output, which simplifies the computation of gradients during backpropagation.",
+    "abstained": false
+  },
+  {
+    "question_id": "q15",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "Which model (name and size) is primarily used for evaluation in the experiments?",
+    "type": "fact",
+    "answer": "The question \"Which model (name and size) is primarily used for evaluation in the experiments?\" does not provide enough context to determine a specific answer. Without additional information about the type of experiment or the models being evaluated, it's impossible to identify a particular model by name and size. Therefore, I cannot provide a definitive answer based solely on the given information.",
+    "abstained": false
+  },
+  {
+    "question_id": "q16",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "In which section (number and title) does the paper describe the \"Mode Switching\" mechanism?",
+    "type": "loc",
+    "answer": "I do not have access to a specific paper or its detailed structure. Without being able to refer to a particular source, I cannot determine the exact section number where the \"Mode Switching\" mechanism is described. Therefore, I cannot provide the requested information.",
+    "abstained": false
+  },
+  {
+    "question_id": "q17",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "According to Table 1, what is the Time to First Token (TTFT) for the AsyncReasoning (Q-Continue) setup on the MATH-500 benchmark?",
+    "type": "loc",
+    "answer": "The information provided in the table does not specify a particular setup or benchmark name like \"AsyncReasoning (Q-Continue)\" for the MATH-500 benchmark. Therefore, I cannot determine the exact value of Time to First Token (TTFT) from this table alone.",
+    "abstained": false
+  },
+  {
+    "question_id": "q18",
+    "doc_id": "arxiv_251210931_asynchronous_reasoning",
+    "question": "Does the AsyncReasoning method require fine-tuning the base language model on a new dataset of conversational speech?",
+    "type": "impossible",
+    "answer": "The AsyncReasoning method does not specifically mention requiring fine-tuning of the base language model on a new dataset of conversational speech. It appears to be related to asynchronous reasoning in natural language processing tasks rather than directly involving fine-tuning for conversational data. Therefore, I cannot confirm whether it necessitates such fine-tuning without additional context or documentation about its implementation specifics.",
+    "abstained": false
+  },
+  {
+    "question_id": "q19",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "What is BabyVLM-V2?",
+    "type": "fact",
+    "answer": "I do not have accurate information about a specific product called \"BabyVLM-V2\". It's possible this could be a typo or a name for a different product. Without more context or verification from reliable sources, I cannot provide detailed information about what this might refer to. If you need help with something else related to technology or science, feel free to ask!",
+    "abstained": false
+  },
+  {
+    "question_id": "q20",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "What dataset is the pretraining set of BabyVLM-V2 based on?",
+    "type": "fact",
+    "answer": "The pretraining set for BabyVLM-V2 is based on the CLS-TRN dataset.",
+    "abstained": false
+  },
+  {
+    "question_id": "q21",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "What is DevCV Toolbox and how many tasks does it contain?",
+    "type": "fact",
+    "answer": "DevCV Toolbox is a collection of tools designed to help developers manage their projects more efficiently. The exact number of tasks included in DevCV Toolbox is not specified in my current knowledge base.",
+    "abstained": false
+  },
+  {
+    "question_id": "q22",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "In which section does the paper compare BabyVLM-V1 and BabyVLM-V2 in a table?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine where exactly this comparison is made in the paper. Without more specific information about the structure or content of the paper, I cannot accurately identify the section containing the table comparing BabyVLM-V1 and BabyVLM-V2. Therefore, my response is:\n\nThe information is unknown.",
+    "abstained": false
+  },
+  {
+    "question_id": "q23",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "Where in the paper is the performance comparison of BabyLLaVA-V2 with GPT-4o on counting tasks shown?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine where exactly this performance comparison appears in a paper about BabyLLaVA-V2 and GPT-4o's performance on counting tasks. Without access to the specific research or publication details, I cannot provide the exact location of this information.",
+    "abstained": false
+  },
+  {
+    "question_id": "q24",
+    "doc_id": "arxiv_251210932_babyvlm_v2",
+    "question": "Does BabyVLM-V2 use reinforcement learning to train its vision encoder?",
+    "type": "impossible",
+    "answer": "The information about whether BabyVLM-V2 uses reinforcement learning to train its vision encoder is unknown.",
+    "abstained": false
+  },
+  {
+    "question_id": "q25",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "What is the main contribution of Any4D?",
+    "type": "fact",
+    "answer": "The main contribution of Any4D is its ability to provide a comprehensive framework for analyzing and visualizing data from various sources in real-time, making it easier for users to understand complex relationships between different datasets. This capability enhances decision-making processes by offering insights into trends and patterns that might be difficult to discern through traditional methods.",
+    "abstained": false
+  },
+  {
+    "question_id": "q26",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "What type of neural network architecture does Any4D use?",
+    "type": "fact",
+    "answer": "I do not have enough context to determine the exact type of neural network architecture used by \"Any4D\". Without more specific information about this system or its technical specifications, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q27",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "Which sensors or modalities can Any4D process besides RGB images?",
+    "type": "fact",
+    "answer": "The Any4D system primarily processes RGB images for its applications in computer vision tasks such as object recognition, scene understanding, and image-based rendering. However, it does not specifically mention processing other types of sensor data or modalities beyond RGB images. Therefore, I cannot provide a comprehensive list of all possible sensors or modalities that Any4D might handle without additional information about its capabilities.",
+    "abstained": false
+  },
+  {
+    "question_id": "q28",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "According to the paper, what are the three core contributions of Any4D?",
+    "type": "loc",
+    "answer": "The paper does not provide a clear list of the three core contributions of Any4D.",
+    "abstained": false
+  },
+  {
+    "question_id": "q29",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "In which section of the paper are the limitations of Any4D discussed?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section of a paper the limitations of Any4D are specifically discussed. The structure of papers can vary widely depending on the field and style guide being followed. Without more specific information about the type of paper or its format, I cannot accurately identify the relevant section.",
+    "abstained": false
+  },
+  {
+    "question_id": "q30",
+    "doc_id": "arxiv_251210935_any4d",
+    "question": "Does Any4D use reinforcement learning to optimize scene flow estimation?",
+    "type": "impossible",
+    "answer": "I don't have enough reliable information about the specific implementation or methods used by Any4D for optimizing scene flow estimation using reinforcement learning. Therefore, I cannot confirm whether it uses this technique or not with certainty.",
+    "abstained": false
+  },
+  {
+    "question_id": "q31",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "What is the proposed function that replaces normalization layers?",
+    "type": "fact",
+    "answer": "The proposed function that replaces normalization layers in deep learning models is Layer Normalization.",
+    "abstained": false
+  },
+  {
+    "question_id": "q32",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "What are the four key properties analyzed for point-wise functions?",
+    "type": "fact",
+    "answer": "The four key properties typically analyzed for point-wise functions are:\n\n1. **Continuity**: This refers to whether small changes in input result in arbitrarily small changes in output.\n2. **Differentiability**: The ability to find a derivative at each point, which measures how much the function changes with respect to its input.\n3. **Integrability**: Whether the area under the curve can be calculated using definite integrals.\n4. **Boundedness**: Whether the values of the function remain within some finite limits or grow without bound.\n\nThese properties help in understanding the behavior and characteristics of point-wise functions.",
+    "abstained": false
+  },
+  {
+    "question_id": "q33",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "Which tasks were used to evaluate Derf?",
+    "type": "fact",
+    "answer": "I don't have enough context or specific information about \"Derf\" to determine which tasks were used for its evaluation. Without more details, I cannot provide a definitive answer regarding the evaluation criteria for this entity.",
+    "abstained": false
+  },
+  {
+    "question_id": "q34",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "In which section does the paper explain the effect of the shift parameter s?",
+    "type": "loc",
+    "answer": "The question \"In which section does the paper explain the effect of the shift parameter s?\" cannot be answered without additional context about the specific paper being referred to or its structure. Different papers may organize their sections differently, so I don't have enough information to determine where this particular explanation would appear. Therefore, my response is:\n\nI do not know.",
+    "abstained": false
+  },
+  {
+    "question_id": "q35",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "Where does the paper compare Derf's training loss with normalization layers?",
+    "type": "loc",
+    "answer": "I don't have enough context to determine where in a paper Derf's training loss is compared with normalization layers. Without more specific information about which paper or section you're referring to, I cannot provide accurate details.",
+    "abstained": false
+  },
+  {
+    "question_id": "q36",
+    "doc_id": "arxiv_251210938_stronger_normalization_free",
+    "question": "Does the paper propose using quantum entanglement for function optimization?",
+    "type": "impossible",
+    "answer": "I don't have enough context to determine if a specific paper proposes using quantum entanglement for function optimization. Without access to the exact content or citation of the paper in question, I cannot confirm whether this claim is accurate. Therefore, my response is:\n\nThe information about the paper proposing use of quantum entanglement for function optimization is unknown.",
+    "abstained": false
+  },
+  {
+    "question_id": "q37",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "What is the name of the method introduced in the paper?",
+    "type": "fact",
+    "answer": "I am unable to provide a definitive answer without access to the specific paper or its content. Please refer to the original source for accurate information about the method described in the paper.",
+    "abstained": false
+  },
+  {
+    "question_id": "q38",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "What technique does GaussianHeadTalk use for real-time rendering?",
+    "type": "fact",
+    "answer": "I do not have enough information to determine what technique GaussianHeadTalk uses for real-time rendering.",
+    "abstained": false
+  },
+  {
+    "question_id": "q39",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "What type of model is used to capture long-range temporal information from audio?",
+    "type": "fact",
+    "answer": "The type of model used to capture long-range temporal information from audio is typically a Recurrent Neural Network (RNN). RNNs can maintain internal memory which allows them to process sequences of data like audio signals where dependencies across different time steps are important.",
+    "abstained": false
+  },
+  {
+    "question_id": "q40",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "In which section does the paper describe the stability metric used to quantify wobbling?",
+    "type": "loc",
+    "answer": "The question \"In which section does the paper describe the stability metric used to quantify wobbling?\" cannot be answered without additional context or information about a specific paper. Different papers may structure their sections differently, so I don't have enough data to pinpoint exactly where this information would appear in a given text. To provide accurate guidance, please refer to the relevant section of the paper itself.",
+    "abstained": false
+  },
+  {
+    "question_id": "q41",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "According to the paper, which datasets were used for experiments?",
+    "type": "loc",
+    "answer": "I do not have access to the specific paper or dataset information mentioned in the question. Therefore, I cannot provide a definitive list of datasets used for experiments without additional context from the original source material.",
+    "abstained": false
+  },
+  {
+    "question_id": "q42",
+    "doc_id": "arxiv_251210939_gaussianHeadTalk",
+    "question": "Does the paper mention the use of reinforcement learning for avatar control?",
+    "type": "impossible",
+    "answer": "I do not have access to the specific content of a particular paper. Therefore, I cannot confirm whether it mentions the use of reinforcement learning for avatar control or not. To provide accurate information, I would need to refer directly to the text of the paper in question.",
+    "abstained": false
+  },
+  {
+    "question_id": "q43",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "What is VL-JEPA and what does it stand for?",
+    "type": "fact",
+    "answer": "VL-JEPA stands for \"Very Large Joint European Parallel Environment.\" It was a distributed computing project in Europe aimed at developing high-performance computing capabilities using parallel processing techniques. The acronym reflects its scale (\"Very Large\") and the involvement of multiple countries (\"Joint\"). However, I don't have detailed information about its current status or specifics beyond this basic definition.",
+    "abstained": false
+  },
+  {
+    "question_id": "q44",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "How does VL-JEPA achieve 50% fewer trainable parameters compared to standard VLMs?",
+    "type": "fact",
+    "answer": "VL-JEPA achieves 50% fewer trainable parameters compared to standard VLMs by leveraging a novel architecture design that reduces the number of parameters required for training while maintaining or even improving performance in various tasks. This approach involves using a combination of low-dimensional embeddings and efficient attention mechanisms, which significantly decreases the computational complexity without compromising the model's ability to learn meaningful representations from large datasets. The result is a more compact yet powerful model that can be trained faster and requires less memory, making it particularly suitable for applications where resource efficiency is critical.",
+    "abstained": false
+  },
+  {
+    "question_id": "q45",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "What two stages are used to train VL-JEPA?",
+    "type": "fact",
+    "answer": "The training process for VL-JEPA typically involves two main stages: supervised learning and reinforcement learning.",
+    "abstained": false
+  },
+  {
+    "question_id": "q46",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "How does VL-JEPA's selective decoding mechanism work for real-time video applications?",
+    "type": "loc",
+    "answer": "I do not have enough context to provide a detailed explanation about how VL-JEPA's selective decoding mechanism works specifically for real-time video applications. My knowledge base does not contain this particular technical detail.",
+    "abstained": false
+  },
+  {
+    "question_id": "q47",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "What are the main differences between VL-JEPA's embedding-space prediction approach and traditional token-space prediction in VLMs?",
+    "type": "loc",
+    "answer": "I do not have access to specific details about the exact differences between VL-JEPA's embedding-space prediction approach and traditional token-space prediction in VLMs. Therefore, I cannot provide a detailed comparison without potentially infringing on intellectual property rights or proprietary information. However, generally speaking, VLMs like VL-JEPA aim to predict embeddings for entire sequences rather than individual tokens, which can lead to more coherent representations but may require larger models due to increased complexity. Traditional token-space predictions focus on predicting embeddings for each individual word/token separately, which might be simpler but could result in less cohesive representations across longer sequences.",
+    "abstained": false
+  },
+  {
+    "question_id": "q48",
+    "doc_id": "arxiv_251210942_vl_jepa",
+    "question": "Does VL-JEPA use reinforcement learning for optimizing its vision encoder parameters?",
+    "type": "impossible",
+    "answer": "I do not have enough reliable information to determine whether VL-JEPA uses reinforcement learning for optimizing its vision encoder parameters. The question cannot be answered with certainty based solely on publicly available data or common knowledge.",
+    "abstained": false
+  },
+  {
+    "question_id": "q49",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "What is the main contribution of Bidirectional Normalizing Flow (BiFlow)?",
+    "type": "fact",
+    "answer": "The main contribution of Bidirectional Normalizing Flow (BiFlow) is its ability to model bidirectional dependencies in data distributions by using two separate flows for encoding and decoding directions. This approach allows BiFlow to capture more complex patterns in the data compared to traditional normalizing flow models which only consider one direction.",
+    "abstained": false
+  },
+  {
+    "question_id": "q50",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "Which architecture does BiFlow use for the reverse model?",
+    "type": "fact",
+    "answer": "The architecture used by BiFlow for the reverse model is called the \"Bi-directional LSTM\" or \"Bidirectional Long Short-Term Memory Network\".",
+    "abstained": false
+  },
+  {
+    "question_id": "q51",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "What dataset and resolution were used in the experiments?",
+    "type": "fact",
+    "answer": "I am unable to provide a definitive answer without additional context or documentation about the specific experiment being referred to. If you can provide more details such as the name of the study or the research paper it's associated with, I might be able to give you a more accurate response. Otherwise, I cannot determine the exact dataset and resolution used in the experiments.",
+    "abstained": false
+  },
+  {
+    "question_id": "q52",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "In which section does the paper describe the three strategies for learning the reverse model?",
+    "type": "loc",
+    "answer": "I do not have access to a specific paper or its content. Therefore, I cannot determine in which section of the paper the description of the three strategies for learning the reverse model appears. To provide accurate information, I would need direct access to the text of the paper being referred to.",
+    "abstained": false
+  },
+  {
+    "question_id": "q53",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "According to Table 3, how much faster is BiFlow compared to iTARFlow on TPU?",
+    "type": "loc",
+    "answer": "The table does not provide a direct comparison between BiFlow and iTARFlow on TPU. Therefore, I cannot determine how much faster one is compared to the other based solely on this table.",
+    "abstained": false
+  },
+  {
+    "question_id": "q54",
+    "doc_id": "arxiv_251210953_bidirectional_normalizing_flow",
+    "question": "Does the paper propose using a quantum neural network for training?",
+    "type": "impossible",
+    "answer": "I do not have enough context to determine if a specific paper proposes using a quantum neural network for training. Without access to the exact content or citation of the paper in question, I cannot confirm this claim. Therefore, my response is:\n\nThe information about whether a particular paper uses a quantum neural network for training is unknown to me.",
+    "abstained": false
+  },
+  {
+    "question_id": "q55",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "What is Group Diffusion?",
+    "type": "fact",
+    "answer": "I don't have enough context to provide a precise definition for \"Group Diffusion.\" This term could refer to various concepts in different fields such as sociology, psychology, or biology. Without more specific information about what type of group diffusion you're referring to, I cannot give a definitive explanation. If you can provide additional details, I would be happy to try to help further.",
+    "abstained": false
+  },
+  {
+    "question_id": "q56",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "What is the main contribution of GroupDiff?",
+    "type": "fact",
+    "answer": "The main contribution of GroupDiff is its ability to efficiently compute differences between groups in large datasets by leveraging parallel processing techniques. This approach significantly reduces computation time compared to traditional methods for group-wise comparisons, making it particularly useful in fields such as genomics where analyzing multiple gene expression profiles across different conditions or samples is common.",
+    "abstained": false
+  },
+  {
+    "question_id": "q57",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "What is the scaling effect observed in GroupDiff?",
+    "type": "fact",
+    "answer": "The term \"GroupDiff\" does not appear to be a standard or commonly recognized concept in physics or mathematics. Without more context about what this might refer to, I cannot provide a definitive explanation of its scaling effect. Therefore, my response is:\n\nI do not know.",
+    "abstained": false
+  },
+  {
+    "question_id": "q58",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "Where in the paper is the definition of cross-attention score given?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine where the definition of a \"cross-attention score\" is located within a typical academic paper. The location can vary depending on the field and the specific research being discussed. Without more detailed information about the paper or its structure, I cannot provide a precise answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q59",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "In which section are the limitations of GroupDiff discussed?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section of a specific text or reference material \"GroupDiff\" is discussed. Without more information about the source material being referred to, I cannot accurately identify the relevant section for discussing the limitations of GroupDiff. Therefore, my response is:\n\nThe information provided is insufficient to determine the exact section where limitations of GroupDiff are discussed.",
+    "abstained": false
+  },
+  {
+    "question_id": "q60",
+    "doc_id": "arxiv_251210954_group_diffusion",
+    "question": "Does the paper mention the application of GroupDiff to quantum image generation?",
+    "type": "impossible",
+    "answer": "I do not have access to the specific content of a particular paper. Therefore, I cannot confirm whether it mentions the application of GroupDiff to quantum image generation or not. To provide accurate information, I would need direct evidence from the text itself.",
+    "abstained": false
+  },
+  {
+    "question_id": "q61",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "What are the six subtasks of audiovisual temporal grounding introduced in ChronusOmni?",
+    "type": "fact",
+    "answer": "I do not have access to specific details about the exact six subtasks of audiovisual temporal grounding introduced in ChronusOmni. Therefore, I cannot provide a definitive list of these tasks without potentially infringing on copyright or proprietary information.",
+    "abstained": false
+  },
+  {
+    "question_id": "q62",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "Which large language model does ChronusOmni use as its backbone?",
+    "type": "fact",
+    "answer": "I do not have accurate information about which specific large language model ChronusOmni uses as its backbone.",
+    "abstained": false
+  },
+  {
+    "question_id": "q63",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "What is the name of the dataset introduced in the paper to support audiovisual temporal grounding?",
+    "type": "fact",
+    "answer": "The dataset introduced in the paper to support audiovisual temporal grounding is called \"VITAG\".",
+    "abstained": false
+  },
+  {
+    "question_id": "q64",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "What is the average duration of videos in the ChronusAV dataset in seconds?",
+    "type": "loc",
+    "answer": "The average duration of videos in the ChronusAV dataset is 120 seconds.",
+    "abstained": false
+  },
+  {
+    "question_id": "q65",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "In the T2V subtask, what evaluation metric is used to measure caption quality besides BLEU-4 and CIDEr?",
+    "type": "loc",
+    "answer": "The T2V subtask does not specify a unique evaluation metric beyond BLEU-4 and CIDEr. These metrics are commonly used for evaluating image-to-video captions in natural language processing tasks. However, without additional context or specific guidelines from the organizers of the T2V subtask, it's difficult to determine if there are other metrics employed. Therefore, I cannot provide a definitive answer about another evaluation metric used specifically for this task.",
+    "abstained": false
+  },
+  {
+    "question_id": "q66",
+    "doc_id": "arxiv_251209841_ChronusOmni.pdf",
+    "question": "According to the paper, what is the exact number of video frames sampled in the V2A subtask during training in Section 6.3?",
+    "type": "impossible",
+    "answer": "The exact number of video frames sampled in the V2A subtask during training in Section 6.3 is not specified in the given text.",
+    "abstained": false
+  },
+  {
+    "question_id": "q67",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "What is the name of the environment used in the paper to evaluate SCOPE?",
+    "type": "fact",
+    "answer": "The paper does not specify the exact name of the environment used for evaluating SCOPE.",
+    "abstained": false
+  },
+  {
+    "question_id": "q68",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "How many parameters does the SCOPE model have according to Table 3?",
+    "type": "fact",
+    "answer": "According to Table 3 in the reference material, the SCOPE model has approximately 10 million parameters.",
+    "abstained": false
+  },
+  {
+    "question_id": "q69",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "What does the manager agent propose in the hierarchical planning framework?",
+    "type": "fact",
+    "answer": "The manager agent proposes a hierarchical planning framework to manage tasks and resources effectively across different levels within an organization. This approach involves breaking down large-scale objectives into smaller, manageable sub-tasks or projects at various organizational layers, ensuring that each level has clear responsibilities and goals aligned with broader strategic objectives. The hierarchy helps in coordinating efforts among departments, aligning priorities, and optimizing resource allocation for maximum efficiency.",
+    "abstained": false
+  },
+  {
+    "question_id": "q70",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "In Section 5.1, what is the rate at which random actions are injected into the generated trajectories to mimic human-like exploration?",
+    "type": "loc",
+    "answer": "The rate at which random actions are injected into the generated trajectories to mimic human-like exploration in Section 5.1 is not specified in the given text.",
+    "abstained": false
+  },
+  {
+    "question_id": "q71",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "According to Table 4, which backend model achieves a success rate of 0.58 with 24B parameters?",
+    "type": "loc",
+    "answer": "The table does not provide specific information about models achieving exactly 0.58 success rate or having 24 billion parameters. Therefore, I cannot determine which backend model fits these criteria from the given data.",
+    "abstained": false
+  },
+  {
+    "question_id": "q72",
+    "doc_id": "arxiv_251209897_SCOPE.pdf",
+    "question": "In which year was the TextCraft environment first published, and who were its original creators?",
+    "type": "impossible",
+    "answer": "The exact year when TextCraft was first published is not definitively known. However, it is believed to have been developed in the early 1980s by a team at IBM Research. The original creators include:\n\n- John J. Ringle\n- David A. Smith\n\nThese individuals worked together on developing TextCraft, which was designed for text processing tasks such as spell checking, grammar correction, and formatting.",
+    "abstained": false
+  },
+  {
+    "question_id": "q73",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "What is the name of the proposed method in this paper for Novel Class Discovery?",
+    "type": "fact",
+    "answer": "The paper does not provide a specific name for the proposed method for novel class discovery.",
+    "abstained": false
+  },
+  {
+    "question_id": "q74",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "Which pre-trained model is used as the backbone for multimodal feature extraction?",
+    "type": "fact",
+    "answer": "I do not have enough context to determine which specific pre-trained model is used as the backbone for multimodal feature extraction. The choice of backbone can vary depending on the application or task at hand. Without more specific information about the system or project in question, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q75",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "What is the evaluation metric used to measure clustering performance in the experiments?",
+    "type": "fact",
+    "answer": "The evaluation metric used to measure clustering performance in the experiments is typically the silhouette score or the Davies-Bouldin index. These metrics help assess how well each data point fits into its assigned cluster compared to other clusters.",
+    "abstained": false
+  },
+  {
+    "question_id": "q76",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "According to Table 1, how many classes are in the unlabelled set (|y_u|) for CIFAR-100?",
+    "type": "loc",
+    "answer": "The table does not provide a direct count of the number of classes in the unlabelled set (|y_u|) for CIFAR-100. Therefore, I cannot determine this value from the given information.",
+    "abstained": false
+  },
+  {
+    "question_id": "q77",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "In Table 2, what is the accuracy achieved by the proposed method on the 'New' subset of ImageNet-100?",
+    "type": "loc",
+    "answer": "I don't have access to specific tables or data from a particular study. Therefore, I cannot provide the exact accuracy achieved by the proposed method on the 'New' subset of ImageNet-100. To get this information, one would need to refer directly to the source material where such results were reported.",
+    "abstained": false
+  },
+  {
+    "question_id": "q78",
+    "doc_id": "arxiv_251210262_VLM_NCD.pdf",
+    "question": "What is the exact weight decay value used during the fine-tuning of the last block of the visual transformer in Section 4.1?",
+    "type": "impossible",
+    "answer": "The exact weight decay value used during the fine-tuning of the last block of the visual transformer in Section 4.1 is not specified in the given text.",
+    "abstained": false
+  },
+  {
+    "question_id": "q79",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What is the name of the SSL method used to pre-train StainNet?",
+    "type": "fact",
+    "answer": "The exact name of the SSL method used to pre-train StainNet is not widely documented or publicly known.",
+    "abstained": false
+  },
+  {
+    "question_id": "q80",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "How many patch images are used for pre-training StainNet?",
+    "type": "fact",
+    "answer": "I don't have access to the exact number of patch images used for pre-training StainNet. The information about this specific model's training process may vary depending on the source or version being referred to. Without more detailed context, I cannot provide a definitive count.",
+    "abstained": false
+  },
+  {
+    "question_id": "q81",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What is the main staining method that most existing pathology foundation models are pre-trained on?",
+    "type": "fact",
+    "answer": "The main staining method that most existing pathology foundation models are pre-trained on is hematoxylin and eosin (H&E) staining. This staining technique is widely used in histopathology to visualize cellular structures under a microscope.",
+    "abstained": false
+  },
+  {
+    "question_id": "q82",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "In which section of the paper is the pre-training loss curve of StainNet discussed?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section of a specific paper the pre-training loss curve of StainNet is discussed. Without access to the exact paper or its structure, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q83",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What database is used as the source of special staining WSIs for pre-training StainNet?",
+    "type": "loc",
+    "answer": "The exact database from which Special Staining Whole Slide Images (WSI) are sourced for pre-training with StainNet is not specified in the given question or context. Therefore, I cannot provide a definitive answer to this part of the query.",
+    "abstained": false
+  },
+  {
+    "question_id": "q84",
+    "doc_id": "arxiv_251210326_StainNet.pdf",
+    "question": "What specific hardware configuration was used to fine-tune the downstream tasks?",
+    "type": "impossible",
+    "answer": "I do not have enough context or specific information about a particular research paper or project to determine which hardware configuration was used for fine-tuning downstream tasks. Without additional details, I cannot provide a specific answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q85",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "What is the name of the two-step approach proposed to resolve Contextual Blindness?",
+    "type": "fact",
+    "answer": "The two-step approach proposed to resolve Contextual Blindness is called the \"Contextual Inference\" method.",
+    "abstained": false
+  },
+  {
+    "question_id": "q86",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "Which model architecture does InstructBLIP use to compress visual information?",
+    "type": "fact",
+    "answer": "The InstructBLIP model uses a combination of Transformer-based architectures for both text and vision tasks. Specifically, it employs Vision Transformers (ViTs) for image understanding and Multi-Head Attention mechanisms for capturing complex relationships in textual data. However, without access to the most recent research papers or updates from the creators, I cannot provide detailed specifics about its exact architectural components.",
+    "abstained": false
+  },
+  {
+    "question_id": "q87",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "What term is used to describe the failure that occurs when single-crop methods isolate fine details from their broader context?",
+    "type": "fact",
+    "answer": "The term used to describe the failure that occurs when single-crop methods isolate fine details from their broader context is called \"myopia.\"",
+    "abstained": false
+  },
+  {
+    "question_id": "q88",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "In which section of the paper is the entropy-guided scale determination mechanism explained?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section of a typical scientific or technical paper the entropy-guided scale determination mechanism would be explained. The location can vary depending on the field and the specific structure of the paper. Without more details about the paper's content or format, I cannot specify a particular section.",
+    "abstained": false
+  },
+  {
+    "question_id": "q89",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "Which dataset is used in the ablation study to evaluate the impact of portfolio size?",
+    "type": "loc",
+    "answer": "The exact dataset used in the ablation study to evaluate the impact of portfolio size is not specified in the given question or context. Therefore, I cannot provide a definitive answer without additional information about the specific research paper or study being referred to.",
+    "abstained": false
+  },
+  {
+    "question_id": "q90",
+    "doc_id": "arxiv_251210362_Visual_Funnel.pdf",
+    "question": "What is the name of the first author of the ViCrop paper referenced in this work?",
+    "type": "impossible",
+    "answer": "The information provided does not specify which \"ViCrop\" paper or its first author. Without more context about the exact paper being referred to, I cannot determine the name of the first author. Therefore, my response is:\n\nUnknown",
+    "abstained": false
+  },
+  {
+    "question_id": "q91",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "What is the full name of the theorem proposed for Transformer-based policies?",
+    "type": "fact",
+    "answer": "The full name of the theorem proposed for Transformer-based policies is \"Transformer Inference Theorem.\"",
+    "abstained": false
+  },
+  {
+    "question_id": "q92",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "Which algorithm does GRPO extend by using grouped trajectories for advantage computation?",
+    "type": "fact",
+    "answer": "The question \"Which algorithm does GRPO extend by using grouped trajectories for advantage computation?\" requires a bit more context to provide an accurate answer. GRPO stands for Grouped Randomized Policy Optimization, which is a method used in reinforcement learning for policy optimization. However, without additional information about what specific algorithm or framework GRPO extends, it's difficult to pinpoint exactly which one.\n\nGRPO itself doesn't directly extend another well-known algorithm like Q-learning, SARSA, or Deep Q-Networks (DQN). Instead, it introduces new ideas such as grouping trajectories and randomized policy updates to improve exploration and exploitation trade-offs.\n\nTherefore, I cannot definitively state which algorithm GRPO extends without more specific details about the original algorithm being extended. If you have more context about the original algorithm or the specific modifications made by GRPO, please provide that information so I can give a more precise answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q93",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "What are the two special cases of the GPG framework mentioned in the paper?",
+    "type": "fact",
+    "answer": "The GPG framework does not have a standard name or acronym like \"GPG\" might suggest. Without more context about which specific paper or field this question refers to, I cannot provide accurate information about its special cases. Therefore, my response is:\n\nI do not know.",
+    "abstained": false
+  },
+  {
+    "question_id": "q94",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "In which section of the paper is the 'Macro-action Segmentation' step explained?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section of a typical research paper the \"Macro-action Segmentation\" step would be located. This term could refer to various concepts depending on the field of study or the specific methodology being used. Without more detailed information about the paper's content or the discipline it belongs to, I cannot specify a particular section.",
+    "abstained": false
+  },
+  {
+    "question_id": "q95",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "Which model is used as the judge in the LLM-as-Judge evaluation protocol?",
+    "type": "loc",
+    "answer": "The LLM-as-Judge evaluation protocol does not specify a particular model for judging models. It aims to evaluate different language models by comparing their performance against human judges or other AI systems designed to assess legal reasoning capabilities. Therefore, it uses various models depending on the context and purpose of each evaluation.",
+    "abstained": false
+  },
+  {
+    "question_id": "q96",
+    "doc_id": "arxiv_251210365_GPG.pdf",
+    "question": "What is the name of the first author of the GRPO paper referenced in this work?",
+    "type": "impossible",
+    "answer": "The GRPO paper mentioned in this work was authored by a team led by Dr. John Smith. However, I don't have the exact name of the first author.",
+    "abstained": false
+  },
+  {
+    "question_id": "q97",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "What is the name of the symbolic engine used as a tool by InternGeometry?",
+    "type": "fact",
+    "answer": "The question \"What is the name of the symbolic engine used as a tool by InternGeometry?\" does not provide enough context to determine the exact name of the symbolic engine being referred to. Therefore, I cannot give a specific answer without additional information about which InternGeometry project or software is being discussed.",
+    "abstained": false
+  },
+  {
+    "question_id": "q98",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "How many geometry problems from IMO 2000–2024 does InternGeometry solve?",
+    "type": "fact",
+    "answer": "I don't have access to real-time data or statistics about how many geometry problems from IMO 2000-2024 InternGeometry has solved. Therefore, I cannot provide a precise number at this moment.",
+    "abstained": false
+  },
+  {
+    "question_id": "q99",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "What metric is used as an indicator of task complexity in the CBRL framework?",
+    "type": "fact",
+    "answer": "The CBRL framework does not specify a particular metric for measuring task complexity.",
+    "abstained": false
+  },
+  {
+    "question_id": "q100",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "In which appendix are the improvements to InternGeometry-DDAR described?",
+    "type": "loc",
+    "answer": "The InternGeometry-DDAR specification does not contain a separate appendix dedicated to improvements. The improvements are integrated directly into the main text of the specification.",
+    "abstained": false
+  },
+  {
+    "question_id": "q101",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "Which algorithm is described in Appendix D for generating geometry questions?",
+    "type": "loc",
+    "answer": "The algorithm described in Appendix D for generating geometry questions is called \"Random Geometry Question Generator.\"",
+    "abstained": false
+  },
+  {
+    "question_id": "q102",
+    "doc_id": "arxiv_251210534_Achieving_Olympia_Level.pdf",
+    "question": "What is the name of the first author of the AlphaGeometry 2 paper referenced in this work?",
+    "type": "impossible",
+    "answer": "The AlphaGeometry 2 paper was authored by a team including Casey Mann, Jennifer McLoud-Mann, and Avinoam Ostrovsky. The first author of this paper is Casey Mann.",
+    "abstained": false
+  },
+  {
+    "question_id": "q103",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "What are the two core types of tokens introduced in GETok?",
+    "type": "fact",
+    "answer": "GETok introduces two core types of tokens: session tokens and user tokens. These tokens are used to authenticate users and maintain their sessions within a system or application.",
+    "abstained": false
+  },
+  {
+    "question_id": "q104",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "Which base model is used for GETok in the experiments?",
+    "type": "fact",
+    "answer": "The base model used for GETok in the experiments is VGG16.",
+    "abstained": false
+  },
+  {
+    "question_id": "q105",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "What is the name of the greedy algorithm used to convert masks into grid tokens?",
+    "type": "fact",
+    "answer": "The greedy algorithm used to convert masks into grid tokens is called \"greedy tokenization\".",
+    "abstained": false
+  },
+  {
+    "question_id": "q106",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "In the Self-Improving RL framework, which token is used to enable iterative refinement and self-correction?",
+    "type": "loc",
+    "answer": "The Self-Improving RL framework does not specify a particular token for enabling iterative refinement and self-correction. The concept of using tokens in reinforcement learning frameworks often refers to different mechanisms such as rewards or feedback signals rather than a single token. Therefore, I cannot provide a definitive answer without more context about the exact implementation within the Self-Improving RL framework.",
+    "abstained": false
+  },
+  {
+    "question_id": "q107",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "According to the experiments, what grid size achieves a good trade-off between spatial precision and vocabulary overhead?",
+    "type": "loc",
+    "answer": "The exact grid size that achieves a good trade-off between spatial precision and vocabulary overhead in image classification tasks has been studied extensively by researchers. However, without referencing a specific study or experiment, I cannot provide an exact number. The optimal grid size can vary depending on factors such as the complexity of the images being classified and the computational resources available. It's often determined through empirical testing and optimization processes.",
+    "abstained": false
+  },
+  {
+    "question_id": "q108",
+    "doc_id": "arxiv_251210554_Grounding_Tokens.pdf",
+    "question": "What is the exact training loss value reported for GETok-SFT on the ReasonSeg validation set?",
+    "type": "impossible",
+    "answer": "I don't have access to specific training loss values or detailed performance metrics like those reported in research papers or official publications. Therefore, I cannot provide the exact training loss value for GETok-SFT on the ReasonSeg validation set.",
+    "abstained": false
+  },
+  {
+    "question_id": "q109",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "What are the names of the two main modules proposed in the GLAT framework?",
+    "type": "fact",
+    "answer": "The GLAT framework does not specify two main modules. It proposes a set of guidelines for language teaching, but without additional context or documentation, I cannot identify two distinct modules within it.",
+    "abstained": false
+  },
+  {
+    "question_id": "q110",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "Which pretrained model is used for local feature extraction in the Iterative Refinement Module (IRM)?",
+    "type": "fact",
+    "answer": "The pretrained model used for local feature extraction in the Iterative Refinement Module (IRM) is ResNet-50.",
+    "abstained": false
+  },
+  {
+    "question_id": "q111",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "How many publicly available datasets were used to evaluate the proposed model?",
+    "type": "fact",
+    "answer": "I do not have enough context or specific information about a particular model being evaluated by publicly available datasets. Without knowing which model or dataset you're referring to, I cannot provide an accurate count of how many datasets were used for evaluation. Therefore, my response is:\n\nThe information provided is insufficient to determine the number of publicly available datasets used in evaluating a specific model.",
+    "abstained": false
+  },
+  {
+    "question_id": "q112",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "In the Graph Laplacian Transformer, what does the learnable filter L_θ optimize during training?",
+    "type": "loc",
+    "answer": "The learnable filter \\( L_\\theta \\) in the Graph Laplacian Transformer optimizes to minimize a loss function related to the reconstruction error between the input graph signals and their predicted representations. Specifically, it aims to find a transformation that preserves important structural features while learning effective mappings for downstream tasks such as node classification or link prediction. The exact nature of this optimization process involves minimizing a combination of reconstruction errors and regularization terms designed to ensure the learned filters capture meaningful patterns in the graph data.",
+    "abstained": false
+  },
+  {
+    "question_id": "q113",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "According to the ablation study, which attention mechanism performed best in terms of spatial consistency for prostate cancer grading?",
+    "type": "loc",
+    "answer": "The ablation study did not provide a clear ranking or specific performance metrics for different attention mechanisms in terms of spatial consistency for prostate cancer grading. Therefore, I cannot determine which attention mechanism performed best without additional data or further research.",
+    "abstained": false
+  },
+  {
+    "question_id": "q114",
+    "doc_id": "arxiv_251210808_Graph_Laplacian_Transformer.pdf",
+    "question": "What is the exact FLOPs value reported for the full proposed model (Exp. 1) in Table 2?",
+    "type": "impossible",
+    "answer": "The exact FLOPs value reported for the full proposed model (Exp. 1) in Table 2 is not specified in the given text.",
+    "abstained": false
+  },
+  {
+    "question_id": "q115",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "What is the total number of records in the superconductor database compiled using LLM extraction?",
+    "type": "fact",
+    "answer": "I don't have access to specific databases or statistics about the \"superconductor database\" compiled using LLM extraction. Therefore, I cannot provide a definitive number of records without additional verification from reliable sources.",
+    "abstained": false
+  },
+  {
+    "question_id": "q116",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "Which fine-tuning method was used to adapt the LLMs for superconductivity tasks?",
+    "type": "fact",
+    "answer": "I do not have enough context or specific information about which particular LLM (Large Language Model) adaptation process was used specifically for superconductivity tasks. The development of models like these often involves a combination of techniques rather than just one fine-tuning method. Without more detailed information about the model in question, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q117",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "Which open-source LLM achieved the highest accuracy in the superconductivity classification task?",
+    "type": "fact",
+    "answer": "I do not have accurate information about which open-source language model achieved the highest accuracy in the superconductivity classification task.",
+    "abstained": false
+  },
+  {
+    "question_id": "q118",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "Why did the inclusion of full CIFs in the regression task lead to decreased performance compared to composition-only models?",
+    "type": "loc",
+    "answer": "The inclusion of full CIFs (Conditional Image Features) in a regression task led to decreased performance compared to composition-only models because CIFs introduce additional complexity into the model's architecture. Full CIFs require more parameters and computational resources, which can slow down training and potentially degrade model accuracy during inference due to overfitting or increased variance. Composition-only models, by contrast, rely solely on image features extracted from images themselves without incorporating conditional information, thus maintaining simpler architectures and potentially offering better generalization properties for regression tasks.",
+    "abstained": false
+  },
+  {
+    "question_id": "q119",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "How many novel compositions did the inverse design model generate that were not present in the training set?",
+    "type": "loc",
+    "answer": "I don't have access to specific data about the number of unique compositions generated by the inverse design model that weren't in the training set. Without detailed information from a reliable source or documentation related to this particular model's performance, I cannot provide an accurate count. Therefore, my response is:\n\nThe information regarding the exact number of novel compositions generated by the inverse design model that were not present in the training set is unknown.",
+    "abstained": false
+  },
+  {
+    "question_id": "q120",
+    "doc_id": "arxiv_251210847_Large_Language_Model.pdf",
+    "question": "What is the exact mean absolute error (MAE) reported for the Qwen3-14B model trained on composition + crystal system + space group inputs?",
+    "type": "impossible",
+    "answer": "The exact mean absolute error (MAE) reported for the Qwen3-14B model trained on composition + crystal system + space group inputs is 0.25.",
+    "abstained": false
+  },
+  {
+    "question_id": "q121",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "What is the main goal of the External Reasoning framework proposed in the paper?",
+    "type": "fact",
+    "answer": "The External Reasoning framework aims to improve reasoning abilities by leveraging external resources such as web pages, databases, or other online sources. It seeks to enhance human decision-making processes by providing additional context and information beyond what can be directly inferred from available data. The primary objective is to augment cognitive capabilities through integration with digital information repositories.",
+    "abstained": false
+  },
+  {
+    "question_id": "q122",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "What are the three levels of assistance defined in the policy-oriented multi-LLM system?",
+    "type": "fact",
+    "answer": "I do not have access to specific policies or systems like \"policy-oriented multi-LLM\" without additional context. Therefore, I cannot provide detailed information about its components such as the three levels of assistance.",
+    "abstained": false
+  },
+  {
+    "question_id": "q123",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "Which embedding model is used by default to encode documents and queries in the retrieval component?",
+    "type": "fact",
+    "answer": "The default embedding model used by most search engines for encoding documents and queries in their retrieval components is typically a combination of techniques such as word embeddings like Word2Vec or GloVe, which convert words into numerical vectors representing semantic meanings, and positional encodings to capture context-awareness. However, without specifying a particular technology stack or implementation, it's challenging to name a single \"default\" model.",
+    "abstained": false
+  },
+  {
+    "question_id": "q124",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "In which section does the paper describe the policy-oriented multi-LLM assistance mechanism and escalation strategy?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section a paper describes a policy-oriented multi-LLM assistance mechanism and escalation strategy. Without more specific information about the paper's content or structure, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q125",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "Where does the paper explain how summarization improves retrieval performance for implicit (Type 2) questions?",
+    "type": "loc",
+    "answer": "The paper explaining how summarization improves retrieval performance for implicit (Type 2) questions is \"Improving Retrieval Performance with Summarization: A Case Study in Question Answering\" by Jiaxuan You et al., published in the Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP) in 2017.",
+    "abstained": false
+  },
+  {
+    "question_id": "q126",
+    "doc_id": "arxiv_230712057_external_reasoning_v2",
+    "question": "What was the total monetary cost in USD of training and evaluating the full External Reasoning system?",
+    "type": "impossible",
+    "answer": "I don't have access to specific financial data for individual projects or systems. Therefore, I cannot provide a precise figure for the total monetary cost of training and evaluating the Full External Reasoning system.",
+    "abstained": false
+  },
+  {
+    "question_id": "q127",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "What is the name of the clustering-based log analysis chatbot proposed in the paper?",
+    "type": "fact",
+    "answer": "The paper does not provide a specific name for the clustering-based log analysis chatbot it proposes.",
+    "abstained": false
+  },
+  {
+    "question_id": "q128",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "Which log parsing algorithm is used by LLMLogAnalyzer to convert raw logs into structured data?",
+    "type": "fact",
+    "answer": "I do not have accurate information about which specific log parsing algorithm LLMLogAnalyzer uses for converting raw logs into structured data. The capabilities of such tools can vary widely depending on their design and implementation, so I cannot provide a definitive answer without more detailed knowledge about this particular tool or its underlying technology.",
+    "abstained": false
+  },
+  {
+    "question_id": "q129",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "What are the four main stages of the LLMLogAnalyzer framework?",
+    "type": "fact",
+    "answer": "The LLMLogAnalyzer framework does not have a standard set of four main stages. The process for analyzing language model logs can vary depending on the specifics of the system being analyzed. Without more context about the particular implementation or framework in question, it's difficult to provide accurate information about its structure.",
+    "abstained": false
+  },
+  {
+    "question_id": "q130",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "In which section does the paper describe the routing mechanism that classifies queries into all, partial, and general tiers?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section a paper describes the routing mechanism for classifying queries into three tiers: all, partial, and general. Without access to the specific paper or its detailed structure, I cannot provide the exact location within the text where this description appears. Therefore, my response is:\n\nThe information about the routing mechanism for query classification into all, partial, and general tiers is unknown without more specific details from the paper's content.",
+    "abstained": false
+  },
+  {
+    "question_id": "q131",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "Where does the paper explain the use of ROUGE-1 and cosine similarity as evaluation metrics?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine where a paper specifically explains the use of ROUGE-1 and cosine similarity as evaluation metrics. Without more details about the paper or its publication, I cannot provide a definitive location for this explanation.",
+    "abstained": false
+  },
+  {
+    "question_id": "q132",
+    "doc_id": "arxiv_251024031_llmloganalyzer",
+    "question": "What was the exact training time in hours required to train the LLMLogAnalyzer model from scratch?",
+    "type": "impossible",
+    "answer": "I don't have specific information about the exact training time for the LLMLogAnalyzer model from scratch. The training process can vary depending on various factors such as the size of the dataset used, the complexity of the model architecture, and the computational resources available. Without more detailed information or access to official documentation, I cannot provide a precise figure.",
+    "abstained": false
+  },
+  {
+    "question_id": "q133",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "What is the main objective of the STRinGS framework proposed in the paper?",
+    "type": "fact",
+    "answer": "The STRinGS framework aims to improve the reproducibility of research by providing a standardized set of guidelines for reporting experimental results.",
+    "abstained": false
+  },
+  {
+    "question_id": "q134",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "What metric is introduced by the authors to quantitatively evaluate text readability in reconstructed 3D scenes?",
+    "type": "fact",
+    "answer": "The authors introduce a metric called \"Reconstructed Text Readability\" to quantify the ease with which people can read text within reconstructed 3D scenes. This metric evaluates how well the text appears in relation to its context and other elements in the scene, providing insights into the overall quality of the visual representation of written content.",
+    "abstained": false
+  },
+  {
+    "question_id": "q135",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "What dataset do the authors introduce to benchmark text reconstruction performance in text-rich 3D scenes?",
+    "type": "fact",
+    "answer": "The authors introduce a synthetic dataset called \"TextRecon\" for benchmarking text reconstruction performance in text-rich 3D scenes.",
+    "abstained": false
+  },
+  {
+    "question_id": "q136",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "In which section does the paper describe the two-phase optimization strategy for selective text refinement?",
+    "type": "loc",
+    "answer": "I do not have access to specific papers or detailed sections within them. Therefore, I cannot definitively state in which section a particular description appears without consulting the original source material.",
+    "abstained": false
+  },
+  {
+    "question_id": "q137",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "Where does the paper explain how OCR-CER is computed using OCR outputs from rendered and ground-truth images?",
+    "type": "loc",
+    "answer": "The question appears to be about a specific technical topic related to Optical Character Recognition (OCR) and Computer-Examination Result Reporting (CER). However, without access to the exact source material or detailed documentation, I cannot provide a definitive location where this explanation can be found. Therefore, my response is:\n\nI do not know.",
+    "abstained": false
+  },
+  {
+    "question_id": "q138",
+    "doc_id": "arxiv_251207230_strings",
+    "question": "Does the STRinGS framework incorporate a reinforcement learning component to optimize Gaussian parameters?",
+    "type": "impossible",
+    "answer": "The STRinGS framework does not specifically mention incorporating a reinforcement learning component for optimizing Gaussian parameters. Therefore, I cannot confirm whether it includes such a feature without additional research or documentation.",
+    "abstained": false
+  },
+  {
+    "question_id": "q139",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "What is the main objective of the UniT framework?",
+    "type": "fact",
+    "answer": "The UniT framework aims to provide a unified approach for managing and analyzing time series data across different domains. It seeks to facilitate interoperability between various systems by standardizing how time series data is represented and processed. The primary goal is to enable researchers and practitioners in fields such as finance, healthcare, and environmental science to share and analyze large datasets more effectively.",
+    "abstained": false
+  },
+  {
+    "question_id": "q140",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Which three main components are integrated in the UniT framework?",
+    "type": "fact",
+    "answer": "The UniT framework integrates three main components:\n\n1. **UniT Core**: This component provides a unified interface for various data types and operations across different programming languages and platforms.\n2. **UniT Runtime**: It manages memory allocation, garbage collection, and other runtime services to ensure efficient execution of applications built with UniT.\n3. **UniT Tools**: These tools offer utilities such as profiling, debugging, and code generation capabilities to enhance development and maintenance processes within the UniT ecosystem.",
+    "abstained": false
+  },
+  {
+    "question_id": "q141",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Which Vision-Language Model is selected as the VLM component in UniT?",
+    "type": "fact",
+    "answer": "I do not have enough context to determine which specific Vision-Language Model (VLM) is selected as the VLM component in UniT. The question does not provide sufficient information about the model or its components. Therefore, I cannot definitively answer this without additional details.",
+    "abstained": false
+  },
+  {
+    "question_id": "q142",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "In which section does the paper describe the complementary roles of the VLM and TSM?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section a paper describes the complementary roles of the VLM and TSM. To provide accurate information, I would need more details about the specific paper or its structure.",
+    "abstained": false
+  },
+  {
+    "question_id": "q143",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Which figure illustrates the overall UniT framework architecture?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine which specific figure illustrates the overall UniT framework architecture. Without more information about the UniT framework or a particular diagram associated with it, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q144",
+    "doc_id": " arxiv_251208922_unit_tair",
+    "question": "Does UniT employ reinforcement learning to optimize the diffusion denoising process?",
+    "type": "impossible",
+    "answer": "I don't have enough information to determine if UniT employs reinforcement learning for optimizing their diffusion denoising process. The question cannot be answered with certainty based solely on publicly available data or knowledge.",
+    "abstained": false
+  },
+  {
+    "question_id": "q145",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "What is the main issue investigated in this paper regarding multimodal large language models?",
+    "type": "fact",
+    "answer": "I do not have access to a specific paper or its content for investigation. Therefore, I cannot provide detailed information about the main issue investigated in a particular paper regarding multimodal large language models. My response should be limited to what can be known from general knowledge without referencing any specific source.",
+    "abstained": false
+  },
+  {
+    "question_id": "q146",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "What types of multimodal tasks are primarily used to evaluate cross-modal inconsistency in the study?",
+    "type": "fact",
+    "answer": "The question \"What types of multimodal tasks are primarily used to evaluate cross-modal inconsistency in the study?\" does not provide enough context or specify a particular field or research area. Without more details about the study's focus, it is difficult to determine which types of multimodal tasks would be relevant for evaluating cross-modal inconsistency. Therefore, I cannot provide a specific list of task types.",
+    "abstained": false
+  },
+  {
+    "question_id": "q147",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "What evaluation strategy is proposed to systematically measure cross-modal inconsistency?",
+    "type": "fact",
+    "answer": "The question \"What evaluation strategy is proposed to systematically measure cross-modal inconsistency?\" does not have a clear or definitive answer within my current knowledge base. There isn't a widely recognized systematic approach specifically named for measuring cross-modal inconsistency across different modalities like vision, audition, touch, etc., in a standardized manner. Therefore, I cannot provide a precise evaluation strategy without additional research into specialized fields such as cognitive science, neuroscience, or computer vision.",
+    "abstained": false
+  },
+  {
+    "question_id": "q148",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "In which section does the paper define the formal concept of cross-modal inconsistency?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which specific section a paper defines the formal concept of cross-modal inconsistency. Without more details about the paper or its structure, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q149",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "Where does the paper discuss empirical results comparing different multimodal large language models?",
+    "type": "loc",
+    "answer": "The question appears to be about a specific paper or study that compares different multimodal large language models using empirical data. However, without access to the exact source material, I cannot provide the precise location where this discussion can be found. If you have more context or additional details about the topic, it might help in identifying relevant sources.",
+    "abstained": false
+  },
+  {
+    "question_id": "q150",
+    "doc_id": "arxiv_251208923_cross_modal_inconsistency_mllms",
+    "question": "Does the paper report the exact energy consumption in kilowatt-hours for training the evaluated models?",
+    "type": "impossible",
+    "answer": "I do not have enough context to determine if the paper reports the exact energy consumption in kilowatt-hours for training the evaluated models. Without specific details from the paper itself or additional research, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q151",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "What problem in text-to-image generation does TextGuider specifically aim to address?",
+    "type": "fact",
+    "answer": "I do not have enough context or specific information about a particular \"TextGuider\" for this question. Without more details, I cannot determine what problem it aims to address in text-to-image generation. Therefore, my response is:\n\nThe information provided is insufficient to answer the question accurately.",
+    "abstained": false
+  },
+  {
+    "question_id": "q152",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "What two loss functions are introduced in TextGuider to improve attention alignment during text rendering?",
+    "type": "fact",
+    "answer": "I do not have access to specific details about the internal workings of TextGuider or its implementation of loss functions for improving attention alignment during text rendering. Therefore, I cannot provide a definitive answer regarding which two loss functions are used by TextGuider. My response reflects my current lack of knowledge rather than speculation or invention.",
+    "abstained": false
+  },
+  {
+    "question_id": "q153",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "Which evaluation metrics are used to assess text rendering quality in the experiments?",
+    "type": "fact",
+    "answer": "I do not have enough context or specific information about which particular experiment or dataset this question refers to. Without more details, I cannot provide a definitive list of evaluation metrics used for assessing text rendering quality in such experiments. Therefore, my response is:\n\nThe information provided is insufficient to determine which specific evaluation metrics were used in the experiments mentioned.",
+    "abstained": false
+  },
+  {
+    "question_id": "q154",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "In which section of the paper are the split loss and wrap loss formally defined and explained?",
+    "type": "loc",
+    "answer": "The exact sections where split loss and wrap loss are formally defined and explained can vary depending on the specific paper or textbook being referred to. These concepts typically appear in more advanced machine learning literature dealing with regression problems, particularly those involving non-linear models like neural networks. Without a specific reference, it's difficult to pinpoint exactly within what subsections these definitions might be found.",
+    "abstained": false
+  },
+  {
+    "question_id": "q155",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "Which figure illustrates the difference in attention maps between successful and failed text rendering cases?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine which figure illustrates the difference in attention maps between successful and failed text rendering cases. Without additional information or a reference image, I cannot provide a specific answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q156",
+    "doc_id": "arxiv_251209350_textguider",
+    "question": "Does the paper report experiments evaluating TextGuider on real-world printed documents scanned with OCR hardware?",
+    "type": "impossible",
+    "answer": "I don't have enough context to determine if there's a paper reporting experiments using TextGuider on real-world printed documents scanned with OCR hardware. Without direct access to the literature or specific documentation about this topic, I cannot confirm whether such research exists or not. Therefore, my response is:\n\nUnknown",
+    "abstained": false
+  },
+  {
+    "question_id": "q157",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "What is the main motivation for introducing a new benchmark for mathematical formula extraction from PDFs?",
+    "type": "fact",
+    "answer": "The main motivation for introducing a new benchmark for mathematical formula extraction from PDFs is to improve the accuracy and reliability of extracting mathematical formulas from digital documents like PDFs. This can be crucial in fields such as scientific research, where precise citation and referencing of equations and formulas are essential. Additionally, it helps in automating tasks related to data analysis and processing by ensuring consistent and accurate representation of mathematical content.",
+    "abstained": false
+  },
+  {
+    "question_id": "q158",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "What synthetic data source is used to generate formulas for the benchmark PDFs, and how are trivial formulas filtered out?",
+    "type": "fact",
+    "answer": "The synthetic data source used to generate formulas for the benchmark PDFs is called \"Synthetic Data Generator\" or \"SDG\". This tool creates complex mathematical expressions that mimic real-world distributions. To filter out trivial formulas, the SDG employs a set of rules and heuristics designed to identify simple or repetitive patterns in the generated expressions. These filters ensure that only meaningful and non-trivial formulas are retained for further analysis and evaluation.",
+    "abstained": false
+  },
+  {
+    "question_id": "q159",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "Which evaluation approach shows the highest correlation with human judgment for formula correctness and semantic equivalence?",
+    "type": "fact",
+    "answer": "The evaluation approach that has been shown to have a high correlation with human judgment for both formula correctness and semantic equivalence is automated theorem proving or proof assistants like Coq, Isabelle, or Lean. These tools use formal logic and mathematical proofs to verify formulas, ensuring they meet rigorous standards of correctness and equivalence.",
+    "abstained": false
+  },
+  {
+    "question_id": "q160",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "In which section of the paper is the robust two-stage LLM-based formula matching pipeline described?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section of a paper a robust two-stage LLM-based formula matching pipeline is described. Without more specific information about the paper's structure or content, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q161",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "Which figure presents the correlation comparison between automated metrics and human evaluation scores?",
+    "type": "loc",
+    "answer": "The question \"Which figure presents the correlation comparison between automated metrics and human evaluation scores?\" does not have a definitive answer because it lacks specific context or references to particular figures or studies. Without more information about which field or research area this question pertains to, it's impossible to identify a specific figure that compares these two types of evaluations. Therefore, I cannot provide a known answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q162",
+    "doc_id": "arxiv_251209874_pdf_formula_benchmark",
+    "question": "Does the paper report an evaluation of the benchmark on scanned historical documents from the 19th century?",
+    "type": "impossible",
+    "answer": "I do not have enough context to determine if a paper reports an evaluation of a benchmark specifically for scanned historical documents from the 19th century. Without more details about the paper in question, I cannot confirm or deny this claim. Therefore, my response is:\n\nUnknown",
+    "abstained": false
+  },
+  {
+    "question_id": "q163",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "What is the primary goal of Guided Transfer Learning (GTL) for discrete diffusion models?",
+    "type": "fact",
+    "answer": "The primary goal of Guided Transfer Learning (GTL) for discrete diffusion models is to improve their performance by leveraging pre-trained models or data from related tasks. This approach helps in fine-tuning the model's parameters more efficiently and effectively, especially when dealing with large datasets or complex problems where direct training might be computationally expensive or time-consuming. GTL allows the model to benefit from the learned features and representations of a larger dataset without having to retrain everything from scratch, thus accelerating the learning process and potentially achieving better results.",
+    "abstained": false
+  },
+  {
+    "question_id": "q164",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "How does Guided Transfer Learning (GTL) address computational challenges in discrete diffusion models with large vocabularies and long sequences?",
+    "type": "fact",
+    "answer": "Guided Transfer Learning (GTL) addresses computational challenges in discrete diffusion models by leveraging pre-trained models to initialize or fine-tune parameters during training. This approach helps reduce the need for extensive data collection and computation required for training from scratch, especially when dealing with large vocabularies and long sequences. By using a smaller model as a starting point, GTL can efficiently transfer learned features across different tasks without requiring significant additional computational resources. This method significantly speeds up the training process while maintaining performance comparable to full training from scratch.",
+    "abstained": false
+  },
+  {
+    "question_id": "q165",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "Which task was used to evaluate GTL in the paper, and how did GTL perform compared to vanilla and fine-tuned models?",
+    "type": "fact",
+    "answer": "The paper does not provide specific details about which particular task was used to evaluate GTL (Generalized Transformer Language Model). Therefore, I cannot determine the performance comparison between GTL and other models like vanilla or fine-tuned ones without additional information from the original research paper.",
+    "abstained": false
+  },
+  {
+    "question_id": "q166",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "In which section of the paper is the computational cost comparison between different methods discussed?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which specific section of a paper the computational cost comparison between different methods is discussed. The location can vary depending on the structure and format of the paper. Without more detailed information about the paper's layout or content, I cannot specify a particular section.",
+    "abstained": false
+  },
+  {
+    "question_id": "q167",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "Which figure shows the performance comparison of GTL with vanilla and fine-tuned models across different target-domain training data fractions?",
+    "type": "loc",
+    "answer": "I don't have access to specific figures or detailed comparisons between GTL (Generalized Transformer Language) models, vanilla models, and fine-tuned models across various target-domain training data fractions. To provide accurate information about this particular comparison would require direct evidence from credible sources such as research papers or official documentation. Therefore, I cannot definitively state whether a figure exists showing these comparisons without additional verification.",
+    "abstained": false
+  },
+  {
+    "question_id": "q168",
+    "doc_id": "arxiv_251210877_guided_transfer_learning",
+    "question": "Does the paper provide experiments evaluating GTL's performance on real-world image datasets?",
+    "type": "impossible",
+    "answer": "I do not have enough context to determine if the paper provides experiments evaluating GTL's performance on real-world image datasets. To verify this, I would need direct access to the paper or additional sources that discuss its experimental evaluations. Without such information, I cannot confirm whether the claim is accurate.",
+    "abstained": false
+  },
+  {
+    "question_id": "q169",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "What is the main contribution of PubTables-1M v2 compared to the original PubTables-1M dataset?",
+    "type": "fact",
+    "answer": "The main contribution of PubTables-1M v2 compared to the original PubTables-1M dataset was the addition of 50 million more tables from various scientific journals, making it a significantly larger and richer resource for researchers studying data in scientific literature.",
+    "abstained": false
+  },
+  {
+    "question_id": "q170",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "From which types of documents are the tables in PubTables-1M v2 primarily sourced?",
+    "type": "fact",
+    "answer": "I do not have enough context to determine from which types of documents the tables in PubTables-1M v2 are primarily sourced. The information provided does not specify this detail.",
+    "abstained": false
+  },
+  {
+    "question_id": "q171",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "Which table-related tasks are explicitly supported and evaluated using the PubTables-1M v2 dataset?",
+    "type": "fact",
+    "answer": "The PubTables-1M v2 dataset is primarily used for evaluating methods related to parsing and understanding tables in text documents. It does not specifically support or evaluate tasks involving creating new tables from scratch or manipulating existing ones. Therefore, I cannot provide a list of table-related tasks explicitly supported by this dataset.",
+    "abstained": false
+  },
+  {
+    "question_id": "q172",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "In which section of the paper is the annotation process and quality control methodology described?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which specific section of a paper the annotation process and quality control methodology are described. The description would typically be found in sections related to data analysis or research methods, depending on the type of study being conducted. Without more detailed information about the paper's structure or content, I cannot specify a particular section.",
+    "abstained": false
+  },
+  {
+    "question_id": "q173",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "Which figure illustrates examples of annotated tables and their corresponding structural labels?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine which specific figure illustrates examples of annotated tables and their corresponding structural labels. Without additional information or a reference image, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q174",
+    "doc_id": "arxiv_251210888_pubtables_v2",
+    "question": "Does the paper report experiments using PubTables-1M v2 for financial document table extraction in industry settings?",
+    "type": "impossible",
+    "answer": "I do not have access to specific information about individual papers or their use of particular tools like PubTables-1M v2 for financial document table extraction in industry settings. Therefore, I cannot confirm whether this experiment was conducted or not. To provide accurate information, one would need direct evidence from the source publication itself.",
+    "abstained": false
+  },
+  {
+    "question_id": "q175",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "What is the main contribution of the Flex scene encoder presented in the paper?",
+    "type": "fact",
+    "answer": "The Flex scene encoder presented in the paper does not provide a clear description of its main contribution. The paper focuses more on introducing the concept of using flexible encoders for video coding, but it does not specify what unique feature or improvement this approach offers compared to existing methods. Therefore, I cannot determine the exact main contribution without additional context from the paper itself.",
+    "abstained": false
+  },
+  {
+    "question_id": "q176",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "How does Flex achieve a significant reduction in the computational load for policy models in autonomous driving systems?",
+    "type": "fact",
+    "answer": "Flex achieves a significant reduction in the computational load for policy models in autonomous driving systems by leveraging reinforcement learning algorithms to optimize decision-making processes. This approach allows Flex to learn from real-world scenarios more efficiently than traditional methods, thereby reducing the need for extensive training data and minimizing the computational resources required for model execution.",
+    "abstained": false
+  },
+  {
+    "question_id": "q177",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "On what type of dataset was Flex evaluated, and how large is the dataset used?",
+    "type": "fact",
+    "answer": "Flex was evaluated using a synthetic dataset for its evaluation purposes. The exact size of this synthetic dataset is not publicly disclosed by the creators or developers of Flex.",
+    "abstained": false
+  },
+  {
+    "question_id": "q178",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "In which section of the paper is the design and performance of the Flex scene encoder described?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine in which section of a paper the design and performance of the Flex scene encoder is described. Without more specific information about the paper or its structure, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q179",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "Which figure illustrates the comparison of Flex with the baseline method regarding the efficiency and performance trade-off?",
+    "type": "loc",
+    "answer": "I do not have enough context to determine which specific figure illustrates this comparison between Flex and the baseline method in terms of efficiency and performance trade-offs. Without a reference or additional details about the study or research paper being referred to, I cannot provide a definitive answer.",
+    "abstained": false
+  },
+  {
+    "question_id": "q180",
+    "doc_id": "arxiv_251210947_flex_multi_camera_encoding",
+    "question": "Does the paper evaluate Flex in real-world driving conditions, such as in off-road or rural areas?",
+    "type": "impossible",
+    "answer": "I do not have enough context to determine if the paper evaluates Flex in real-world driving conditions like off-road or rural areas. Without more specific information about the study's scope and location, I cannot provide a definitive answer.",
+    "abstained": false
   }
 ]

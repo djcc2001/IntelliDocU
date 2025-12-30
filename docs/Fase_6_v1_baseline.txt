@@ -21,8 +21,8 @@ Dentro de este módulo se implementó un sistema que:
     - construye un prompt mínimo sin contexto externo,
     - genera una respuesta directamente desde el modelo de lenguaje.
 
-El sistema utiliza el modelo de lenguaje Google/Flan-T5 y Qwen/Qwen2.5-1.5B-Instruct como modelo base para la generación 
-de respuestas.
+El sistema utiliza el modelo de lenguaje Qwen/Qwen2.5-1.5B-Instruct como modelo principal para la generación 
+de respuestas. El modelo Flan-T5 está disponible como alternativa pero no se utiliza por defecto.
 
 El prompt está compuesto por:
     - una instrucción general al modelo, que define el rol de asistente académico,

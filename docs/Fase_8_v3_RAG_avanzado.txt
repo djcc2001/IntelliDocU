@@ -6,8 +6,9 @@ mecanismos explícitos de control sobre la generación de respuestas mediante po
 basada en fragmentos recuperados. El enfoque de esta versión prioriza la confiabilidad y la trazabilidad documental, 
 evitando la generación de contenido no respaldado por evidencia textual.
 
-A diferencia de la versión RAG básica (v2), esta fase introduce un control estricto sobre cuándo el sistema puede 
-responder y bajo qué condiciones, consolidando un enfoque orientado a la reducción sistemática de alucinaciones.
+A diferencia de la versión RAG básica (v2), esta fase introduce un control balanceado sobre cuándo el sistema puede 
+responder y bajo qué condiciones, consolidando un enfoque orientado a la reducción sistemática de alucinaciones mientras
+mantiene la capacidad de responder cuando hay evidencia razonable disponible.
 
 ==================================================
 1. Objetivo de la fase
@@ -19,8 +20,8 @@ El objetivo principal de la Fase 8 fue:
     - Implementar una política de abstención robusta y multinivel.
     - Reducir la generación de respuestas no fundamentadas o especulativas.
 
-Esta fase prioriza la precisión y la trazabilidad documental por encima de la
-cobertura de respuestas.
+Esta fase busca un balance entre precisión, trazabilidad documental y cobertura de respuestas, utilizando
+umbrales ajustados que permiten responder cuando hay evidencia razonable sin comprometer la seguridad.
 
 ==================================================
 2. Estructura de archivos utilizada
@@ -86,8 +87,10 @@ La abstención puede activarse en las siguientes etapas del pipeline:
 
     3. Abstención por debilidad de evidencia:
         Se evalúa la fuerza de la evidencia recuperada en función del score de
-        similitud semántica. Si los fragmentos no alcanzan un nivel mínimo de
-        relevancia, el sistema se abstiene.
+        similitud semántica. El sistema utiliza umbrales ajustados (score mínimo 0.10)
+        para determinar si la evidencia es suficiente. Se aceptan respuestas con evidencia
+        "weak" (score >= 0.10) además de "strong" (score >= 0.25), permitiendo mayor
+        flexibilidad mientras mantiene la seguridad.
 
     4. Abstención post-generación:
         Tras la generación de la respuesta, se verifica que el contenido generado
@@ -96,7 +99,7 @@ La abstención puede activarse en las siguientes etapas del pipeline:
         contexto, el sistema se abstiene.
 
 En todos los casos de abstención, el sistema devuelve el mensaje estándar:
-    "It is not mentioned in the document."
+    "No se menciona en el documento."
 
 ==================================================
 5. Construcción del contexto y control del prompt
@@ -108,12 +111,15 @@ El contexto se construye a partir de los fragmentos recuperados, respetando lím
 longitud total y tamaño máximo por fragmento, con el fin de mantener estabilidad en la generación 
 y evitar desbordes de contexto.
 
-El prompt utilizado instruye explícitamente al modelo a:
-    - Utilizar únicamente la información presente en el contexto.
-    - No inferir ni generalizar conocimiento externo.
-    - Responder de forma breve y factual.
-    - Devolver el mensaje de abstención cuando la información no esté explícitamente indicada en 
-      los fragmentos.
+El prompt utilizado instruye al modelo a:
+    - Usar el contexto para responder la pregunta de manera precisa.
+    - Si puede inferir una respuesta razonable del contexto, proporcionarla.
+    - Responder de forma concisa y factual (2-3 oraciones).
+    - Solo responder con el mensaje de abstención si el contexto NO contiene NINGUNA 
+      información relevante para responder la pregunta.
+    
+Este enfoque es menos estricto que versiones anteriores, permitiendo inferencias razonables
+basadas en el contexto mientras mantiene la verificación de evidencia.
 
 ==================================================
 6. Citación basada en fragmentos
@@ -123,7 +129,10 @@ construcción del contexto.
 
 El formato de citación es el siguiente:
 
-    [Doc: DOC_ID, P.PAGE, Sec.SECTION]
+    [Doc: DOC_ID, Paginas: X, Y, Sec: SECTION]
+
+Donde X, Y representan los números de página donde se encuentra la evidencia. Si un fragmento
+abarca múltiples páginas, todas se incluyen en la citación.
 
 Las citas se agregan de forma global al final de la respuesta y corresponden a todos los fragmentos 
 empleados durante la generación. No se implementa citación a nivel de afirmación individual ni 
@@ -162,10 +171,13 @@ Los resultados se almacenan en:
 ==================================================
 Al finalizar esta fase se confirmó que:
     - El pipeline RAG avanzado funciona de forma estable.
-    - El sistema responde únicamente cuando existe evidencia suficiente.
-    - La abstención se activa de manera consistente ante preguntas no respondibles.
-    - Las respuestas generadas son más conservadoras, pero más confiables.
-    - Se reduce significativamente el riesgo de generación de contenido no fundamentado.
+    - El sistema responde cuando existe evidencia razonable (score >= 0.10), permitiendo mayor cobertura
+      que versiones anteriores sin comprometer la seguridad.
+    - La abstención se activa de manera consistente ante preguntas no respondibles o cuando no hay
+      información relevante en el contexto.
+    - Las respuestas generadas son confiables y están fundamentadas en evidencia documental.
+    - Se reduce significativamente el riesgo de generación de contenido no fundamentado mediante
+      verificación de evidencia y uso de contexto.
 
 
 ==================================================

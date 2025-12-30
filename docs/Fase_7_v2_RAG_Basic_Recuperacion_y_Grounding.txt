@@ -94,7 +94,7 @@ La lógica de construcción del prompt se implementó en:
     src/v2_rag_basic/prompt.py
 
 Se definió un límite máximo de caracteres (MAX_CONTEXT_CHARS) para el contexto, con el objetivo de:
-  - Evitar desbordar la ventana de contexto del modelo Flan-T5.
+  - Evitar desbordar la ventana de contexto del modelo de lenguaje (Qwen/Qwen2.5-1.5B-Instruct).
   - Priorizar los fragmentos más relevantes.
   - Mantener un comportamiento estable y reproducible.
 

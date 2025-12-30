@@ -46,13 +46,13 @@ class Recuperador:
         if self.indice is None:
             self.similitud = None
             self.tipo_indice = "none"
-            print("ℹ️ Recuperador inicializado SIN indice FAISS (no hay documentos)")
+            print("ℹRecuperador inicializado SIN indice FAISS (no hay documentos)")
         else:
             self.similitud = self.metadatos_indice.get("similarity", "cosine")
             self.tipo_indice = self._detectar_tipo_indice()
-            print(f"🔍 Recuperador listo — indice: {self.tipo_indice}, sim: {self.similitud}")
+            print(f"Recuperador listo — indice: {self.tipo_indice}, sim: {self.similitud}")
 
-        print(f"📂 Recuperador usando directorio_base_datos = {self.directorio_base_datos}")
+        print(f"Recuperador usando directorio_base_datos = {self.directorio_base_datos}")
 
     def _detectar_tipo_indice(self):
         """

@@ -21,13 +21,13 @@ def run_test(name, fn, question="What is artificial intelligence?"):
     print(f"\n🧪 TEST: {name}")
     try:
         out = fn(question)
-        print("✅ OK")
+        print("OK")
         if isinstance(out, str):
             print("↪ respuesta:", out[:300])
         else:
             print("↪ tipo:", type(out))
     except Exception as e:
-        print("❌ FAILED")
+        print("FAILED")
         if DEBUG:
             traceback.print_exc()
         else:
@@ -57,4 +57,4 @@ if __name__ == "__main__":
     for q in questions:
         run_test("RAG Advanced UI", ejecutar_rag_avanzado_ui, q)
 
-    print("\n🎯 Test completo")
+    print("\nTest completo")
