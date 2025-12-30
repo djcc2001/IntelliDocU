@@ -405,11 +405,11 @@ Este es un proyecto académico. Las contribuciones son bienvenidas:
 
 Este proyecto es de **uso académico**. No se permite uso comercial sin autorización del autor.
 
----
+<!-----
 
 ## 👥 Autores
 
-- **Tu Nombre** - *Desarrollo inicial* - [TuGitHub](https://github.com/tu-usuario)
+- **Deni** - *Desarrollo inicial* - [TuGitHub](https://github.com/tu-usuario)-->
 
 ---
 
