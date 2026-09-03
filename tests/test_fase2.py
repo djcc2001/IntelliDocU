@@ -1,8 +1,12 @@
 import json
 from pathlib import Path
 
+# Proyecto root para rutas relativas
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = PROJECT_ROOT / "data" / "preprocessed"
+
 # Tomar el primer archivo jsonl del texto limpio
-archivo = next(Path("data/preprocessed").glob("*.jsonl"))
+archivo = next(DATA_DIR.glob("*.jsonl"))
 
 with open(archivo, "r", encoding="utf-8") as f:
     linea = json.loads(next(f))

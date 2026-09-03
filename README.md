@@ -413,19 +413,8 @@ Este proyecto es de **uso académico**. No se permite uso comercial sin autoriza
 
 ---
 
-## 🙏 Agradecimientos
-
-- HuggingFace por los modelos pre-entrenados
-- Meta AI por FAISS
-- Streamlit por la excelente herramienta de UI
-- La comunidad open source de Python
-
----
-
 <div align="center">
 
 **⭐ Si este proyecto te resultó útil, considera darle una estrella ⭐**
-
-Hecho con ❤️ para la investigación académica
 
 </div>

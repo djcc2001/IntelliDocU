@@ -39,7 +39,11 @@ def debe_abstener(pregunta, fragmentos, puntuacion_minima=None):
     if len(palabras) < MIN_PALABRAS_PREGUNTA:
         return True
     
-    # 4) Preguntas CLARAMENTE fuera de dominio (lista reducida)
+    # 4) Preguntas CLARAMENTE fuera de dominio (lista reducida).
+    # Diseño intencional: lista mínima para cubrir los casos más obvios
+    # (weather, recipe, joke, song, hello) sin tentar sobre-ajuste.
+    # Esta lista puede expandirse posteriormente con un detector
+    # de dominio formal si el proyecto requiere it.
     palabras_imposibles = [
         # Solo cosas MUY obvias
         "weather", "clima hoy", "receta", "recipe", 
